@@ -1,58 +1,51 @@
-/* @import "tailwindcss";
+/* =====================================================
+   EliteLodge - globals.css (Clean & Professional Setup)
+   ===================================================== */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* -----------------------------------------------------
+   1. Google Fonts (OPTIONAL - better to use next/font)
+------------------------------------------------------ */
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Jost:wght@300;400;500&display=swap");
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* -----------------------------------------------------
+   2. Tailwind Layers
+------------------------------------------------------ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-} */
-
-@import "tailwindcss";
-
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500&display=swap");
-
+/* -----------------------------------------------------
+   3. Base Theme Variables
+------------------------------------------------------ */
 @layer base {
   :root {
-    /* EliteLodge Fine Dining — Dark & Rich palette */
+    /* Brand Colors */
     --color-brand-primary: #1a0a00;
     --color-brand-secondary: #c9a96e;
     --color-brand-accent: #e8d5b0;
 
+    /* Surfaces */
     --color-surface-base: #0d0700;
     --color-surface-raised: #1a0e05;
     --color-surface-overlay: #221508;
 
+    /* Text */
     --color-text-primary: #f5ead6;
     --color-text-secondary: #c9b99a;
     --color-text-muted: #7a6a54;
     --color-text-inverse: #1a0a00;
 
+    /* Borders */
     --color-border-subtle: rgba(201, 169, 110, 0.12);
     --color-border-default: rgba(201, 169, 110, 0.28);
     --color-border-strong: #c9a96e;
 
+    /* States */
     --color-state-success: #5a8a5a;
     --color-state-warning: #c9963a;
     --color-state-error: #8a3a3a;
 
+    /* Buttons */
     --color-btn-primary-bg: #c9a96e;
     --color-btn-primary-text: #1a0a00;
     --color-btn-primary-hover: #e8d5b0;
@@ -79,21 +72,17 @@ body {
     --radius-pill: 9999px;
 
     /* Shadows */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.2);
-    --shadow-lg: 0 10px 32px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 32px rgba(0, 0, 0, 0.5);
 
     /* Motion */
-    --duration-instant: 80ms;
     --duration-fast: 150ms;
     --duration-normal: 300ms;
     --duration-slow: 500ms;
-    --duration-cinematic: 800ms;
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-    --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
-    --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
 
-    /* shadcn required tokens */
+    /* shadcn tokens */
     --background: 0 0% 5%;
     --foreground: 35 60% 90%;
     --card: 20 80% 6%;
@@ -115,12 +104,11 @@ body {
     --ring: 35 50% 60%;
     --radius: 0.25rem;
   }
-}
 
-@layer base {
+  /* Global Base Styles */
   * {
-    @apply border-border;
     box-sizing: border-box;
+    border-color: hsl(var(--border)); /* FIXED: no border-border */
   }
 
   html {
@@ -148,29 +136,14 @@ body {
 
   ::selection {
     background: rgba(201, 169, 110, 0.25);
-    color: var(--color-text-primary);
   }
 
   :focus-visible {
     outline: 2px solid var(--color-brand-secondary);
     outline-offset: 3px;
-    border-radius: var(--radius-sm);
   }
 
-  :focus:not(:focus-visible) {
-    outline: none;
-  }
-
-  input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(0.7) sepia(1) saturate(2) hue-rotate(5deg);
-    opacity: 0.6;
-    cursor: pointer;
-  }
-
-  input[type="date"],
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
+  input,
   select,
   textarea {
     background: transparent;
@@ -178,58 +151,19 @@ body {
     font-family: var(--font-body);
   }
 
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus {
+  input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px var(--color-surface-raised) inset;
     -webkit-text-fill-color: var(--color-text-primary);
-    caret-color: var(--color-text-primary);
   }
 }
 
-/* ── Animations ── */
+/* -----------------------------------------------------
+   4. Utilities
+------------------------------------------------------ */
 @layer utilities {
-  .animate-fade-up {
-    animation: fadeUp var(--duration-slow) var(--ease-out-expo) both;
-  }
-
-  .animate-fade-in {
-    animation: fadeIn var(--duration-slow) var(--ease-out-expo) both;
-  }
-
-  .animate-draw-line {
-    animation: drawLine var(--duration-slow) var(--ease-out-expo) both;
-  }
-
-  .delay-100 {
-    animation-delay: 100ms;
-  }
-  .delay-200 {
-    animation-delay: 200ms;
-  }
-  .delay-300 {
-    animation-delay: 300ms;
-  }
-  .delay-400 {
-    animation-delay: 400ms;
-  }
-  .delay-500 {
-    animation-delay: 500ms;
-  }
-  .delay-600 {
-    animation-delay: 600ms;
-  }
-  .delay-700 {
-    animation-delay: 700ms;
-  }
-  .delay-800 {
-    animation-delay: 800ms;
-  }
-
   .font-display {
     font-family: var(--font-display);
   }
-
   .font-body {
     font-family: var(--font-body);
   }
@@ -237,41 +171,15 @@ body {
   .text-gold {
     color: var(--color-brand-secondary);
   }
-
-  .text-gold-light {
-    color: var(--color-brand-accent);
-  }
-
   .text-cream {
     color: var(--color-text-primary);
   }
 
-  .text-cream-secondary {
-    color: var(--color-text-secondary);
-  }
-
-  .text-muted-gold {
-    color: var(--color-text-muted);
-  }
-
   .bg-surface {
-    background-color: var(--color-surface-base);
+    background: var(--color-surface-base);
   }
-
-  .bg-surface-raised {
-    background-color: var(--color-surface-raised);
-  }
-
-  .bg-surface-overlay {
-    background-color: var(--color-surface-overlay);
-  }
-
-  .border-gold-subtle {
-    border-color: var(--color-border-subtle);
-  }
-
-  .border-gold-default {
-    border-color: var(--color-border-default);
+  .bg-raised {
+    background: var(--color-surface-raised);
   }
 
   .border-gold {
@@ -279,6 +187,9 @@ body {
   }
 }
 
+/* -----------------------------------------------------
+   5. Animations
+------------------------------------------------------ */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -299,59 +210,7 @@ body {
   }
 }
 
-@keyframes drawLine {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
-@keyframes shimmer {
-  from {
-    background-position: 200% 0;
-  }
-  to {
-    background-position: -200% 0;
-  }
-}
-
-@keyframes datePop {
-  0% {
-    transform: scale(1);
-  }
-  40% {
-    transform: scale(1.12);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes drawCircle {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes drawCheck {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes goldPulse {
-  0%,
-  100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-/* Reduced motion */
+/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
