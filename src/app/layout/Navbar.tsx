@@ -28,7 +28,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
 // ── Types ──────────────────────────────────────────────────────────────
@@ -261,92 +260,131 @@ function MobileSidebar({
 }) {
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    if (!open) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <motion.button
-          whileTap={{ scale: 0.9 }}
-          aria-label="Open menu"
-          className="p-2 rounded-lg text-foreground/70 hover:text-foreground hover:bg-foreground/6 transition-colors"
-        >
-          <Menu size={20} />
-        </motion.button>
-      </SheetTrigger>
-
-      <SheetContent
-        side="left"
-        className="w-[280px] sm:w-[320px] bg-nav-bg border-r border-border/60 p-0"
+    <>
+      <motion.button
+        whileTap={{ scale: 0.9 }}
+        aria-label={open ? "Close menu" : "Open menu"}
+        aria-expanded={open}
+        onClick={() => setOpen((prev) => !prev)}
+        className="p-2 rounded-lg text-foreground/70 hover:text-foreground hover:bg-foreground/6 transition-colors"
       >
-        {/* Sidebar header */}
-        <div className="flex items-center justify-between px-5 py-5 border-b border-border/40">
-          <Logo />
-          <button
-            onClick={() => setOpen(false)}
-            className="p-1.5 rounded-lg text-foreground/50 hover:text-foreground hover:bg-foreground/6"
-          >
-            <X size={18} />
-          </button>
-        </div>
+        {open ? <X size={20} /> : <Menu size={20} />}
+      </motion.button>
 
-        {/* Nav links */}
-        <nav className="flex flex-col px-4 py-4 gap-1">
-          {navLinks.map((link, i) => (
-            <motion.div
-              key={link.href}
-              initial={{ opacity: 0, x: -14 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.06, duration: 0.2 }}
+      <AnimatePresence>
+        {open && (
+          <>
+            <motion.button
+              key="overlay"
+              aria-label="Close menu overlay"
+              onClick={() => setOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-40 bg-black/30 backdrop-blur-[1px]"
+            />
+
+            <motion.aside
+              key="drawer"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 32 }}
+              className="fixed left-0 top-0 z-50 h-dvh w-full sm:w-[320px] bg-nav-bg border-r border-border/60 p-0 bg-white/95 backdrop-blur-md"
             >
-              <Link
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-foreground/75 hover:text-foreground hover:bg-foreground/5 transition-colors"
-              >
-                {link.label}
-              </Link>
-            </motion.div>
-          ))}
-        </nav>
+              <div className="flex items-center justify-between px-5 py-5 border-b border-border/40">
+                <Logo />
+                <button
+                  onClick={() => setOpen(false)}
+                  className="p-1.5 rounded-lg text-foreground/50 hover:text-foreground hover:bg-foreground/6"
+                >
+                  <X size={18} />
+                </button>
+              </div>
 
-        {/* Divider */}
-        <div className="mx-4 border-t border-border/40" />
+              <nav className="flex flex-col px-4 py-4 gap-1">
+                {navLinks.map((link, i) => (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, x: -14 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.06, duration: 0.2 }}
+                  >
+                    <Link
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-foreground/75 hover:text-foreground hover:bg-foreground/5 transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
 
-        {/* Bottom: theme + auth */}
-        <div className="px-4 py-4 space-y-3">
-          <div className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-foreground/4">
-            <span className="text-sm text-foreground/70 font-medium">
-              {isDark ? "Dark Mode" : "Light Mode"}
-            </span>
-            <ThemeToggle isDark={isDark} toggle={toggleTheme} />
-          </div>
+              <div className="mx-4 border-t border-border/40" />
 
-          {isLoggedIn ? (
-            <Button
-              variant="ghost"
-              className="w-full justify-start gap-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl"
-            >
-              <LogOut size={15} /> Sign Out
-            </Button>
-          ) : (
-            <div className="flex flex-col gap-2 pt-1">
-              <Button
-                variant="outline"
-                className="w-full rounded-xl border-border/60 text-foreground/70"
-                asChild
-              >
-                <Link href="/login">Log In</Link>
-              </Button>
-              <Button
-                className="w-full rounded-xl bg-brand-btn text-brand-text hover:bg-brand-600"
-                asChild
-              >
-                <Link href="/signup">Sign Up</Link>
-              </Button>
-            </div>
-          )}
-        </div>
-      </SheetContent>
-    </Sheet>
+              <div className="px-4 py-4 space-y-3">
+                <div className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-foreground/4">
+                  <span className="text-sm text-foreground/70 font-medium">
+                    {isDark ? "Dark Mode" : "Light Mode"}
+                  </span>
+                  <ThemeToggle isDark={isDark} toggle={toggleTheme} />
+                </div>
+
+                {isLoggedIn ? (
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl"
+                  >
+                    <LogOut size={15} /> Sign Out
+                  </Button>
+                ) : (
+                  <div className="flex flex-col gap-2 pt-1">
+                    <Button
+                      variant="outline"
+                      className="w-full rounded-xl border-border/60 text-foreground/70"
+                      asChild
+                    >
+                      <Link href="/login" onClick={() => setOpen(false)}>
+                        Log In
+                      </Link>
+                    </Button>
+                    <Button
+                      className="w-full rounded-xl bg-brand-btn text-brand-text hover:bg-brand-600"
+                      asChild
+                    >
+                      <Link href="/signup" onClick={() => setOpen(false)}>
+                        Sign Up
+                      </Link>
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 

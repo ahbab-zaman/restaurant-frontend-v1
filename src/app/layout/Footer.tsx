@@ -12,7 +12,6 @@ import {
   ChevronDown,
   ArrowRight,
 } from "lucide-react";
-
 // ── Link Groups ────────────────────────────────────────────────────────
 interface LinkGroup {
   title: string;
@@ -148,12 +147,12 @@ function FooterLogo() {
       <motion.div
         whileHover={{ rotate: 8, scale: 1.08 }}
         transition={{ type: "spring", stiffness: 300, damping: 18 }}
-        className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-btn dark:bg-[#C4A882]"
+        className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-btn"
       >
-        <Hotel size={18} className="text-brand-text dark:text-[#1A120D]" />
+        <Hotel size={18} className="text-brand-text" />
       </motion.div>
       <span className="font-display text-xl font-semibold tracking-tight text-foreground leading-none">
-        Lumos<span className="text-brand-btn dark:text-[#C4A882]">Stay</span>
+        Lumos<span className="text-brand-btn">Stay</span>
       </span>
     </Link>
   );
@@ -178,7 +177,7 @@ function SocialButton({
       whileHover={{ scale: 1.12, y: -2 }}
       whileTap={{ scale: 0.92 }}
       transition={{ type: "spring", stiffness: 350, damping: 20 }}
-      className="flex items-center justify-center w-9 h-9 rounded-full border border-border/60 text-foreground/55 hover:text-brand-btn dark:hover:text-[#C4A882] hover:border-brand-btn/40 dark:hover:border-[#C4A882]/40 transition-colors duration-200"
+      className="flex items-center justify-center w-9 h-9 rounded-full border border-border/60 text-foreground/55 hover:text-brand-btn hover:border-brand-btn/40 transition-colors duration-200"
     >
       {icon}
     </motion.a>
@@ -201,7 +200,7 @@ function FooterLeft() {
         <span className="flex items-start gap-2">
           <MapPin
             size={14}
-            className="mt-0.5 flex-shrink-0 text-brand-btn dark:text-[#C4A882]"
+            className="mt-0.5 flex-shrink-0 text-brand-btn"
           />
           12 Harrington Lane, Sylhet 3100, Bangladesh
         </span>
@@ -211,7 +210,7 @@ function FooterLeft() {
         >
           <Phone
             size={14}
-            className="flex-shrink-0 text-brand-btn dark:text-[#C4A882]"
+            className="flex-shrink-0 text-brand-btn"
           />
           +880 1700 000 000
         </a>
@@ -221,7 +220,7 @@ function FooterLeft() {
         >
           <Mail
             size={14}
-            className="flex-shrink-0 text-brand-btn dark:text-[#C4A882]"
+            className="flex-shrink-0 text-brand-btn"
           />
           hello@lumosstay.com
         </a>
@@ -276,7 +275,7 @@ function FooterAccordion({ group }: { group: LinkGroup }) {
                   >
                     <ArrowRight
                       size={11}
-                      className="opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-150 text-brand-btn dark:text-[#C4A882]"
+                      className="opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-150 text-brand-btn"
                     />
                     {link.label}
                   </Link>
@@ -309,7 +308,7 @@ function FooterMiddle() {
                   <motion.span
                     initial={{ width: 0, opacity: 0 }}
                     whileHover={{ width: "auto", opacity: 1 }}
-                    className="text-brand-btn dark:text-[#C4A882]"
+                    className="text-brand-btn"
                   >
                     <ArrowRight size={11} />
                   </motion.span>
@@ -325,170 +324,6 @@ function FooterMiddle() {
 }
 
 // ── Right Column (app store + QR) ─────────────────────────────────────
-// Inline SVG QR placeholder (a simplified visual stand-in)
-function QRCodePlaceholder() {
-  return (
-    <svg
-      width="88"
-      height="88"
-      viewBox="0 0 88 88"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="rounded-lg"
-    >
-      <rect
-        width="88"
-        height="88"
-        rx="8"
-        fill="currentColor"
-        className="text-brand-btn/8 dark:text-[#C4A882]/10"
-      />
-      {/* Finder patterns */}
-      {[
-        [4, 4],
-        [4, 5],
-        [4, 6],
-        [4, 7],
-        [4, 8],
-        [4, 9],
-        [4, 10],
-        [5, 4],
-        [5, 10],
-        [6, 4],
-        [6, 6],
-        [6, 7],
-        [6, 8],
-        [6, 10],
-        [7, 4],
-        [7, 6],
-        [7, 8],
-        [7, 10],
-        [8, 4],
-        [8, 6],
-        [8, 7],
-        [8, 8],
-        [8, 10],
-        [9, 4],
-        [9, 10],
-        [10, 4],
-        [10, 5],
-        [10, 6],
-        [10, 7],
-        [10, 8],
-        [10, 9],
-        [10, 10],
-        // Bottom-left
-        [4, 14],
-        [4, 15],
-        [4, 16],
-        [4, 17],
-        [4, 18],
-        [4, 19],
-        [4, 20],
-        [5, 14],
-        [5, 20],
-        [6, 14],
-        [6, 16],
-        [6, 17],
-        [6, 18],
-        [6, 20],
-        [7, 14],
-        [7, 16],
-        [7, 18],
-        [7, 20],
-        [8, 14],
-        [8, 16],
-        [8, 17],
-        [8, 18],
-        [8, 20],
-        [9, 14],
-        [9, 20],
-        [10, 14],
-        [10, 15],
-        [10, 16],
-        [10, 17],
-        [10, 18],
-        [10, 19],
-        [10, 20],
-        // Top-right
-        [14, 4],
-        [14, 5],
-        [14, 6],
-        [14, 7],
-        [14, 8],
-        [14, 9],
-        [14, 10],
-        [15, 4],
-        [15, 10],
-        [16, 4],
-        [16, 6],
-        [16, 7],
-        [16, 8],
-        [16, 10],
-        [17, 4],
-        [17, 6],
-        [17, 8],
-        [17, 10],
-        [18, 4],
-        [18, 6],
-        [18, 7],
-        [18, 8],
-        [18, 10],
-        [19, 4],
-        [19, 10],
-        [20, 4],
-        [20, 5],
-        [20, 6],
-        [20, 7],
-        [20, 8],
-        [20, 9],
-        [20, 10],
-        // Random data modules
-        [12, 12],
-        [12, 14],
-        [12, 16],
-        [13, 13],
-        [13, 15],
-        [13, 17],
-        [14, 12],
-        [14, 16],
-        [15, 13],
-        [15, 14],
-        [16, 12],
-        [16, 15],
-        [17, 13],
-        [17, 16],
-        [18, 12],
-        [18, 14],
-        [19, 15],
-        [20, 12],
-        [20, 13],
-        [20, 16],
-        [12, 18],
-        [13, 19],
-        [14, 20],
-        [15, 18],
-        [16, 19],
-        [17, 20],
-        [18, 18],
-        [19, 19],
-        [20, 20],
-      ].map(([col, row], i) => (
-        <rect
-          key={i}
-          x={col * 4}
-          y={row * 4}
-          width="3.2"
-          height="3.2"
-          rx="0.4"
-          fill="currentColor"
-          className="text-brand-btn dark:text-[#C4A882]"
-        />
-      ))}
-    </svg>
-  );
-}
-
 function FooterRight() {
   return (
     <div className="flex flex-col gap-5">
@@ -496,14 +331,21 @@ function FooterRight() {
         Get the App
       </h4>
 
-      <p className="text-sm text-muted-foreground leading-relaxed max-w-[220px]">
+      <p className="text-sm text-muted-foreground leading-relaxed max-w-55">
         Book on the go. Scan to download the LumosStay app from your store.
       </p>
 
       {/* QR Code */}
       <div className="flex items-start gap-4">
-        <div className="p-2.5 rounded-xl border border-border/60 bg-nav-bg dark:bg-[#1A120D]">
-          <QRCodePlaceholder />
+        <div className="p-2.5 rounded-xl border border-border/60 bg-nav-bg">
+          <Image
+            src="/Ahbab.png"
+            alt="Scan to download the LumosStay app"
+            width={88}
+            height={88}
+            className="rounded-lg object-cover"
+            priority={false}
+          />
         </div>
         <div className="flex flex-col gap-2 pt-1">
           <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">
@@ -514,7 +356,7 @@ function FooterRight() {
             href="#"
             whileHover={{ scale: 1.04, y: -1 }}
             whileTap={{ scale: 0.97 }}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-brand-btn dark:bg-[#C4A882] text-brand-text dark:text-[#1A120D] w-fit"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-brand-btn text-brand-text w-fit"
           >
             {/* Play icon */}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -531,7 +373,7 @@ function FooterRight() {
             href="#"
             whileHover={{ scale: 1.04, y: -1 }}
             whileTap={{ scale: 0.97 }}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/60 bg-nav-bg dark:bg-[#1A120D] text-foreground/80 w-fit"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/60 bg-nav-bg text-foreground/80 w-fit"
           >
             {/* Apple icon */}
             <svg
@@ -606,7 +448,7 @@ export default function Footer() {
               <motion.a
                 href="#"
                 whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-brand-btn dark:bg-[#C4A882] text-brand-text dark:text-[#1A120D]"
+                className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-brand-btn text-brand-text"
               >
                 <svg
                   width="13"
@@ -651,3 +493,5 @@ export default function Footer() {
     </footer>
   );
 }
+
+
