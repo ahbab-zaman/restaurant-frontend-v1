@@ -1,174 +1,208 @@
 "use client";
 
+import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
 import { useState } from "react";
-import { AvailabilityBadge } from "@/app/components/ui/AvailibilityBadge";
-import type { Room } from "@/app/types";
 
-interface RoomCardProps {
-  room: Room;
-  index: number;
+// ─── Icons ────────────────────────────────────────────────────────────────────
+
+function HeartIcon({ filled }: { filled: boolean }) {
+  return (
+    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M12.62 20.81C12.28 20.93 11.72 20.93 11.38 20.81C8.48 19.82 2 15.69 2 8.69C2 5.6 4.49 3.1 7.56 3.1C9.38 3.1 10.99 3.98 12 5.34C13.01 3.98 14.63 3.1 16.44 3.1C19.51 3.1 22 5.6 22 8.69C22 15.69 15.52 19.82 12.62 20.81Z"
+        stroke="currentColor"
+        fill={filled ? "currentColor" : "none"}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
-const ROOM_ICONS = [
-  // House icon
-  <svg
-    key="house"
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-    <polyline points="9 22 9 12 15 12 15 22" />
-  </svg>,
-  // Coffee / wine glass icon
-  <svg
-    key="wine"
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M18 8h1a4 4 0 010 8h-1" />
-    <path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z" />
-    <line x1="6" y1="1" x2="6" y2="4" />
-    <line x1="10" y1="1" x2="10" y2="4" />
-    <line x1="14" y1="1" x2="14" y2="4" />
-  </svg>,
-  // Leaf / garden icon
-  <svg
-    key="garden"
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M12 22V12" />
-    <path d="M5 17H2a10 10 0 0020 0h-3" />
-    <path d="M12 12C12 12 7 9 7 5a5 5 0 0110 0c0 4-5 7-5 7z" />
-  </svg>,
-];
+function BadgeIcon() {
+  return (
+    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M3.99 14.66L2.47 13.14C1.85 12.52 1.85 11.5 2.47 10.88L3.99 9.36C4.25 9.1 4.46 8.59 4.46 8.23V6.08C4.46 5.2 5.18 4.48 6.06 4.48H8.21C8.57 4.48 9.08 4.27 9.34 4.01L10.86 2.49C11.48 1.87 12.5 1.87 13.12 2.49L14.64 4.01C14.9 4.27 15.41 4.48 15.77 4.48H17.92C18.8 4.48 19.52 5.2 19.52 6.08V8.23C19.52 8.59 19.73 9.1 19.99 9.36L21.51 10.88C22.13 11.5 22.13 12.52 21.51 13.14L19.99 14.66C19.73 14.92 19.52 15.43 19.52 15.79V17.94C19.52 18.82 18.8 19.54 17.92 19.54H15.77C15.41 19.54 14.9 19.75 14.64 20.01L13.12 21.53C12.5 22.15 11.48 22.15 10.86 21.53L9.34 20.01C9.08 19.75 8.57 19.54 8.21 19.54H6.06C5.18 19.54 4.46 18.82 4.46 17.94V15.79C4.46 15.42 4.25 14.91 3.99 14.66Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9 15L15 9"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14.495 14.5H14.504"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9.495 9.5H9.504"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
-export function RoomCard({ room, index }: RoomCardProps) {
-  const [hovered, setHovered] = useState(false);
-  const ordinals = ["01", "02", "03"];
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export interface RoomCardProps {
+  href?: string;
+  image: string | StaticImageData;
+  imageAlt: string;
+  saleBadge?: string; // e.g. "48% Sale"
+  title: string;
+  description: string;
+  price: string;
+  originalPrice?: string;
+  discountLabel?: string; // e.g. "48% off"
+  currency?: string;
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
+export default function RoomCard({
+  href = "#",
+  image,
+  imageAlt,
+  saleBadge,
+  title,
+  description,
+  price,
+  originalPrice,
+  discountLabel,
+}: RoomCardProps) {
+  const [wishlisted, setWishlisted] = useState(false);
 
   return (
-    <article
-      className="relative overflow-hidden cursor-pointer transition-colors duration-300"
-      style={{
-        background: hovered
-          ? "var(--color-surface-overlay)"
-          : "var(--color-surface-raised)",
-        padding: "40px 32px",
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      aria-label={room.name}
+    <Link
+      href={href}
+      className="
+        group flex flex-col h-full rounded-2xl border border-neutral-200
+        bg-white overflow-hidden
+        hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-500/10
+        transition-all duration-300
+        cursor-pointer
+      "
+      style={{ textDecoration: "none" }}
     >
-      {/* Hover underline */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-[2px] transition-transform duration-500 origin-left"
-        style={{
-          background: "var(--color-brand-secondary)",
-          transform: hovered ? "scaleX(1)" : "scaleX(0)",
-          transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-        }}
-        aria-hidden="true"
-      />
+      {/* ── Image area ───────────────────────────────────────────────────── */}
+      <div className="relative flex-shrink-0 overflow-hidden bg-neutral-100">
+        {/* Square aspect ratio */}
+        <div className="relative w-full" style={{ paddingBottom: "100%" }}>
+          <div className="absolute inset-0 w-full h-full">
+            <Image
+              alt={imageAlt}
+              src={image}
+              className="
+                object-cover w-full h-full
+                transition-transform duration-500 ease-out
+                group-hover:scale-105
+              "
+            />
+          </div>
+        </div>
 
-      {/* Background ordinal number */}
-      <span
-        className="absolute top-5 right-6 font-display font-light leading-none pointer-events-none select-none"
-        style={{ fontSize: "52px", color: "rgba(201,169,110,0.1)" }}
-        aria-hidden="true"
-      >
-        {ordinals[index] ?? "01"}
-      </span>
+        {/* Sale badge — top-left */}
+        {saleBadge && (
+          <div className="absolute top-2 left-2 flex flex-wrap items-center gap-1.5 z-10">
+            <div
+              className="
+                shadow-lg rounded-full flex items-center justify-center
+                px-2 py-1 bg-white/95 backdrop-blur-sm
+                transition-transform duration-200 group-hover:scale-105
+              "
+            >
+              <BadgeIcon />
+              <span className="ml-1 leading-none text-xs text-red-400 font-bold">
+                {saleBadge}
+              </span>
+            </div>
+          </div>
+        )}
 
-      {/* Icon */}
-      <div
-        className="flex items-center justify-center w-10 h-10 mb-6"
-        style={{
-          border: "0.5px solid var(--color-border-default)",
-          color: "var(--color-brand-secondary)",
-        }}
-        aria-hidden="true"
-      >
-        {ROOM_ICONS[index % ROOM_ICONS.length]}
-      </div>
-
-      {/* Name */}
-      <h3
-        className="font-display text-[22px] font-normal mb-3"
-        style={{ color: "var(--color-text-primary)" }}
-      >
-        {room.name}
-      </h3>
-
-      {/* Description */}
-      <p
-        className="text-[13px] leading-[1.65] mb-5"
-        style={{
-          color: "var(--color-text-secondary)",
-          fontFamily: "var(--font-body)",
-          fontWeight: 300,
-        }}
-      >
-        {room.description}
-      </p>
-
-      {/* Amenity tags */}
-      <div
-        className="flex flex-wrap gap-1.5 mb-5"
-        role="list"
-        aria-label="Amenities"
-      >
-        {room.amenities.map((amenity) => (
-          <span
-            key={amenity}
-            className="text-[10px] tracking-[0.16em] uppercase px-2.5 py-1"
-            style={{
-              border: "0.5px solid var(--color-border-default)",
-              color: "var(--color-text-muted)",
-              fontFamily: "var(--font-body)",
+        {/* Wishlist button — top-right */}
+        <div className="absolute top-2 right-2 z-10">
+          <button
+            type="button"
+            title={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+            onClick={(e) => {
+              e.preventDefault();
+              setWishlisted((v) => !v);
             }}
-            role="listitem"
+            className="
+              w-9 h-9 flex items-center justify-center rounded-full
+              bg-neutral-50 shadow-md
+              transition-all duration-200
+              hover:scale-110 hover:shadow-lg
+              active:scale-95
+            "
+            style={{
+              color: wishlisted ? "#ef4444" : "#525252",
+            }}
           >
-            {amenity}
-          </span>
-        ))}
+            <HeartIcon filled={wishlisted} />
+          </button>
+        </div>
       </div>
 
-      {/* Capacity */}
-      <p
-        className="text-[11px] tracking-[0.1em] mb-3"
-        style={{
-          color: "var(--color-brand-secondary)",
-          fontFamily: "var(--font-body)",
-        }}
-        aria-label={`Capacity: ${room.capacity.min} to ${room.capacity.max} guests`}
-      >
-        Seats {room.capacity.min} – {room.capacity.max} guests
-      </p>
+      {/* ── Content area ─────────────────────────────────────────────────── */}
+      <div className="flex flex-1 flex-col p-4">
+        {/* Title */}
+        <h3
+          className="
+            text-sm font-semibold text-neutral-800 line-clamp-2
+            min-h-[2.5rem]
+            transition-colors duration-200
+            group-hover:text-emerald-700
+          "
+        >
+          {title}
+        </h3>
 
-      {/* Availability */}
-      <AvailabilityBadge status={room.availability} />
-    </article>
+        {/* Description */}
+        <p className="text-xs text-neutral-500 mt-1.5 line-clamp-3 flex-1 leading-relaxed">
+          {description}
+        </p>
+
+        {/* Price row */}
+        <div className="mt-auto pt-3">
+          <div className="flex flex-wrap items-baseline gap-2">
+            <span className="text-base font-bold text-neutral-800 tabular-nums">
+              {price}
+            </span>
+            {originalPrice && (
+              <span className="text-sm text-neutral-400 line-through tabular-nums">
+                {originalPrice}
+              </span>
+            )}
+            {discountLabel && (
+              <span
+                className="
+                  text-xs font-medium text-emerald-700
+                  bg-emerald-100 px-1.5 py-0.5 rounded
+                  transition-colors duration-200
+                  group-hover:bg-emerald-200
+                "
+              >
+                {discountLabel}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 }

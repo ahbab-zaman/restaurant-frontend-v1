@@ -1,240 +1,221 @@
 "use client";
+import RoomCard from "./RoomCard";
+import bannerImage1 from "../../../../public/banner-1.jpg";
+import bannerImage2 from "../../../../public/banner-2.avif";
+import bannerImage3 from "../../../../public/banner-3.avif";
+import bannerImage4 from "../../../../public/banner-4.avif";
+import bannerImage5 from "../../../../public/banner-5.avif";
+// ─── Room data ────────────────────────────────────────────────────────────────
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { usePartySize } from "@/app/hooks/usePartySize";
-import { GoldButton } from "@/app/components/ui/GoldButton";
-import { ROOMS } from "@/app/lib/constants";
-import { getTodayString } from "@/app/lib/utils";
+const rooms = [
+  {
+    id: 1,
+    href: "/rooms/deluxe",
+    image: bannerImage1,
+    imageAlt: "Deluxe Room — modern interiors with city view",
+    saleBadge: "10% Sale",
+    title: "Deluxe Room",
+    description:
+      "A stylish room featuring modern interiors, plush bedding, and beautiful city views. Perfect for a relaxing short stay.",
+    price: "$108 / night",
+    originalPrice: "$120 / night",
+    discountLabel: "10% off",
+  },
+  {
+    id: 2,
+    href: "/rooms/executive-suite",
+    image: bannerImage2,
+    imageAlt: "Executive Suite — separate living area with premium amenities",
+    saleBadge: "15% Sale",
+    title: "Executive Suite",
+    description:
+      "Spacious suite with a separate living area, premium amenities, and elegant design. Ideal for business travellers and couples.",
+    price: "$299 / night",
+    originalPrice: "$352 / night",
+    discountLabel: "15% off",
+  },
+  {
+    id: 3,
+    href: "/rooms/presidential-suite",
+    image: bannerImage3,
+    imageAlt: "Presidential Suite — expansive luxury accommodation",
+    saleBadge: "20% Sale",
+    title: "Presidential Suite",
+    description:
+      "Our most luxurious accommodation offering expansive space, refined interiors, and exceptional comfort for the discerning guest.",
+    price: "$655 / night",
+    originalPrice: "$820 / night",
+    discountLabel: "20% off",
+  },
+  {
+    id: 4,
+    href: "/rooms/presidential-suite",
+    image: bannerImage4,
+    imageAlt: "Presidential Suite — expansive luxury accommodation",
+    saleBadge: "20% Sale",
+    title: "Presidential Suite",
+    description:
+      "Our most luxurious accommodation offering expansive space, refined interiors, and exceptional comfort for the discerning guest.",
+    price: "$655 / night",
+    originalPrice: "$820 / night",
+    discountLabel: "20% off",
+  },
+  {
+    id: 5,
+    href: "/rooms/presidential-suite",
+    image: bannerImage5,
+    imageAlt: "Presidential Suite — expansive luxury accommodation",
+    saleBadge: "20% Sale",
+    title: "Presidential Suite",
+    description:
+      "Our most luxurious accommodation offering expansive space, refined interiors, and exceptional comfort for the discerning guest.",
+    price: "$655 / night",
+    originalPrice: "$820 / night",
+    discountLabel: "20% off",
+  },
+  {
+    id: 7,
+    href: "/rooms/presidential-suite",
+    image: bannerImage5,
+    imageAlt: "Presidential Suite — expansive luxury accommodation",
+    saleBadge: "20% Sale",
+    title: "Presidential Suite",
+    description:
+      "Our most luxurious accommodation offering expansive space, refined interiors, and exceptional comfort for the discerning guest.",
+    price: "$655 / night",
+    originalPrice: "$820 / night",
+    discountLabel: "20% off",
+  },
+  {
+    id: 8,
+    href: "/rooms/presidential-suite",
+    image: bannerImage5,
+    imageAlt: "Presidential Suite — expansive luxury accommodation",
+    saleBadge: "20% Sale",
+    title: "Presidential Suite",
+    description:
+      "Our most luxurious accommodation offering expansive space, refined interiors, and exceptional comfort for the discerning guest.",
+    price: "$655 / night",
+    originalPrice: "$820 / night",
+    discountLabel: "20% off",
+  },
+  {
+    id: 6,
+    href: "/rooms/presidential-suite",
+    image: bannerImage5,
+    imageAlt: "Presidential Suite — expansive luxury accommodation",
+    saleBadge: "20% Sale",
+    title: "Presidential Suite",
+    description:
+      "Our most luxurious accommodation offering expansive space, refined interiors, and exceptional comfort for the discerning guest.",
+    price: "$655 / night",
+    originalPrice: "$820 / night",
+    discountLabel: "20% off",
+  },
+];
 
-export function BookingWidget() {
-  const router = useRouter();
-  const today = getTodayString();
-  const [date, setDate] = useState(today);
-  const [roomId, setRoomId] = useState("");
-  const { partySize, increment, decrement, isAtMin, isAtMax, isLargeParty } =
-    usePartySize({ initial: 2, min: 1, max: 20 });
+// ─── Leaf SVG decoration ──────────────────────────────────────────────────────
 
-  const handleCheckAvailability = () => {
-    const params = new URLSearchParams({
-      date,
-      guests: partySize.toString(),
-      ...(roomId && { room: roomId }),
-    });
-    router.push(`/reserve?${params.toString()}`);
-  };
-
+function LeafDecoration() {
   return (
-    <section
-      id="booking-widget"
-      className="mx-12 reveal"
-      aria-label="Make a reservation"
+    <svg
+      className="absolute top-0 right-0 opacity-40 pointer-events-none"
+      width="60"
+      height="60"
+      viewBox="0 0 60 60"
+      fill="none"
+      aria-hidden="true"
     >
-      <div
-        className="relative"
-        style={{
-          background: "var(--color-surface-raised)",
-          border: "0.5px solid var(--color-border-default)",
-        }}
-      >
-        {/* Floating label */}
-        <span
-          className="absolute -top-[11px] left-12 text-[11px] tracking-[0.22em] uppercase px-3"
-          style={{
-            color: "var(--color-brand-secondary)",
-            background: "var(--color-surface-raised)",
-            fontFamily: "var(--font-body)",
-          }}
-        >
-          Reserve Your Table
-        </span>
+      <path
+        d="M30 56C30 56 10 42 10 24C10 12 18 4 30 4C42 4 50 12 50 24C50 42 30 56 30 56Z"
+        fill="#7a9e7e"
+        opacity="0.6"
+      />
+      <path
+        d="M30 4L30 56"
+        stroke="#5a7a5e"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M30 18C23 16 16 21 14 28"
+        stroke="#5a7a5e"
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
+      <path
+        d="M30 28C23 26 17 31 16 38"
+        stroke="#5a7a5e"
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
+      <path
+        d="M30 38C25 36 21 40 20 44"
+        stroke="#5a7a5e"
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
 
-        <div className="grid grid-cols-[1fr_1fr_1fr_auto]">
-          {/* Date */}
-          <fieldset
-            className="px-6 py-5"
-            style={{
-              borderRight: "0.5px solid var(--color-border-default)",
-              border: "none",
-            }}
-          >
-            <label
-              htmlFor="res-date"
-              className="block text-[10px] tracking-[0.22em] uppercase mb-2"
-              style={{
-                color: "var(--color-brand-secondary)",
-                fontFamily: "var(--font-body)",
-              }}
-            >
-              Date
-            </label>
-            <input
-              id="res-date"
-              type="date"
-              value={date}
-              min={today}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full bg-transparent border-none outline-none font-display text-[20px] font-light cursor-pointer"
-              style={{ color: "var(--color-text-primary)" }}
-              aria-label="Reservation date"
-            />
-          </fieldset>
+// ─── Section ──────────────────────────────────────────────────────────────────
 
-          {/* Guests */}
-          <div
-            className="px-6 py-5"
-            style={{ borderRight: "0.5px solid var(--color-border-default)" }}
-          >
-            <p
-              className="text-[10px] tracking-[0.22em] uppercase mb-2"
-              style={{
-                color: "var(--color-brand-secondary)",
-                fontFamily: "var(--font-body)",
-              }}
-              id="guests-label"
+export default function BookingWidget() {
+  return (
+    <section className="min-h-screen py-14">
+      <div>
+        {/* Heading */}
+        <div className="relative text-center mb-12">
+          <h2 className="inline text-[36px] font-bold text-gray-900 leading-tight tracking-tight">
+            Recently Booked{" "}
+            <span
+              className="font-normal italic"
+              style={{ fontFamily: "'Playfair Display', serif" }}
             >
-              Guests
-            </p>
+              Hotels
+            </span>
+          </h2>
+          <LeafDecoration />
+        </div>
+
+        {/* Grid of ProductCards */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {rooms.map((room, i) => (
             <div
-              className="flex items-center gap-4"
-              role="group"
-              aria-labelledby="guests-label"
-            >
-              <button
-                onClick={decrement}
-                disabled={isAtMin}
-                aria-label={`Decrease guests, currently ${partySize}`}
-                className="w-7 h-7 flex items-center justify-center text-lg transition-all duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
-                style={{
-                  border: "0.5px solid var(--color-border-default)",
-                  background: "transparent",
-                  color: "var(--color-brand-secondary)",
-                  fontFamily: "var(--font-body)",
-                }}
-                onMouseEnter={(e) => {
-                  if (!isAtMin) {
-                    (e.currentTarget as HTMLButtonElement).style.background =
-                      "var(--color-brand-secondary)";
-                    (e.currentTarget as HTMLButtonElement).style.color =
-                      "var(--color-brand-primary)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.background =
-                    "transparent";
-                  (e.currentTarget as HTMLButtonElement).style.color =
-                    "var(--color-brand-secondary)";
-                }}
-              >
-                −
-              </button>
-
-              <output
-                aria-live="polite"
-                aria-label={`${partySize} guests`}
-                className="font-display text-[24px] font-light min-w-[28px] text-center"
-                style={{ color: "var(--color-text-primary)" }}
-              >
-                {partySize}
-              </output>
-
-              <button
-                onClick={increment}
-                disabled={isAtMax}
-                aria-label="Increase guests"
-                className="w-7 h-7 flex items-center justify-center text-lg transition-all duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
-                style={{
-                  border: "0.5px solid var(--color-border-default)",
-                  background: "transparent",
-                  color: "var(--color-brand-secondary)",
-                  fontFamily: "var(--font-body)",
-                }}
-                onMouseEnter={(e) => {
-                  if (!isAtMax) {
-                    (e.currentTarget as HTMLButtonElement).style.background =
-                      "var(--color-brand-secondary)";
-                    (e.currentTarget as HTMLButtonElement).style.color =
-                      "var(--color-brand-primary)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.background =
-                    "transparent";
-                  (e.currentTarget as HTMLButtonElement).style.color =
-                    "var(--color-brand-secondary)";
-                }}
-              >
-                +
-              </button>
-            </div>
-
-            {isLargeParty && (
-              <p
-                className="text-[10px] mt-1 tracking-wide"
-                style={{
-                  color: "var(--color-state-warning)",
-                  fontFamily: "var(--font-body)",
-                }}
-                role="note"
-              >
-                Large party — contact us directly
-              </p>
-            )}
-          </div>
-
-          {/* Room */}
-          <div
-            className="px-6 py-5"
-            style={{ borderRight: "0.5px solid var(--color-border-default)" }}
-          >
-            <label
-              htmlFor="room-select"
-              className="block text-[10px] tracking-[0.22em] uppercase mb-2"
+              key={room.id}
+              className="opacity-0 animate-fadeInUp"
               style={{
-                color: "var(--color-brand-secondary)",
-                fontFamily: "var(--font-body)",
+                animationDelay: `${i * 120}ms`,
+                animationFillMode: "forwards",
               }}
             >
-              Room
-            </label>
-            <select
-              id="room-select"
-              value={roomId}
-              onChange={(e) => setRoomId(e.target.value)}
-              className="w-full bg-transparent border-none outline-none font-display text-[20px] font-light cursor-pointer appearance-none"
-              style={{ color: "var(--color-text-primary)" }}
-              aria-label="Select dining room"
-            >
-              <option
-                value=""
-                style={{ background: "var(--color-surface-raised)" }}
-              >
-                Any room
-              </option>
-              {ROOMS.map((room) => (
-                <option
-                  key={room.id}
-                  value={room.id}
-                  disabled={room.availability === "unavailable"}
-                  style={{ background: "var(--color-surface-raised)" }}
-                >
-                  {room.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* CTA */}
-          <GoldButton
-            size="lg"
-            onClick={handleCheckAvailability}
-            className="self-stretch rounded-none"
-            aria-label="Check availability and proceed to reservation"
-          >
-            Check Availability →
-          </GoldButton>
+              <RoomCard
+                href={room.href}
+                image={room.image}
+                imageAlt={room.imageAlt}
+                saleBadge={room.saleBadge}
+                title={room.title}
+                description={room.description}
+                price={room.price}
+                originalPrice={room.originalPrice}
+                discountLabel={room.discountLabel}
+              />
+            </div>
+          ))}
         </div>
       </div>
+
+      {/* Keyframes — move to globals.css in a real project */}
+      <style>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(24px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeInUp {
+          animation: fadeInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+      `}</style>
     </section>
   );
 }
