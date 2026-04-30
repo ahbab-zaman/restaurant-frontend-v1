@@ -12,6 +12,8 @@ import {
   ChevronDown,
   ArrowRight,
 } from "lucide-react";
+import logo from "../../../public/reception.png";
+
 // ── Link Groups ────────────────────────────────────────────────────────
 interface LinkGroup {
   title: string;
@@ -149,7 +151,7 @@ function FooterLogo() {
         transition={{ type: "spring", stiffness: 300, damping: 18 }}
         className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-btn"
       >
-        <Hotel size={18} className="text-brand-text" />
+        <Image src={logo} alt="LumosStay Logo" className="w-6 h-w-6" />
       </motion.div>
       <span className="font-display text-xl font-semibold tracking-tight text-foreground leading-none">
         Lumos<span className="text-brand-btn">Stay</span>
@@ -198,30 +200,21 @@ function FooterLeft() {
       {/* Address & contact */}
       <address className="not-italic flex flex-col gap-2.5 text-sm text-foreground/65">
         <span className="flex items-start gap-2">
-          <MapPin
-            size={14}
-            className="mt-0.5 flex-shrink-0 text-brand-btn"
-          />
+          <MapPin size={14} className="mt-0.5 flex-shrink-0 text-brand-btn" />
           12 Harrington Lane, Sylhet 3100, Bangladesh
         </span>
         <a
           href="tel:+8801700000000"
           className="flex items-center gap-2 hover:text-foreground transition-colors"
         >
-          <Phone
-            size={14}
-            className="flex-shrink-0 text-brand-btn"
-          />
+          <Phone size={14} className="flex-shrink-0 text-brand-btn" />
           +880 1700 000 000
         </a>
         <a
           href="mailto:hello@lumosstay.com"
           className="flex items-center gap-2 hover:text-foreground transition-colors"
         >
-          <Mail
-            size={14}
-            className="flex-shrink-0 text-brand-btn"
-          />
+          <Mail size={14} className="flex-shrink-0 text-brand-btn" />
           hello@lumosstay.com
         </a>
       </address>
@@ -493,5 +486,3 @@ export default function Footer() {
     </footer>
   );
 }
-
-

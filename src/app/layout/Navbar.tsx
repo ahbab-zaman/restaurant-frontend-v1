@@ -29,7 +29,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-
+import logo from "../../../public/reception.png";
+import Image from "next/image";
 // ── Types ──────────────────────────────────────────────────────────────
 interface NavLink {
   label: string;
@@ -68,13 +69,13 @@ const MOCK_USER = {
 // ── Logo ──────────────────────────────────────────────────────────────
 function Logo() {
   return (
-    <Link href="/" className="flex items-center gap-2.5 group select-none">
+    <Link href="/" className="flex items-center gap-1.5 group select-none">
       <motion.div
         whileHover={{ rotate: 8, scale: 1.08 }}
         transition={{ type: "spring", stiffness: 300, damping: 18 }}
         className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-btn"
       >
-        <Hotel size={18} className="text-brand-text" />
+        <Image src={logo} alt="LumosStay Logo" className="w-6 h-w-6" />
       </motion.div>
       <span className="font-display text-xl font-semibold tracking-tight text-foreground leading-none">
         Lumos<span className="text-brand-btn">Stay</span>

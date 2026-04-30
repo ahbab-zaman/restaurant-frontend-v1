@@ -117,7 +117,7 @@ export default function HeroSection() {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
       setCurrent((c) => (c + 1) % SLIDES.length);
-    }, 4500);
+    }, 7000);
   }, []);
 
   useEffect(() => {
@@ -139,11 +139,11 @@ export default function HeroSection() {
 
   return (
     <section className="w-full bg-site-bg">
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 py-10 lg:py-14">
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 py-10 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10 items-stretch">
           <div className="lg:col-span-8 order-1 lg:order-2">
             <div className="relative rounded-[28px] overflow-hidden border border-neutral-200/60 shadow-sm group h-full">
-              <div className="relative w-full aspect-video bg-neutral-100">
+              <div className="relative w-full aspect-[16/10] bg-neutral-100">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={active.id}
