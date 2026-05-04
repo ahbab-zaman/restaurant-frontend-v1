@@ -3,7 +3,12 @@ import { clearAuth, setAccessToken } from "@/store/auth.slice";
 import { ApiSuccessResponse } from "@/types/auth";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:5000/api/v1";
+  process.env.NEXT_PUBLIC_API_BASE_URL ??
+  (process.env.NODE_ENV === "production" ? "" : "http://localhost:5000/api/v1");
+
+if (!API_BASE_URL) {
+  throw new Error("NEXT_PUBLIC_API_BASE_URL is required in production.");
+}
 
 class ApiError extends Error {
   status: number;
@@ -54,4 +59,3 @@ export async function apiFetch<T>(
 
   return result.data;
 }
-
