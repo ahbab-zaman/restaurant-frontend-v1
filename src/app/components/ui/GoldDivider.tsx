@@ -1,4 +1,4 @@
-import { cn } from "@/app/lib/utils";
+import { cn } from "@/lib/utils";
 
 interface GoldDividerProps {
   className?: string;
@@ -25,3 +25,4 @@ export function GoldDivider({ className }: GoldDividerProps) {
     </div>
   );
 }
+

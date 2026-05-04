@@ -3,6 +3,7 @@ import { Geist_Mono, Montserrat } from "next/font/google";
 import "./globals.css";
 import Navbar from "./layout/Navbar";
 import Footer from "./layout/Footer";
+import AppProviders from "@/providers/AppProviders";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -34,10 +35,13 @@ export default function RootLayout({
       className={`${montserrat.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body suppressHydrationWarning className="min-h-full flex flex-col">
-        <Navbar />
-        <main className="flex-1 pt-16">{children}</main>
-        <Footer />
+        <AppProviders>
+          <Navbar />
+          <main className="flex-1 pt-16">{children}</main>
+          <Footer />
+        </AppProviders>
       </body>
     </html>
   );
 }
+

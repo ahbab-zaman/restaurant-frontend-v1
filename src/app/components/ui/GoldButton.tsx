@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/app/lib/utils";
+import { cn } from "@/lib/utils";
 import { ButtonHTMLAttributes, forwardRef } from "react";
 
 interface GoldButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -85,3 +85,4 @@ export const GoldButton = forwardRef<HTMLButtonElement, GoldButtonProps>(
 );
 
 GoldButton.displayName = "GoldButton";
+

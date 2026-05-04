@@ -1,4 +1,4 @@
-import type { ExpectItem } from "@/app/types";
+import type { ExpectItem } from "@/types";
 
 interface ExpectIconProps {
   icon: ExpectItem["icon"];
@@ -50,3 +50,4 @@ export function ExpectIcon({ icon, size = 16 }: ExpectIconProps) {
       return null;
   }
 }
+

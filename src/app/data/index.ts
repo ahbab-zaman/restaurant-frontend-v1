@@ -5,7 +5,7 @@ import type {
   ExpectItem,
   FlowStep,
   NavLink,
-} from "@/app/types/index";
+} from "@/types/index";
 
 // ── Navigation ───────────────────────────────────────────────────
 export const NAV_LINKS: NavLink[] = [
@@ -178,3 +178,4 @@ export const FOOTER_CONTACT = [
   },
   { label: "12 Manor Lane, London EC1A", href: "#" },
 ];
+

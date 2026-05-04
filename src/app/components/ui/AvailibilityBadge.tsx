@@ -1,5 +1,5 @@
-import { cn } from "@/app/lib/utils";
-import type { RoomAvailability } from "@/app/types";
+import { cn } from "@/lib/utils";
+import type { RoomAvailability } from "@/types";
 
 interface AvailabilityBadgeProps {
   status: RoomAvailability;
@@ -54,3 +54,4 @@ export function AvailabilityBadge({
     </span>
   );
 }
+

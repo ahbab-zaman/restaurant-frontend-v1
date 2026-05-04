@@ -226,13 +226,7 @@ function AuthButtons() {
         </Button>
       </motion.div>
       <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-        <Button
-          size="sm"
-          className="text-sm font-medium bg-brand-btn text-brand-text hover:bg-brand-600 rounded-lg px-4 shadow-sm"
-          asChild
-        >
-          <Link href="/signup">Sign Up</Link>
-        </Button>
+       
       </motion.div>
     </div>
   );
@@ -359,14 +353,7 @@ function MobileSidebar({
                         Log In
                       </Link>
                     </Button>
-                    <Button
-                      className="w-full rounded-xl bg-brand-btn text-brand-text hover:bg-brand-600"
-                      asChild
-                    >
-                      <Link href="/signup" onClick={() => setOpen(false)}>
-                        Sign Up
-                      </Link>
-                    </Button>
+                    
                   </div>
                 )}
               </div>

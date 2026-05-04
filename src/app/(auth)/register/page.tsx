@@ -2,8 +2,37 @@
 
 import { Eye } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useRegisterMutation } from "@/lib/auth/auth.query";
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const registerMutation = useRegisterMutation();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const name = `${firstName} ${lastName}`.trim();
+
+    try {
+      await registerMutation.mutateAsync({
+        name,
+        email,
+        password,
+        confirmPassword,
+      });
+      router.push("/account");
+    } catch {
+      return;
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4 py-6">
       <div className="w-full max-w-md">
@@ -31,7 +60,7 @@ export default function RegisterPage() {
             <p className="text-sm text-gray-500 mt-1">Start your account setup</p>
           </div>
 
-          <form className="space-y-5 auth-autofill-scope">
+          <form className="space-y-5 auth-autofill-scope" onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium text-gray-600 dark:text-gray-300">
@@ -39,6 +68,8 @@ export default function RegisterPage() {
                 </label>
                 <input
                   placeholder="First Name"
+                  value={firstName}
+                  onChange={(event) => setFirstName(event.target.value)}
                   className="mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10"
                 />
               </div>
@@ -48,6 +79,8 @@ export default function RegisterPage() {
                 </label>
                 <input
                   placeholder="Last Name"
+                  value={lastName}
+                  onChange={(event) => setLastName(event.target.value)}
                   className="mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10"
                 />
               </div>
@@ -60,17 +93,8 @@ export default function RegisterPage() {
               <input
                 type="email"
                 placeholder="Email address"
-                className="mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                Phone
-              </label>
-              <input
-                type="text"
-                placeholder="+973 XXXX XXXX"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
                 className="mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10"
               />
             </div>
@@ -83,6 +107,8 @@ export default function RegisterPage() {
                 <input
                   type="password"
                   placeholder="Password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
                   className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10"
                 />
                 <div className="absolute inset-y-0 right-4 flex items-center text-gray-400">
@@ -98,19 +124,26 @@ export default function RegisterPage() {
               <input
                 type="password"
                 placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
                 className="mt-2 w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10"
               />
             </div>
 
             <button
-              type="button"
-              className="w-full bg-black text-white dark:bg-white dark:text-black py-3 rounded-xl font-semibold text-sm hover:opacity-90 transition"
+              type="submit"
+              disabled={registerMutation.isPending}
+              className="w-full bg-black text-white dark:bg-white dark:text-black py-3 rounded-xl font-semibold text-sm hover:opacity-90 transition disabled:opacity-50"
             >
-              Create Account
+              {registerMutation.isPending ? "Creating account..." : "Create Account"}
             </button>
+            {registerMutation.error ? (
+              <p className="text-sm text-red-500">{registerMutation.error.message}</p>
+            ) : null}
           </form>
         </div>
       </div>
     </div>
   );
 }
+
