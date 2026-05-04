@@ -94,24 +94,22 @@ function NavItem({ href, label, onClick }: NavLink & { onClick?: () => void }) {
       href={href}
       onClick={onClick}
       className={cn(
-        "relative text-sm font-medium tracking-wide transition-colors duration-200",
+        "relative text-sm font-medium tracking-wide transition-colors duration-200 px-3 py-1.5 rounded-lg",
         "text-foreground/70 hover:text-foreground",
         isActive && "text-foreground",
       )}
     >
-      {label}
-      {/* Animated underline */}
-      <motion.span
-        className="absolute -bottom-0.5 left-0 h-px bg-brand-btn rounded-full"
-        initial={{ width: isActive ? "100%" : "0%" }}
-        animate={{ width: isActive ? "100%" : "0%" }}
-        whileHover={{ width: "100%" }}
-        transition={{ duration: 0.22, ease: "easeInOut" }}
-      />
+      {isActive && (
+        <motion.span
+          layoutId="nav-pill"
+          className="absolute inset-0 rounded-lg bg-foreground/8"
+          transition={{ type: "spring", stiffness: 350, damping: 30 }}
+        />
+      )}
+      <span className="relative z-10">{label}</span>
     </Link>
   );
 }
-
 // ── Theme Toggle ──────────────────────────────────────────────────────
 function ThemeToggle({
   isDark,
@@ -126,22 +124,13 @@ function ThemeToggle({
       whileTap={{ scale: 0.88 }}
       whileHover={{ scale: 1.1 }}
       aria-label="Toggle theme"
-      className={cn(
-        "relative w-10 h-5 rounded-full transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-brand-btn",
-        isDark ? "bg-brand-btn" : "bg-foreground/15",
-      )}
+      className="p-2 rounded-lg text-foreground/60 hover:text-foreground hover:bg-foreground/6 transition-colors duration-150"
     >
-      <motion.span
-        animate={{ x: isDark ? 20 : 2 }}
-        transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        className="absolute top-0.5 flex items-center justify-center w-4 h-4 rounded-full bg-white shadow-sm"
-      >
-        {isDark ? (
-          <Moon size={9} className="text-brand-btn" />
-        ) : (
-          <Sun size={9} className="text-amber-500" />
-        )}
-      </motion.span>
+      {isDark ? (
+        <Moon size={18} className="text-brand-btn" />
+      ) : (
+        <Sun size={18} className="text-amber-500" />
+      )}
     </motion.button>
   );
 }
@@ -179,7 +168,7 @@ function UserDropdown({ user }: { user: typeof MOCK_USER }) {
                 .join("")}
             </AvatarFallback>
           </Avatar>
-          <span className="hidden md:block text-sm font-medium text-foreground/80 max-w-[90px] truncate">
+          <span className="hidden md:block text-sm font-medium text-foreground/80 max-w-22.5 truncate">
             {user.name.split(" ")[0]}
           </span>
           <ChevronDown
@@ -311,7 +300,7 @@ function MobileSidebar({
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 32 }}
-              className="fixed left-0 top-0 z-50 h-dvh w-full sm:w-[320px] bg-nav-bg border-r border-border/60 p-0 bg-white/95 backdrop-blur-md"
+              className="fixed left-0 top-0 z-50 h-dvh w-full sm:w-[320px] bg-white dark:bg-gray-900 border-r border-border/60 p-0 backdrop-blur-md"
             >
               <div className="flex items-center justify-between px-5 py-5 border-b border-border/40">
                 <Logo />
@@ -417,7 +406,7 @@ export default function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
       className={cn(
-        "fixed top-0 inset-x-0 z-50 h-16 transition-shadow duration-300 bg-nav-bg",
+        "fixed top-0 inset-x-0 z-50 h-16 transition-shadow duration-300 bg-white dark:bg-gray-900",
         scrolled
           ? "shadow-[0_2px_24px_rgba(71,55,41,0.08)] backdrop-blur-md"
           : "shadow-none",
@@ -426,7 +415,7 @@ export default function Navbar() {
       {/* Inner layout */}
       <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
         {/* LEFT — Logo */}
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <Logo />
         </div>
 

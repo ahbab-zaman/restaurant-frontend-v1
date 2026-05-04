@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -16,99 +16,101 @@ type Slide = {
   title: string;
   primaryCta: { label: string; href: string };
   secondaryCta: { label: string; href: string };
-  stats: [
-    { label: string; value: string },
-    { label: string; value: string },
-  ];
+  stats: [{ label: string; value: string }, { label: string; value: string }];
 };
 
 const SLIDES: Slide[] = [
   {
     id: 0,
     url: "/banner-1.jpg",
-    alt: "Elegant sofa collection",
-    featured: "Featured",
+    alt: "Luxurious hotel lobby with grand chandelier and marble flooring",
+    featured: "Most Popular",
     eyebrow: "We didn't change, we evolved",
-    title: "Sofa Collection",
-    primaryCta: { label: "Sofa", href: "/products-list?category=sofa" },
-    secondaryCta: { label: "Browse all", href: "/hotels" },
+    title: "Luxury Stays",
+    primaryCta: { label: "Book Now", href: "/hotels?category=luxury" },
+    secondaryCta: { label: "Browse All Hotels", href: "/hotels" },
     stats: [
-      { label: "Curated", value: "24 Designs" },
-      { label: "Delivery", value: "48h Express" },
+      { label: "Properties", value: "24 Hotels" },
+      { label: "Check-in", value: "Instant Confirm" },
     ],
   },
   {
     id: 1,
     url: "/banner-2.avif",
-    alt: "Modern dining collection",
-    featured: "Featured",
+    alt: "Elegant hotel dining room with candlelit tables and fine tableware",
+    featured: "Guest Favorite",
     eyebrow: "Gather beautifully, every day",
-    title: "Dining Collection",
-    primaryCta: { label: "Dining", href: "/products-list?category=dining" },
-    secondaryCta: { label: "Browse all", href: "/hotels" },
+    title: "Dining & Suites",
+    primaryCta: { label: "Explore Dining", href: "/hotels?category=dining" },
+    secondaryCta: { label: "Browse All Hotels", href: "/hotels" },
     stats: [
-      { label: "Curated", value: "18 Styles" },
-      { label: "Delivery", value: "3-5 Days" },
+      { label: "Restaurants", value: "18 Venues" },
+      { label: "Experience", value: "Fine Dining" },
     ],
   },
   {
     id: 2,
     url: "/banner-3.avif",
-    alt: "Luxury bedroom collection",
-    featured: "Featured",
+    alt: "Premium hotel bedroom with king-size bed and panoramic city view",
+    featured: "Editor's Pick",
     eyebrow: "Comfort crafted for deep rest",
-    title: "Bedroom Collection",
-    primaryCta: { label: "Bedroom", href: "/products-list?category=bedroom" },
-    secondaryCta: { label: "Browse all", href: "/hotels" },
+    title: "Premium Rooms",
+    primaryCta: { label: "View Rooms", href: "/hotels?category=rooms" },
+    secondaryCta: { label: "Browse All Hotels", href: "/hotels" },
     stats: [
-      { label: "Curated", value: "14 Sets" },
-      { label: "Delivery", value: "Free Setup" },
+      { label: "Room Types", value: "14 Options" },
+      { label: "Perks", value: "Free Breakfast" },
     ],
   },
   {
     id: 3,
     url: "/banner-4.avif",
-    alt: "Premium office collection",
-    featured: "Featured",
+    alt: "Modern hotel business center with private meeting rooms and city skyline",
+    featured: "Business Choice",
     eyebrow: "Focus-ready spaces that inspire",
-    title: "Office Collection",
-    primaryCta: { label: "Office", href: "/products-list?category=office" },
-    secondaryCta: { label: "Browse all", href: "/hotels" },
+    title: "Business Hotels",
+    primaryCta: { label: "Book Corporate", href: "/hotels?category=business" },
+    secondaryCta: { label: "Browse All Hotels", href: "/hotels" },
     stats: [
-      { label: "Curated", value: "21 Picks" },
-      { label: "Delivery", value: "Nationwide" },
+      { label: "Locations", value: "21 Cities" },
+      { label: "Coverage", value: "Nationwide" },
     ],
   },
   {
     id: 4,
     url: "/banner-5.avif",
-    alt: "Outdoor furniture collection",
-    featured: "Featured",
-    eyebrow: "Bring resort mood to your home",
-    title: "Outdoor Collection",
-    primaryCta: { label: "Outdoor", href: "/products-list?category=outdoor" },
-    secondaryCta: { label: "Browse all", href: "/hotels" },
+    alt: "Stunning resort pool terrace with sun loungers and ocean backdrop",
+    featured: "Seasonal Deal",
+    eyebrow: "Bring resort mood to your stay",
+    title: "Resort Collection",
+    primaryCta: { label: "Explore Resorts", href: "/hotels?category=resort" },
+    secondaryCta: { label: "Browse All Hotels", href: "/hotels" },
     stats: [
-      { label: "Curated", value: "12 Sets" },
-      { label: "Delivery", value: "Quick Ship" },
+      { label: "Resorts", value: "12 Properties" },
+      { label: "Booking", value: "Quick Confirm" },
     ],
   },
 ];
 
-const slideVariants = {
-  enter: { opacity: 0, scale: 1.03 },
+const slideVariants: Variants = {
+  enter: { opacity: 0, scale: 1.05 },
   center: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.65, ease: [0.4, 0, 0.2, 1] },
+    transition: {
+      duration: 0.6,
+      ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
+    },
   },
   exit: {
     opacity: 0,
-    scale: 0.985,
-    transition: { duration: 0.45, ease: [0.4, 0, 0.2, 1] },
+    scale: 0.95,
+    transition: {
+      duration: 0.4,
+      ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
+    },
   },
 };
-
 export default function HeroSection() {
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -143,7 +145,7 @@ export default function HeroSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10 items-stretch">
           <div className="lg:col-span-8 order-1 lg:order-2">
             <div className="relative rounded-[28px] overflow-hidden border border-neutral-200/60 shadow-sm group h-full">
-              <div className="relative w-full aspect-[16/10] bg-neutral-100">
+              <div className="relative w-full aspect-16/10 bg-neutral-100">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={active.id}
@@ -235,14 +237,18 @@ export default function HeroSection() {
                   asChild
                   className="rounded-full py-3.5 px-7 h-auto text-sm sm:text-base font-medium bg-[#4b3728] hover:bg-[#3f2f23] text-white"
                 >
-                  <Link href={active.primaryCta.href}>{active.primaryCta.label}</Link>
+                  <Link href={active.primaryCta.href}>
+                    {active.primaryCta.label}
+                  </Link>
                 </Button>
                 <Button
                   asChild
                   variant="outline"
                   className="rounded-full py-3.5 px-7 h-auto text-sm sm:text-base font-medium border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-100"
                 >
-                  <Link href={active.secondaryCta.href}>{active.secondaryCta.label}</Link>
+                  <Link href={active.secondaryCta.href}>
+                    {active.secondaryCta.label}
+                  </Link>
                 </Button>
               </div>
 

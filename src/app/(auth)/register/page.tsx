@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4 py-6">
       <div className="w-full max-w-md">
         <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-md border border-gray-100 dark:border-gray-800 p-10">
           <div className="flex bg-gray-100 dark:bg-gray-800 p-1.5 rounded-2xl mb-8">
