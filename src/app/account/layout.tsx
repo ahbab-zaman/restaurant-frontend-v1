@@ -49,15 +49,15 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   }
 
   return (
-    <div className="py-8 min-h-dvh bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="h-dvh flex flex-col bg-gray-50 dark:bg-gray-900">
+      <div className="flex-1 overflow-hidden max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Account</h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{user.name} | {user.email}</p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          <aside className="hidden lg:block lg:w-64 shrink-0">
+        <div className="flex flex-1 overflow-hidden flex-col lg:flex-row gap-8">
+          <aside className="hidden lg:block lg:w-64 shrink-0 sticky top-6 h-fit">
             <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm dark:shadow-black/20 border border-gray-100 dark:border-gray-800 overflow-hidden">
               <div className="p-5 border-b border-gray-100 dark:border-gray-800 bg-[#383736] text-white">
                 <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-3">
@@ -103,7 +103,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
             </div>
           </aside>
 
-          <main className="flex-1 min-w-0">{children}</main>
+          <main className="flex-1 min-w-0 overflow-y-auto">{children}</main>
         </div>
       </div>
     </div>

@@ -337,7 +337,7 @@ function FooterRight() {
             width={88}
             height={88}
             className="rounded-lg object-cover"
-            priority={false}
+            loading="eager"
           />
         </div>
         <div className="flex flex-col gap-2 pt-1">

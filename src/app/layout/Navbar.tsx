@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -16,7 +17,7 @@ import {
   BookOpen,
   Heart,
   ChevronDown,
-  Hotel,
+  LayoutDashboard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,9 +30,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { useAuthUser, useLogoutMutation } from "@/lib/auth/auth.query";
 import logo from "../../../public/reception.png";
-import Image from "next/image";
-// ── Types ──────────────────────────────────────────────────────────────
+
 interface NavLink {
   label: string;
   href: string;
@@ -40,10 +41,9 @@ interface NavLink {
 interface UserDropdownItem {
   label: string;
   href: string;
-  icon: React.ReactNode;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
 }
 
-// ── Constants ──────────────────────────────────────────────────────────
 const navLinks: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "Hotels", href: "/hotels" },
@@ -52,21 +52,11 @@ const navLinks: NavLink[] = [
 ];
 
 const userDropdownItems: UserDropdownItem[] = [
-  { label: "My Profile", href: "/profile", icon: <User size={14} /> },
-  { label: "My Bookings", href: "/bookings", icon: <BookOpen size={14} /> },
-  { label: "Wishlist", href: "/wishlist", icon: <Heart size={14} /> },
-  { label: "Settings", href: "/settings", icon: <Settings size={14} /> },
+  { label: "My Dashboard", href: "/account/dashboard", icon: LayoutDashboard },
+  { label: "My Bookings", href: "/account/bookings", icon: BookOpen },
+  { label: "Settings", href: "/account/edit", icon: Settings },
 ];
 
-// ── Mock auth state (replace with your real auth hook) ────────────────
-const MOCK_USER = {
-  isLoggedIn: false, // toggle to true to preview logged-in state
-  name: "Aryan Karim",
-  email: "aryan@example.com",
-  avatar: "",
-};
-
-// ── Logo ──────────────────────────────────────────────────────────────
 function Logo() {
   return (
     <Link href="/" className="flex items-center gap-1.5 group select-none">
@@ -84,7 +74,6 @@ function Logo() {
   );
 }
 
-// ── Nav Link Item ─────────────────────────────────────────────────────
 function NavItem({ href, label, onClick }: NavLink & { onClick?: () => void }) {
   const pathname = usePathname();
   const isActive = pathname === href;
@@ -110,7 +99,7 @@ function NavItem({ href, label, onClick }: NavLink & { onClick?: () => void }) {
     </Link>
   );
 }
-// ── Theme Toggle ──────────────────────────────────────────────────────
+
 function ThemeToggle({
   isDark,
   toggle,
@@ -135,7 +124,6 @@ function ThemeToggle({
   );
 }
 
-// ── Search Button ─────────────────────────────────────────────────────
 function SearchButton() {
   return (
     <motion.button
@@ -149,60 +137,85 @@ function SearchButton() {
   );
 }
 
-// ── User Dropdown ─────────────────────────────────────────────────────
-function UserDropdown({ user }: { user: typeof MOCK_USER }) {
+function UserDropdown({
+  user,
+  onLogout,
+}: {
+  user: {
+    name?: string | null;
+    firstname?: string | null;
+    lastname?: string | null;
+    email?: string | null;
+    avatar?: string | null;
+  };
+  onLogout: () => void;
+}) {
+  const displayName =
+    user?.name?.trim() ||
+    [user?.firstname, user?.lastname].filter(Boolean).join(" ").trim() ||
+    "User";
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <motion.button
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.96 }}
+        <button
+          type="button"
           className="flex items-center gap-2 px-1 py-0.5 rounded-full hover:bg-foreground/6 transition-colors focus-visible:ring-2 focus-visible:ring-brand-btn outline-none"
         >
           <Avatar className="w-8 h-8 ring-2 ring-brand-btn/30">
-            <AvatarImage src={user.avatar} alt={user.name} />
+            <AvatarImage src={user.avatar ?? ""} alt={displayName} />
             <AvatarFallback className="bg-brand-btn text-brand-text text-xs font-semibold">
-              {user.name
+              {displayName
                 .split(" ")
                 .map((n) => n[0])
                 .join("")}
             </AvatarFallback>
           </Avatar>
           <span className="hidden md:block text-sm font-medium text-foreground/80 max-w-22.5 truncate">
-            {user.name.split(" ")[0]}
+            {displayName.split(" ")[0]}
           </span>
           <ChevronDown
             size={13}
             className="text-foreground/50 hidden md:block"
           />
-        </motion.button>
+        </button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
         align="end"
         sideOffset={10}
-        className="w-52 rounded-xl shadow-xl border border-border/60 bg-nav-bg p-1.5"
+        className="w-52 rounded-xl shadow-xl border border-border/60 bg-white p-1.5"
       >
         <DropdownMenuLabel className="px-2 py-1.5">
           <p className="text-sm font-semibold text-foreground truncate">
-            {user.name}
+            {displayName}
           </p>
-          <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+          <p className="text-xs text-muted-foreground truncate">
+            {user.email ?? ""}
+          </p>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {userDropdownItems.map((item) => (
-          <DropdownMenuItem key={item.href} asChild>
-            <Link
-              href={item.href}
-              className="flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm text-foreground/75 hover:text-foreground cursor-pointer"
-            >
-              <span className="text-foreground/50">{item.icon}</span>
-              {item.label}
-            </Link>
-          </DropdownMenuItem>
-        ))}
+        {userDropdownItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <DropdownMenuItem key={item.href} asChild>
+              <Link
+                href={item.href}
+                className="flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm text-foreground/75 hover:text-foreground cursor-pointer"
+              >
+                <span className="text-foreground/50">
+                  <Icon size={14} />
+                </span>
+                {item.label}
+              </Link>
+            </DropdownMenuItem>
+          );
+        })}
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm text-red-500 focus:text-red-500 focus:bg-red-50 dark:focus:bg-red-950/30 cursor-pointer">
+        <DropdownMenuItem
+          onClick={onLogout}
+          className="flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm text-red-500 focus:text-red-500 focus:bg-red-50 dark:focus:bg-red-950/30 cursor-pointer"
+        >
           <LogOut size={14} />
           Sign Out
         </DropdownMenuItem>
@@ -211,7 +224,6 @@ function UserDropdown({ user }: { user: typeof MOCK_USER }) {
   );
 }
 
-// ── Auth Buttons ──────────────────────────────────────────────────────
 function AuthButtons() {
   return (
     <div className="flex items-center gap-2">
@@ -225,37 +237,30 @@ function AuthButtons() {
           <Link href="/login">Log In</Link>
         </Button>
       </motion.div>
-      <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-       
-      </motion.div>
     </div>
   );
 }
 
-// ── Mobile Sidebar ────────────────────────────────────────────────────
 function MobileSidebar({
   isLoggedIn,
   isDark,
   toggleTheme,
+  onLogout,
 }: {
   isLoggedIn: boolean;
   isDark: boolean;
   toggleTheme: () => void;
+  onLogout: () => void;
 }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (!open) return;
-
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setOpen(false);
-      }
+      if (event.key === "Escape") setOpen(false);
     };
-
     document.addEventListener("keydown", onKeyDown);
     document.body.style.overflow = "hidden";
-
     return () => {
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
@@ -338,6 +343,7 @@ function MobileSidebar({
                 {isLoggedIn ? (
                   <Button
                     variant="ghost"
+                    onClick={onLogout}
                     className="w-full justify-start gap-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl"
                   >
                     <LogOut size={15} /> Sign Out
@@ -353,7 +359,6 @@ function MobileSidebar({
                         Log In
                       </Link>
                     </Button>
-                    
                   </div>
                 )}
               </div>
@@ -365,26 +370,31 @@ function MobileSidebar({
   );
 }
 
-// ── Main Navbar ────────────────────────────────────────────────────────
 export default function Navbar() {
   const [isDark, setIsDark] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const user = MOCK_USER;
+  const router = useRouter();
+  const user = useAuthUser();
+  const logoutMutation = useLogoutMutation();
+  const isLoggedIn = Boolean(user);
 
-  // Scroll shadow
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Theme toggle
   const toggleTheme = () => {
     setIsDark((prev) => {
       const next = !prev;
       document.documentElement.classList.toggle("dark", next);
       return next;
     });
+  };
+
+  const handleLogout = () => {
+    router.replace("/login");
+    logoutMutation.mutate();
   };
 
   return (
@@ -399,50 +409,51 @@ export default function Navbar() {
           : "shadow-none",
       )}
     >
-      {/* Inner layout */}
       <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
-        {/* LEFT — Logo */}
         <div className="shrink-0">
           <Logo />
         </div>
 
-        {/* MIDDLE — Desktop nav links */}
         <nav className="hidden md:flex items-center gap-7">
           {navLinks.map((link) => (
             <NavItem key={link.href} {...link} />
           ))}
         </nav>
 
-        {/* RIGHT — Actions */}
         <div className="flex items-center gap-1 sm:gap-2">
-          {/* Search */}
+          <div className="md:hidden">
+            {isLoggedIn && user ? (
+              <UserDropdown user={user} onLogout={handleLogout} />
+            ) : null}
+          </div>
+
           <SearchButton />
 
-          {/* Theme toggle — hidden on mobile (available in sidebar) */}
           <span className="hidden sm:block">
             <ThemeToggle isDark={isDark} toggle={toggleTheme} />
           </span>
 
-          {/* Divider */}
           <div className="hidden sm:block w-px h-5 bg-border mx-1" />
 
-          {/* Auth */}
           <div className="hidden md:flex">
-            {user.isLoggedIn ? <UserDropdown user={user} /> : <AuthButtons />}
+            {isLoggedIn && user ? (
+              <UserDropdown user={user} onLogout={handleLogout} />
+            ) : (
+              <AuthButtons />
+            )}
           </div>
 
-          {/* Mobile hamburger */}
           <div className="md:hidden">
             <MobileSidebar
-              isLoggedIn={user.isLoggedIn}
+              isLoggedIn={isLoggedIn}
               isDark={isDark}
               toggleTheme={toggleTheme}
+              onLogout={handleLogout}
             />
           </div>
         </div>
       </div>
 
-      {/* Bottom border line */}
       <div className="absolute bottom-0 inset-x-0 h-px bg-border/60" />
     </motion.header>
   );
