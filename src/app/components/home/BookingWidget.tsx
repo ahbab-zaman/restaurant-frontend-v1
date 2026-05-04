@@ -1,10 +1,6 @@
 "use client";
 import RoomCard from "./RoomCard";
 import bannerImage1 from "../../../../public/banner-1.jpg";
-import bannerImage2 from "../../../../public/banner-2.avif";
-import bannerImage3 from "../../../../public/banner-3.avif";
-import bannerImage4 from "../../../../public/banner-4.avif";
-import bannerImage5 from "../../../../public/banner-5.avif";
 // ─── Room data ────────────────────────────────────────────────────────────────
 
 const rooms = [
@@ -24,7 +20,7 @@ const rooms = [
   {
     id: 2,
     href: "/rooms/executive-suite",
-    image: bannerImage2,
+    image: "/banner-2.avif",
     imageAlt: "Executive Suite — separate living area with premium amenities",
     saleBadge: "15% Sale",
     title: "Executive Suite",
@@ -37,7 +33,7 @@ const rooms = [
   {
     id: 3,
     href: "/rooms/presidential-suite",
-    image: bannerImage3,
+    image: "/banner-3.avif",
     imageAlt: "Presidential Suite — expansive luxury accommodation",
     saleBadge: "20% Sale",
     title: "Presidential Suite",
@@ -50,7 +46,7 @@ const rooms = [
   {
     id: 4,
     href: "/rooms/presidential-suite",
-    image: bannerImage4,
+    image: "/banner-4.avif",
     imageAlt: "Presidential Suite — expansive luxury accommodation",
     saleBadge: "20% Sale",
     title: "Presidential Suite",
@@ -63,7 +59,7 @@ const rooms = [
   {
     id: 5,
     href: "/rooms/presidential-suite",
-    image: bannerImage5,
+    image: "/banner-5.avif",
     imageAlt: "Presidential Suite — expansive luxury accommodation",
     saleBadge: "20% Sale",
     title: "Presidential Suite",
@@ -76,7 +72,7 @@ const rooms = [
   {
     id: 7,
     href: "/rooms/presidential-suite",
-    image: bannerImage5,
+    image: "/banner-5.avif",
     imageAlt: "Presidential Suite — expansive luxury accommodation",
     saleBadge: "20% Sale",
     title: "Presidential Suite",
@@ -89,7 +85,7 @@ const rooms = [
   {
     id: 8,
     href: "/rooms/presidential-suite",
-    image: bannerImage5,
+    image: "/banner-5.avif",
     imageAlt: "Presidential Suite — expansive luxury accommodation",
     saleBadge: "20% Sale",
     title: "Presidential Suite",
@@ -102,7 +98,7 @@ const rooms = [
   {
     id: 6,
     href: "/rooms/presidential-suite",
-    image: bannerImage5,
+    image: "/banner-5.avif",
     imageAlt: "Presidential Suite — expansive luxury accommodation",
     saleBadge: "20% Sale",
     title: "Presidential Suite",

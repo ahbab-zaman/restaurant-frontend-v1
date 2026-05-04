@@ -1,5 +1,4 @@
 
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Jost:wght@300;400;500&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -42,8 +41,8 @@
     --color-btn-primary-hover: #e8d5b0;
 
     /* Typography */
-    --font-display: "Cormorant Garamond", serif;
-    --font-body: "Jost", sans-serif;
+    --font-display: var(--font-montserrat);
+    --font-body: var(--font-montserrat);
 
     /* Spacing */
     --space-1: 4px;
@@ -112,7 +111,9 @@
     background-color: var(--color-surface-base);
     color: var(--color-text-primary);
     font-family: var(--font-body);
+    font-optical-sizing: auto;
     font-weight: 300;
+    font-style: normal;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -125,7 +126,7 @@
   h4,
   h5,
   h6 {
-    font-family: var(--font-display);
+    font-family: var(--font-body);
   }
 
   ::selection {

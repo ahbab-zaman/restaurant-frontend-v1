@@ -157,6 +157,7 @@ export default function HeroSection() {
                       fill
                       src={active.url}
                       alt={active.alt}
+                      sizes="(max-width: 1024px) 100vw, 66vw"
                       className="object-cover"
                       draggable={false}
                       priority={active.id === 0}

@@ -1,5 +1,9 @@
 import BookingWidget from "./components/home/BookingWidget";
+import CountdownTimer from "./components/home/CountdownTimer";
+import GuestReviews from "./components/home/GuestReviews";
 import HeroSection from "./components/home/HeroSection";
+import TrustBar from "./components/home/TrustBar";
+import WhyChooseUs from "./components/home/WhyChooseUs";
 
 export default function Home() {
   return (
@@ -17,8 +21,22 @@ export default function Home() {
         </section>
 
         {/* TRUST STATS */}
-        <section className="mt-20 px-4 sm:px-8 lg:px-16">
-          <div className="mx-auto max-w-6xl">{/* <TrustStatsSection /> */}</div>
+        <section className="px-4 sm:px-8 lg:px-16">
+          <div className="mx-auto max-w-6xl">
+            <TrustBar />
+          </div>
+          <div className="mx-auto max-w-6xl">
+            <CountdownTimer />
+          </div>
+          {/* <div className="mx-auto max-w-6xl">
+            <SpecialDeals />
+          </div> */}
+          <div className="mx-auto max-w-6xl">
+            <WhyChooseUs />
+          </div>
+          <div className="mx-auto max-w-6xl">
+            <GuestReviews />
+          </div>
         </section>
       </main>
     </div>
