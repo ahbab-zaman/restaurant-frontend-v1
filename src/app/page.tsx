@@ -1,6 +1,4 @@
-import BookingWidget from "./components/home/BookingWidget";
-import CountdownTimer from "./components/home/CountdownTimer";
-import GuestReviews from "./components/home/GuestReviews";
+import BookingWidget from "./components/home/BookingWidget";import GuestReviews from "./components/home/GuestReviews";
 import HeroSection from "./components/home/HeroSection";
 import TrustBar from "./components/home/TrustBar";
 import WhyChooseUs from "./components/home/WhyChooseUs";
@@ -24,9 +22,6 @@ export default function Home() {
         <section className="px-4 sm:px-8 lg:px-16">
           <div className="mx-auto max-w-6xl">
             <TrustBar />
-          </div>
-          <div className="mx-auto max-w-6xl">
-            <CountdownTimer />
           </div>
           {/* <div className="mx-auto max-w-6xl">
             <SpecialDeals />
