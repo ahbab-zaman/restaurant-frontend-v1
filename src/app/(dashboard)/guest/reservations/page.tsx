@@ -18,7 +18,7 @@ export default function GuestReservationsPage() {
               <div>
                 <p className="text-sm text-zinc-500">{reservation.id}</p>
                 <h3 className="text-xl font-medium text-zinc-900">{reservation.hotel}</h3>
-                <p className="text-zinc-600">Room {reservation.room} · {reservation.stay}</p>
+                <p className="text-zinc-600">Room {reservation.room} - {reservation.stay}</p>
               </div>
               <span className={`rounded-full border px-3 py-1 text-sm font-medium ${reservation.status === "Confirmed" ? "border-emerald-200 bg-emerald-50 text-emerald-700" : reservation.status === "Pending" ? "border-amber-200 bg-amber-50 text-amber-700" : "border-red-200 bg-red-50 text-red-700"}`}>{reservation.status}</span>
             </div>

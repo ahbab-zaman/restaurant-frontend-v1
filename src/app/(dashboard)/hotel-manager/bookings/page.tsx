@@ -23,7 +23,7 @@ export default function HotelManagerBookingsPage() {
               <div>
                 <p className="text-sm text-zinc-500">{booking.id}</p>
                 <h3 className="text-xl font-medium text-zinc-900">{booking.guest}</h3>
-                <p className="text-zinc-600">Room {booking.room} · {booking.date}</p>
+                <p className="text-zinc-600">Room {booking.room} - {booking.date}</p>
               </div>
               <span className={`rounded-full border px-3 py-1 text-sm font-medium ${booking.status === "Confirmed" ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-amber-200 bg-amber-50 text-amber-700"}`}>{booking.status}</span>
             </div>

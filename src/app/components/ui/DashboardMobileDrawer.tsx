@@ -8,6 +8,7 @@ import {
   Building,
   CalendarCheck,
   LayoutDashboard,
+  Star,
   Ticket,
   Users,
   X,
@@ -25,6 +26,7 @@ const iconMap: Record<string, LucideIcon> = {
   CalendarCheck,
   BedDouble,
   Ticket,
+  Star,
 };
 
 function getRoleFromPath(pathname: string): Role {

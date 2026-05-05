@@ -44,13 +44,11 @@ const TopBar = ({ onOpenMobileMenu }: TopBarProps) => {
         </button>
 
         <Link href="/" className="group flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-zinc-900 transition-transform duration-200 group-hover:scale-105">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl  transition-transform duration-200 group-hover:scale-105">
             <Image src={logo} alt="LumosStay" className="h-7 w-7" />
           </div>
           <div>
-            <p className="text-lg font-semibold leading-none text-zinc-900 sm:text-xl">LumosStay</p>
-            <p className="text-xs text-zinc-500">Dashboard</p>
-          </div>
+            <p className="text-lg font-semibold leading-none text-zinc-900 sm:text-xl">LumosStay</p>          </div>
         </Link>
       </div>
 

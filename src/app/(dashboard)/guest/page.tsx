@@ -21,7 +21,7 @@ export default function GuestDashboardPage() {
           {trips.map((trip) => (
             <div key={`${trip.hotel}-${trip.room}`} className="rounded-xl border border-zinc-200 px-4 py-3 transition-colors hover:bg-zinc-50">
               <p className="text-lg font-medium">{trip.hotel}</p>
-              <p className="text-zinc-600">Room {trip.room} · {trip.stay}</p>
+              <p className="text-zinc-600">Room {trip.room} - {trip.stay}</p>
               <span className={`mt-2 inline-flex rounded-full border px-2.5 py-1 text-xs font-medium ${trip.status === "Confirmed" ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-amber-200 bg-amber-50 text-amber-700"}`}>{trip.status}</span>
             </div>
           ))}
