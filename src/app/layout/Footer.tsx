@@ -13,7 +13,8 @@ import {
   ArrowRight,
 } from "lucide-react";
 import logo from "../../../public/reception.png";
-
+import google from "@/assets/gplay-store-full.webp";
+import apple from "@/assets/app-store-full.webp";
 // ── Link Groups ────────────────────────────────────────────────────────
 interface LinkGroup {
   title: string;
@@ -192,7 +193,7 @@ function FooterLeft() {
     <div className="flex flex-col gap-6">
       <FooterLogo />
 
-      <p className="text-sm text-muted-foreground leading-relaxed max-w-[260px]">
+      <p className="text-sm text-muted-foreground leading-relaxed max-w-65">
         Discover handpicked hotels and extraordinary stays, curated for the
         discerning traveller.
       </p>
@@ -200,21 +201,21 @@ function FooterLeft() {
       {/* Address & contact */}
       <address className="not-italic flex flex-col gap-2.5 text-sm text-foreground/65">
         <span className="flex items-start gap-2">
-          <MapPin size={14} className="mt-0.5 flex-shrink-0 text-brand-btn" />
+          <MapPin size={14} className="mt-0.5 shrink-0 text-brand-btn" />
           12 Harrington Lane, Sylhet 3100, Bangladesh
         </span>
         <a
           href="tel:+8801700000000"
           className="flex items-center gap-2 hover:text-foreground transition-colors"
         >
-          <Phone size={14} className="flex-shrink-0 text-brand-btn" />
+          <Phone size={14} className="shrink-0 text-brand-btn" />
           +880 1700 000 000
         </a>
         <a
           href="mailto:hello@lumosstay.com"
           className="flex items-center gap-2 hover:text-foreground transition-colors"
         >
-          <Mail size={14} className="flex-shrink-0 text-brand-btn" />
+          <Mail size={14} className="shrink-0 text-brand-btn" />
           hello@lumosstay.com
         </a>
       </address>
@@ -329,36 +330,34 @@ function FooterRight() {
       </p>
 
       {/* QR Code */}
-      <div className="flex items-start gap-4">
+      <div className="flex items-center gap-4 ">
         <div className="p-2.5 rounded-xl border border-border/60 bg-nav-bg">
           <Image
             src="/Ahbab.png"
             alt="Scan to download the LumosStay app"
-            width={88}
-            height={88}
-            className="rounded-lg object-cover"
+            width={120}
+            height={120}
+            className="rounded-lg object-contain max-w-22.5 max-h-25"
             loading="eager"
           />
         </div>
         <div className="flex flex-col gap-2 pt-1">
-          <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">
-            Scan with your phone
-          </span>
           {/* Google Play badge */}
           <motion.a
             href="#"
             whileHover={{ scale: 1.04, y: -1 }}
             whileTap={{ scale: 0.97 }}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-brand-btn text-brand-text w-fit"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/60 bg-nav-bg text-foreground/80 w-fit"
           >
             {/* Play icon */}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3 22V2l18 10L3 22z" />
-            </svg>
-            <div className="flex flex-col leading-none">
-              <span className="text-[9px] opacity-70">GET IT ON</span>
-              <span className="text-xs font-semibold">Google Play</span>
-            </div>
+            <Image
+              src={google}
+              alt="Google Play"
+              width={120}
+              height={120}
+              className="shrink-0"
+              loading="eager"
+            />
           </motion.a>
 
           {/* App Store badge */}
@@ -369,18 +368,14 @@ function FooterRight() {
             className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/60 bg-nav-bg text-foreground/80 w-fit"
           >
             {/* Apple icon */}
-            <svg
-              width="13"
-              height="14"
-              viewBox="0 0 814 1000"
-              fill="currentColor"
-            >
-              <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-37.5-157.7-105l-2.3-2.3-2.3 2.3c-69.2 43.3-145.7 67.5-229.4 67.5C2.1 960.1 0 952.4 0 946.5c0-4.7 1-9.4 3.1-13.9 24.4-60.1 72.4-106.5 125.8-137.6-42.5-26-73.6-68.2-88.3-117.9-8.6-29.6-12.5-61.8-10.7-93.7 5-89.9 59.3-162.5 116.4-162.5 21.7 0 36.8 11.4 51.2 11.4 13.2 0 28.5-11.4 51.2-11.4 57.1 0 100.4 66.1 117.9 130.1-30.3 17-91.6 62.1-91.6 148.4 0 96.8 77.8 160.8 145 178.8-6.1 16.2-16.5 34-30.7 47.9h37.7c14.2 0 54.4-3.1 84.8-38.7 36.8-42 52.2-109.9 52.2-172.1 0-62.2-3.1-101.4-3.1-152.5 0-65.4 47.6-107.9 111.3-107.9 55.2 0 105.6 43.9 105.6 107.9z" />
-            </svg>
-            <div className="flex flex-col leading-none">
-              <span className="text-[9px] opacity-60">Download on the</span>
-              <span className="text-xs font-semibold">App Store</span>
-            </div>
+            <Image
+              src={apple}
+              alt="Apple logo"
+              width={120}
+              height={120}
+              className="shrink-0"
+              loading="eager"
+            />
           </motion.a>
         </div>
       </div>

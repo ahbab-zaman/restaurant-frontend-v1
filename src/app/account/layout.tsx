@@ -3,18 +3,33 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { User, LogOut, ChevronRight, LayoutDashboard, ShoppingBag } from "lucide-react";
+import {
+  User,
+  LogOut,
+  ChevronRight,
+  LayoutDashboard,
+  ShoppingBag,
+  Settings,
+} from "lucide-react";
 import clsx from "clsx";
-import { useAuthUser, useLogoutMutation, useMeQuery } from "@/lib/auth/auth.query";
+import {
+  useAuthUser,
+  useLogoutMutation,
+  useMeQuery,
+} from "@/lib/auth/auth.query";
 import { hasSessionFlag } from "@/lib/auth/session";
 
 const navItems = [
-  { href: "/account", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { href: "/account/settings", label: "Account Settings", icon: Settings, exact: true },
   { href: "/account/edit", label: "Edit Profile", icon: User },
   { href: "/account/bookings", label: "Orders", icon: ShoppingBag },
 ];
 
-export default function AccountLayout({ children }: { children: React.ReactNode }) {
+export default function AccountLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const user = useAuthUser();
@@ -52,8 +67,12 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
     <div className="h-dvh flex flex-col bg-gray-50 dark:bg-gray-900">
       <div className="flex-1 overflow-hidden max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Account</h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{user.name} | {user.email}</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            My Account
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+            {user.name} | {user.email}
+          </p>
         </div>
 
         <div className="flex flex-1 overflow-hidden flex-col lg:flex-row gap-8">
@@ -64,12 +83,16 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
                   <User size={22} className="text-white" />
                 </div>
                 <p className="font-semibold">{user.name}</p>
-                <p className="text-gray-300 text-xs mt-0.5 truncate">{user.email}</p>
+                <p className="text-gray-300 text-xs mt-0.5 truncate">
+                  {user.email}
+                </p>
               </div>
 
               <nav className="py-2">
                 {navItems.map(({ href, label, icon: Icon, exact }) => {
-                  const active = exact ? pathname === href : pathname.startsWith(href);
+                  const active = exact
+                    ? pathname === href
+                    : pathname.startsWith(href);
                   return (
                     <Link
                       key={href}
@@ -83,10 +106,20 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
                     >
                       <Icon
                         size={16}
-                        className={active ? "text-gray-900 dark:text-gray-100" : "text-gray-400 dark:text-gray-500"}
+                        className={
+                          active
+                            ? "text-gray-900 dark:text-gray-100"
+                            : "text-gray-400 dark:text-gray-500"
+                        }
                       />
                       <span className="flex-1">{label}</span>
-                      <ChevronRight size={14} className={clsx("transition-opacity", active ? "opacity-100" : "opacity-0")} />
+                      <ChevronRight
+                        size={14}
+                        className={clsx(
+                          "transition-opacity",
+                          active ? "opacity-100" : "opacity-0",
+                        )}
+                      />
                     </Link>
                   );
                 })}
@@ -96,7 +129,9 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
                     className="w-full flex items-center gap-3 px-5 py-3 text-sm text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
                   >
                     <LogOut size={16} />
-                    <span>{logoutMutation.isPending ? "Logging out..." : "Logout"}</span>
+                    <span>
+                      {logoutMutation.isPending ? "Logging out..." : "Logout"}
+                    </span>
                   </button>
                 </div>
               </nav>
@@ -109,4 +144,3 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
     </div>
   );
 }
-
