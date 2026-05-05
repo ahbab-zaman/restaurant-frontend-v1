@@ -53,8 +53,7 @@ const navLinks: NavLink[] = [
 
 const userDropdownItems: UserDropdownItem[] = [
   { label: "My Dashboard", href: "/account/dashboard", icon: LayoutDashboard },
-  { label: "My Bookings", href: "/account/bookings", icon: BookOpen },
-  { label: "Settings", href: "/account/edit", icon: Settings },
+  { label: "My Account", href: "/account/settings", icon: Settings },
 ];
 
 function Logo() {

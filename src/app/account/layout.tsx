@@ -7,7 +7,6 @@ import {
   User,
   LogOut,
   ChevronRight,
-  LayoutDashboard,
   ShoppingBag,
   Settings,
 } from "lucide-react";
@@ -22,7 +21,6 @@ import { hasSessionFlag } from "@/lib/auth/session";
 const navItems = [
   { href: "/account/settings", label: "Account Settings", icon: Settings, exact: true },
   { href: "/account/edit", label: "Edit Profile", icon: User },
-  { href: "/account/bookings", label: "Orders", icon: ShoppingBag },
 ];
 
 export default function AccountLayout({
