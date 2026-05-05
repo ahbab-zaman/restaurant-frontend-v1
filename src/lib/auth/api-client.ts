@@ -62,3 +62,41 @@ export async function apiFetch<T>(
 
   return result.data;
 }
+
+export async function apiFetchMultipart<T>(
+  path: string,
+  options: Omit<RequestInit, "body"> & { body: FormData },
+): Promise<T> {
+  const token = store.getState().auth.accessToken;
+  const headers = new Headers(options.headers);
+
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...options,
+    headers,
+    body: options.body,
+    credentials: "include",
+  });
+
+  const nextAccessToken = response.headers.get("x-access-token");
+  if (nextAccessToken) {
+    store.dispatch(setAccessToken(nextAccessToken));
+  }
+
+  const result = (await response.json()) as ApiSuccessResponse<T>;
+
+  if (!response.ok || !result.success) {
+    const message = result?.message || "Request failed";
+
+    if (response.status === 401) {
+      store.dispatch(clearAuth());
+    }
+
+    throw new ApiError(message, response.status);
+  }
+
+  return result.data;
+}
