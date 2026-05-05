@@ -148,7 +148,7 @@ function UserDropdown({
     email?: string | null;
     avatar?: string | null;
   };
-  onLogout: () => void;
+  onLogout: () => void | Promise<void>;
 }) {
   const displayName =
     user?.name?.trim() ||
@@ -250,7 +250,7 @@ function MobileSidebar({
   isLoggedIn: boolean;
   isDark: boolean;
   toggleTheme: () => void;
-  onLogout: () => void;
+  onLogout: () => void | Promise<void>;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -392,9 +392,9 @@ export default function Navbar() {
     });
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await logoutMutation.mutateAsync();
     router.replace("/login");
-    logoutMutation.mutate();
   };
 
   return (

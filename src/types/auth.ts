@@ -24,6 +24,11 @@ export interface LoginPayload {
   password: string;
 }
 
+export interface UpdateUserPayload {
+  name?: string;
+  email?: string;
+}
+
 export interface ApiSuccessResponse<T> {
   success: boolean;
   message: string;

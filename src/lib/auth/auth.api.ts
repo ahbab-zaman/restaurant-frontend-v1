@@ -3,6 +3,7 @@ import {
   AuthUser,
   LoginPayload,
   RegisterPayload,
+  UpdateUserPayload,
 } from "@/types/auth";
 import { apiFetch, API_V1_PREFIX } from "./api-client";
 
@@ -26,6 +27,12 @@ export const logoutApi = () =>
   });
 
 export const meApi = () => apiFetch<AuthUser>(`${AUTH_BASE_PATH}/me`);
+
+export const updateMeApi = (payload: UpdateUserPayload) =>
+  apiFetch<AuthUser>(`${AUTH_BASE_PATH}/me`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
 
 export const refreshTokenApi = () =>
   apiFetch<{ accessToken: string }>(`${AUTH_BASE_PATH}/refresh`, {

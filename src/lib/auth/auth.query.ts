@@ -1,10 +1,10 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { clearAuth, setAccessToken, setAuth } from "@/store/auth.slice";
+import { clearAuth, setAccessToken, setAuth, setUser } from "@/store/auth.slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { LoginPayload, RegisterPayload } from "@/types/auth";
-import { loginApi, logoutApi, meApi, refreshTokenApi, registerApi } from "./auth.api";
+import { LoginPayload, RegisterPayload, UpdateUserPayload } from "@/types/auth";
+import { loginApi, logoutApi, meApi, refreshTokenApi, registerApi, updateMeApi } from "./auth.api";
 import { clearSessionFlag, setSessionFlag } from "./session";
 
 export const authKeys = {
@@ -68,10 +68,29 @@ export const useLogoutMutation = () => {
 
   return useMutation({
     mutationFn: logoutApi,
+    onMutate: () => {
+      // Clear auth state immediately so UI reflects logged-out state without delay.
+      dispatch(clearAuth());
+      clearSessionFlag();
+      queryClient.removeQueries({ queryKey: authKeys.me });
+    },
     onSettled: () => {
       dispatch(clearAuth());
       clearSessionFlag();
       queryClient.removeQueries({ queryKey: authKeys.me });
+    },
+  });
+};
+
+export const useUpdateMeMutation = () => {
+  const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: UpdateUserPayload) => updateMeApi(payload),
+    onSuccess: (user) => {
+      dispatch(setUser(user));
+      queryClient.setQueryData(authKeys.me, user);
     },
   });
 };
