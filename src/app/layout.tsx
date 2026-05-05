@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Montserrat } from "next/font/google";
 import "./globals.css";
-import Navbar from "./layout/Navbar";
-import Footer from "./layout/Footer";
 import AppProviders from "@/providers/AppProviders";
+import LayoutShell from "./layout/LayoutShell";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -18,9 +17,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "LumosStay",
-  description: "Discover handpicked hotels and extraordinary stays, curated for the discerning traveller.",
+  description:
+    "Discover handpicked hotels and extraordinary stays, curated for the discerning traveller.",
   icons: {
-    icon: '/reception.png',
+    icon: "/reception.png",
   },
 };
 
@@ -37,12 +37,9 @@ export default function RootLayout({
     >
       <body suppressHydrationWarning className="min-h-full flex flex-col">
         <AppProviders>
-          <Navbar />
-          <main className="flex-1 pt-16">{children}</main>
-          <Footer />
+          <LayoutShell>{children}</LayoutShell>
         </AppProviders>
       </body>
     </html>
   );
 }
-

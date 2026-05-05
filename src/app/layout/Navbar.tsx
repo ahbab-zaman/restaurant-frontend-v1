@@ -14,8 +14,6 @@ import {
   User,
   LogOut,
   Settings,
-  BookOpen,
-  Heart,
   ChevronDown,
   LayoutDashboard,
 } from "lucide-react";
@@ -31,6 +29,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useAuthUser, useLogoutMutation } from "@/lib/auth/auth.query";
+import { type UserRole } from "@/types/auth";
 import logo from "../../../public/reception.png";
 
 interface NavLink {
@@ -51,10 +50,11 @@ const navLinks: NavLink[] = [
   { label: "Contact Us", href: "/contact" },
 ];
 
-const userDropdownItems: UserDropdownItem[] = [
-  { label: "My Dashboard", href: "/account/dashboard", icon: LayoutDashboard },
-  { label: "My Account", href: "/account/settings", icon: Settings },
-];
+const getDashboardPathByRole = (role?: UserRole) => {
+  if (role === "SUPER_ADMIN") return "/super-admin";
+  if (role === "HOTEL_ADMIN") return "/hotel-manager";
+  return "/guest";
+};
 
 function Logo() {
   return (
@@ -141,18 +141,21 @@ function UserDropdown({
   onLogout,
 }: {
   user: {
-    name?: string | null;
-    firstname?: string | null;
-    lastname?: string | null;
-    email?: string | null;
-    avatar?: string | null;
+    name: string;
+    email: string;
+    role: UserRole;
   };
   onLogout: () => void | Promise<void>;
 }) {
-  const displayName =
-    user?.name?.trim() ||
-    [user?.firstname, user?.lastname].filter(Boolean).join(" ").trim() ||
-    "User";
+  const displayName = user.name?.trim() || "User";
+  const userDropdownItems: UserDropdownItem[] = [
+    {
+      label: "My Dashboard",
+      href: getDashboardPathByRole(user.role),
+      icon: LayoutDashboard,
+    },
+    { label: "My Account", href: "/account/settings", icon: Settings },
+  ];
 
   return (
     <DropdownMenu>
@@ -162,7 +165,7 @@ function UserDropdown({
           className="flex items-center gap-2 px-1 py-0.5 rounded-full hover:bg-foreground/6 transition-colors focus-visible:ring-2 focus-visible:ring-brand-btn outline-none"
         >
           <Avatar className="w-8 h-8 ring-2 ring-brand-btn/30">
-            <AvatarImage src={user.avatar ?? ""} alt={displayName} />
+            <AvatarImage src="" alt={displayName} />
             <AvatarFallback className="bg-brand-btn text-brand-text text-xs font-semibold">
               {displayName
                 .split(" ")
