@@ -4,8 +4,10 @@ import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { Plus } from "lucide-react";
 import { useCreateHotelMutation, useDeleteHotelMutation, useHotelsQuery, useUpdateHotelMutation } from "@/lib/hotels/hotels.query";
+import { useRoomsByHotelsQuery } from "@/lib/rooms/rooms.query";
 import { apiError } from "@/lib/auth/api-client";
 import { Hotel, HotelMutationPayload } from "@/types/hotel";
+import { Room } from "@/types/room";
 import { Button } from "@/components/ui/button";
 import ConfirmationModal from "./ConfirmationModal";
 import HotelFormModal from "./HotelFormModal";
@@ -25,11 +27,27 @@ export default function HotelsDashboard({ title, description }: HotelsDashboardP
   const deleteMutation = useDeleteHotelMutation();
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [viewingHotel, setViewingHotel] = useState<Hotel | null>(null);
+  const [viewingHotel, setViewingHotel] = useState<(Hotel & { rooms: Room[] }) | null>(null);
   const [editingHotel, setEditingHotel] = useState<Hotel | null>(null);
   const [deletingHotel, setDeletingHotel] = useState<Hotel | null>(null);
 
   const hotels = useMemo(() => data?.items ?? [], [data?.items]);
+  const hotelIds = useMemo(() => hotels.map((hotel) => hotel.id), [hotels]);
+  const { data: roomsData, isLoading: isRoomsLoading, isFetching: isRoomsFetching } = useRoomsByHotelsQuery(hotelIds);
+
+  const hotelsWithRooms = useMemo(() => {
+    const groupedRooms = new Map<string, Room[]>();
+    for (const room of roomsData.items) {
+      const existing = groupedRooms.get(room.hotelId) ?? [];
+      existing.push(room);
+      groupedRooms.set(room.hotelId, existing);
+    }
+
+    return hotels.map((hotel) => ({
+      ...hotel,
+      rooms: groupedRooms.get(hotel.id) ?? [],
+    }));
+  }, [hotels, roomsData.items]);
 
   async function onCreate(payload: HotelMutationPayload) {
     try {
@@ -79,18 +97,18 @@ export default function HotelsDashboard({ title, description }: HotelsDashboardP
         </Button>
       </div>
 
-      {isLoading ? (
+      {isLoading || isRoomsLoading ? (
         <div className="flex min-h-52 items-center justify-center rounded-2xl border border-zinc-200 bg-white">
           <LoadingSpinner className="h-8 w-8 text-zinc-600" />
         </div>
-      ) : hotels.length ? (
+      ) : hotelsWithRooms.length ? (
         <div className="space-y-3">
-          {isFetching ? (
+          {isFetching || isRoomsFetching ? (
             <div className="flex items-center gap-2 text-sm text-zinc-500">
               <LoadingSpinner className="h-4 w-4" /> Syncing latest data...
             </div>
           ) : null}
-          <HotelsTable hotels={hotels} onView={setViewingHotel} onEdit={setEditingHotel} onDelete={setDeletingHotel} />
+          <HotelsTable hotels={hotelsWithRooms} onView={setViewingHotel} onEdit={setEditingHotel} onDelete={setDeletingHotel} />
         </div>
       ) : (
         <div className="rounded-2xl border border-dashed border-zinc-300 bg-white p-8 text-center">

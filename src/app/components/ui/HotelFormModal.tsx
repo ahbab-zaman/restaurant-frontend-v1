@@ -92,9 +92,15 @@ export default function HotelFormModal({
       open={open}
       onClose={onClose}
       title={isCreateMode ? "Add Hotel" : "Edit Hotel"}
+      contentClassName="hotel-form-scrollbar"
       footer={
         <div className="flex items-center justify-end gap-2">
-          <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            disabled={isLoading}
+          >
             Cancel
           </Button>
           <Button type="submit" form="hotel-form" disabled={isLoading}>
@@ -104,55 +110,69 @@ export default function HotelFormModal({
         </div>
       }
     >
-      <form id="hotel-form" className="space-y-4" onSubmit={handleSubmit}>
-        <div className="space-y-1.5">
-          <label className="text-sm font-medium text-gray-900">Name</label>
-          <Input value={name} onChange={(event) => setName(event.target.value)} placeholder="Hotel name" className="text-gray-900" />
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-sm font-medium text-gray-900">Address</label>
-          <Input value={address} onChange={(event) => setAddress(event.target.value)} placeholder="Hotel address" className="text-gray-900" />
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-sm font-medium text-gray-900">Description</label>
-          <Textarea
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            placeholder="Description (optional)"
-            className="min-h-24 text-gray-900 resize-none"
-          />
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-sm font-medium text-gray-900">
-            Image {isCreateMode ? "" : "(optional for update)"}
-          </label>
-          <Input
-            key={fileInputKey}
-            type="file"
-            accept="image/*"
-            className="text-gray-900"
-            onChange={(event) => setImage(event.target.files?.[0] ?? null)}
-          />
-          {previewUrl ? (
-            <div className="relative mt-2 inline-block">
-              <img
-                src={previewUrl}
-                alt="Selected hotel"
-                className="h-16 w-16 rounded-md border border-zinc-200 object-cover"
-              />
-              <button
-                type="button"
-                onClick={clearSelectedImage}
-                className="absolute -right-2 -top-2 rounded-full bg-red-600 p-1 text-white transition hover:bg-red-700"
-                aria-label="Remove selected image"
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </div>
-          ) : null}
-        </div>
-        {error ? <p className="text-sm text-red-600">{error}</p> : null}
-      </form>
+      <div className="pr-2">
+        <form id="hotel-form" className="space-y-4" onSubmit={handleSubmit}>
+          <div className="space-y-1.5">
+            <label className="text-sm font-medium text-gray-900">Name</label>
+            <Input
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder="Hotel name"
+              className="text-gray-900"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-sm font-medium text-gray-900">Address</label>
+            <Input
+              value={address}
+              onChange={(event) => setAddress(event.target.value)}
+              placeholder="Hotel address"
+              className="text-gray-900"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-sm font-medium text-gray-900">
+              Description
+            </label>
+            <Textarea
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+              placeholder="Description (optional)"
+              className="min-h-24 text-gray-900 resize-none"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-sm font-medium text-gray-900">
+              Image {isCreateMode ? "" : "(optional for update)"}
+            </label>
+            <Input
+              key={fileInputKey}
+              type="file"
+              accept="image/*"
+              className="text-gray-900"
+              onChange={(event) => setImage(event.target.files?.[0] ?? null)}
+            />
+            {previewUrl ? (
+              <div className="relative mt-2 inline-block">
+                <img
+                  src={previewUrl}
+                  alt="Selected hotel"
+                  className="h-16 w-16 rounded-md border border-zinc-200 object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={clearSelectedImage}
+                  className="absolute -right-2 -top-2 rounded-full bg-red-600 p-1 text-white transition hover:bg-red-700"
+                  aria-label="Remove selected image"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            ) : null}
+          </div>
+          {error ? <p className="text-sm text-red-600">{error}</p> : null}
+        </form>
+      </div>
     </AppModal>
   );
 }

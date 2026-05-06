@@ -10,9 +10,17 @@ type AppModalProps = {
   onClose: () => void;
   children: ReactNode;
   footer?: ReactNode;
+  contentClassName?: string;
 };
 
-export default function AppModal({ open, title, onClose, children, footer }: AppModalProps) {
+export default function AppModal({
+  open,
+  title,
+  onClose,
+  children,
+  footer,
+  contentClassName,
+}: AppModalProps) {
   return (
     <AnimatePresence>
       {open ? (
@@ -24,7 +32,7 @@ export default function AppModal({ open, title, onClose, children, footer }: App
           onClick={onClose}
         >
           <motion.div
-            className="w-full max-w-xl rounded-2xl bg-white shadow-xl"
+            className="flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-2xl bg-white shadow-xl"
             initial={{ opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
@@ -42,7 +50,9 @@ export default function AppModal({ open, title, onClose, children, footer }: App
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <div className="px-5 py-4">{children}</div>
+            <div className={`min-h-0 flex-1 overflow-y-auto px-5 py-4 ${contentClassName ?? ""}`}>
+              {children}
+            </div>
             {footer ? <div className="border-t border-zinc-200 px-5 py-4">{footer}</div> : null}
           </motion.div>
         </motion.div>

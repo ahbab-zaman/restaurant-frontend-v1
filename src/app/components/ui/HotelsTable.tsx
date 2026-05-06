@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Delete, Edit, Eye, Trash } from "lucide-react";
+import { Edit, Eye, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -12,10 +12,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Hotel } from "@/types/hotel";
+import { Room } from "@/types/room";
 
 type HotelsTableProps = {
-  hotels: Hotel[];
-  onView: (hotel: Hotel) => void;
+  hotels: Array<Hotel & { rooms: Room[] }>;
+  onView: (hotel: Hotel & { rooms: Room[] }) => void;
   onEdit: (hotel: Hotel) => void;
   onDelete: (hotel: Hotel) => void;
 };
@@ -39,6 +40,7 @@ export default function HotelsTable({
             <TableHead>Image</TableHead>
             <TableHead>Hotel</TableHead>
             <TableHead>Address</TableHead>
+            <TableHead>Rooms</TableHead>
             <TableHead>Added By</TableHead>
             <TableHead>Created</TableHead>
             <TableHead className="text-right">Actions</TableHead>
@@ -59,6 +61,22 @@ export default function HotelsTable({
               </TableCell>
               <TableCell className="max-w-xs truncate text-zinc-600">
                 {hotel.address}
+              </TableCell>
+              <TableCell className="text-zinc-600">
+                {hotel.rooms.length ? (
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium text-zinc-900">{hotel.rooms.length} rooms</p>
+                    <p className="max-w-xs truncate text-xs text-zinc-500">
+                      {hotel.rooms
+                        .slice(0, 3)
+                        .map((room) => `${room.roomNumber} (${room.type})`)
+                        .join(", ")}
+                      {hotel.rooms.length > 3 ? "..." : ""}
+                    </p>
+                  </div>
+                ) : (
+                  <span className="text-sm text-zinc-500">No rooms</span>
+                )}
               </TableCell>
               <TableCell className="text-zinc-600">
                 {hotel.admin?.name ?? "N/A"}
