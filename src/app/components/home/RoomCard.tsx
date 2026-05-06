@@ -6,20 +6,6 @@ import { useState } from "react";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
-function HeartIcon({ filled }: { filled: boolean }) {
-  return (
-    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M12.62 20.81C12.28 20.93 11.72 20.93 11.38 20.81C8.48 19.82 2 15.69 2 8.69C2 5.6 4.49 3.1 7.56 3.1C9.38 3.1 10.99 3.98 12 5.34C13.01 3.98 14.63 3.1 16.44 3.1C19.51 3.1 22 5.6 22 8.69C22 15.69 15.52 19.82 12.62 20.81Z"
-        stroke="currentColor"
-        fill={filled ? "currentColor" : "none"}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 function BadgeIcon() {
   return (
@@ -92,16 +78,18 @@ export default function RoomCard({
       className="
         group flex flex-col h-full rounded-2xl border border-neutral-200
         bg-white overflow-hidden
-        hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-500/10
-        transition-all duration-300
+        hover:-translate-y-1.5 hover:border-emerald-300
+        hover:shadow-[0_18px_38px_rgba(16,185,129,0.18)]
+        transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
         cursor-pointer
       "
       style={{ textDecoration: "none" }}
     >
       {/* ── Image area ───────────────────────────────────────────────────── */}
-      <div className="relative flex-shrink-0 overflow-hidden bg-neutral-100">
+      <div className="relative shrink-0 overflow-hidden bg-neutral-100">
         {/* Square aspect ratio */}
         <div className="relative w-full" style={{ paddingBottom: "100%" }}>
+          <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
           <div className="absolute inset-0 w-full h-full">
             <Image
               fill
@@ -110,8 +98,8 @@ export default function RoomCard({
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               className="
                 object-cover w-full h-full
-                transition-transform duration-500 ease-out
-                group-hover:scale-105
+                transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
+                group-hover:scale-[1.08]
               "
             />
           </div>
@@ -124,7 +112,8 @@ export default function RoomCard({
               className="
                 shadow-lg rounded-full flex items-center justify-center
                 px-2 py-1 bg-white/95 backdrop-blur-sm
-                transition-transform duration-200 group-hover:scale-105
+                transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
+                group-hover:scale-105 group-hover:shadow-xl
               "
             >
               <BadgeIcon />
@@ -134,42 +123,18 @@ export default function RoomCard({
             </div>
           </div>
         )}
-
-        {/* Wishlist button — top-right */}
-        <div className="absolute top-2 right-2 z-10">
-          <button
-            type="button"
-            title={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-            onClick={(e) => {
-              e.preventDefault();
-              setWishlisted((v) => !v);
-            }}
-            className="
-              w-9 h-9 flex items-center justify-center rounded-full
-              bg-neutral-50 shadow-md
-              transition-all duration-200
-              hover:scale-110 hover:shadow-lg
-              active:scale-95
-            "
-            style={{
-              color: wishlisted ? "#ef4444" : "#525252",
-            }}
-          >
-            <HeartIcon filled={wishlisted} />
-          </button>
-        </div>
       </div>
 
       {/* ── Content area ─────────────────────────────────────────────────── */}
-      <div className="flex flex-1 flex-col p-4">
+      <div className="flex flex-1 flex-col p-4 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-0.5">
         {/* Title */}
         <h3
-          className="
-            text-sm font-semibold text-neutral-800 line-clamp-2
-            min-h-[2.5rem]
-            transition-colors duration-200
-            group-hover:text-emerald-700
-          "
+            className="
+              text-sm font-semibold text-neutral-800 line-clamp-2
+              min-h-[2.5rem]
+              transition-colors duration-400
+              group-hover:text-emerald-700
+            "
         >
           {title}
         </h3>
@@ -195,8 +160,8 @@ export default function RoomCard({
                 className="
                   text-xs font-medium text-emerald-700
                   bg-emerald-100 px-1.5 py-0.5 rounded
-                  transition-colors duration-200
-                  group-hover:bg-emerald-200
+                  transition-all duration-400
+                  group-hover:bg-emerald-200 group-hover:text-emerald-800
                 "
               >
                 {discountLabel}
