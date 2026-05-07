@@ -64,7 +64,7 @@ function Logo() {
         transition={{ type: "spring", stiffness: 300, damping: 18 }}
         className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-btn"
       >
-        <Image src={logo} alt="LumosStay Logo" className="w-6 h-w-6" />
+        <Image src={logo} alt="LumosStay Logo" className="w-6 h-6" />
       </motion.div>
       <span className="font-display text-xl font-semibold tracking-tight text-foreground leading-none">
         Lumos<span className="text-brand-btn">Stay</span>

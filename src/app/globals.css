@@ -1,7 +1,11 @@
+@config "../../tailwind.config.ts";
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+/* Tailwind v4 limits hover styles to hover-capable devices.
+   Restore classic behavior so hover/tap effects (e.g. RoomCard) still apply. */
+@custom-variant hover (&:hover);
 
 /* -----------------------------------------------------
    2. Base Theme Variables

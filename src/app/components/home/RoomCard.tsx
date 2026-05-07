@@ -2,10 +2,6 @@
 
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-
-// ─── Icons ────────────────────────────────────────────────────────────────────
-
 
 function BadgeIcon() {
   return (
@@ -42,22 +38,18 @@ function BadgeIcon() {
   );
 }
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 export interface RoomCardProps {
   href?: string;
   image: string | StaticImageData;
   imageAlt: string;
-  saleBadge?: string; // e.g. "48% Sale"
+  saleBadge?: string;
   title: string;
   description: string;
   price: string;
   originalPrice?: string;
-  discountLabel?: string; // e.g. "48% off"
+  discountLabel?: string;
   currency?: string;
 }
-
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export default function RoomCard({
   href = "#",
@@ -70,26 +62,22 @@ export default function RoomCard({
   originalPrice,
   discountLabel,
 }: RoomCardProps) {
-  const [wishlisted, setWishlisted] = useState(false);
-
   return (
     <Link
       href={href}
       className="
-        group flex flex-col h-full rounded-2xl border border-neutral-200
-        bg-white overflow-hidden
-        hover:-translate-y-1.5 hover:border-emerald-300
-        hover:shadow-[0_18px_38px_rgba(16,185,129,0.18)]
-        transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
+        group relative flex flex-col h-full rounded-2xl border border-neutral-200
+        bg-white
+        hover:-translate-y-1 hover:border-emerald-300/70
+        hover:shadow-[0_16px_40px_rgba(6,95,70,0.15)]
+        transition-all duration-500 ease-in-out will-change-transform
         cursor-pointer
       "
       style={{ textDecoration: "none" }}
     >
       {/* ── Image area ───────────────────────────────────────────────────── */}
-      <div className="relative shrink-0 overflow-hidden bg-neutral-100">
-        {/* Square aspect ratio */}
+      <div className="relative shrink-0 overflow-hidden bg-neutral-100 rounded-2xl">
         <div className="relative w-full" style={{ paddingBottom: "100%" }}>
-          <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
           <div className="absolute inset-0 w-full h-full">
             <Image
               fill
@@ -98,24 +86,16 @@ export default function RoomCard({
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               className="
                 object-cover w-full h-full
-                transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
-                group-hover:scale-[1.08]
+                transition-transform duration-500 ease-in-out
+                group-hover:scale-[1.03] rounded-2xl
               "
             />
           </div>
         </div>
 
-        {/* Sale badge — top-left */}
         {saleBadge && (
           <div className="absolute top-2 left-2 flex flex-wrap items-center gap-1.5 z-10">
-            <div
-              className="
-                shadow-lg rounded-full flex items-center justify-center
-                px-2 py-1 bg-white/95 backdrop-blur-sm
-                transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
-                group-hover:scale-105 group-hover:shadow-xl
-              "
-            >
+            <div className="shadow-lg rounded-full flex items-center justify-center px-2 py-1 bg-white/95 backdrop-blur-sm">
               <BadgeIcon />
               <span className="ml-1 leading-none text-xs text-red-400 font-bold">
                 {saleBadge}
@@ -126,25 +106,21 @@ export default function RoomCard({
       </div>
 
       {/* ── Content area ─────────────────────────────────────────────────── */}
-      <div className="flex flex-1 flex-col p-4 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-0.5">
-        {/* Title */}
+      <div className="flex flex-1 flex-col p-4">
         <h3
-            className="
-              text-sm font-semibold text-neutral-800 line-clamp-2
-              min-h-[2.5rem]
-              transition-colors duration-400
-              group-hover:text-emerald-700
-            "
+          className="
+          text-sm font-semibold text-neutral-800 line-clamp-2 min-h-[2.5rem]
+          transition-colors duration-500 ease-in-out
+          group-hover:text-emerald-800
+        "
         >
           {title}
         </h3>
 
-        {/* Description */}
         <p className="text-xs text-neutral-500 mt-1.5 line-clamp-3 flex-1 leading-relaxed">
           {description}
         </p>
 
-        {/* Price row */}
         <div className="mt-auto pt-3">
           <div className="flex flex-wrap items-baseline gap-2">
             <span className="text-base font-bold text-neutral-800 tabular-nums">
@@ -158,11 +134,11 @@ export default function RoomCard({
             {discountLabel && (
               <span
                 className="
-                  text-xs font-medium text-emerald-700
-                  bg-emerald-100 px-1.5 py-0.5 rounded
-                  transition-all duration-400
-                  group-hover:bg-emerald-200 group-hover:text-emerald-800
-                "
+                text-xs font-medium text-emerald-700
+                bg-emerald-100 px-1.5 py-0.5 rounded
+                transition-colors duration-500 ease-in-out
+                group-hover:bg-emerald-200 group-hover:text-emerald-900
+              "
               >
                 {discountLabel}
               </span>
