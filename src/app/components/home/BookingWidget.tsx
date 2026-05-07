@@ -1,116 +1,10 @@
-"use client";
+﻿"use client";
+
+import Link from "next/link";
+import { useMemo, useRef } from "react";
+import HotelCardSkeleton from "@/app/components/hotel/HotelCardSkeleton";
+import { useHotelsQuery } from "@/lib/hotels/hotels.query";
 import RoomCard from "./RoomCard";
-import bannerImage1 from "../../../../public/banner-1.jpg";
-// ─── Room data ────────────────────────────────────────────────────────────────
-
-const rooms = [
-  {
-    id: 1,
-    href: "/rooms/deluxe",
-    image: bannerImage1,
-    imageAlt: "Deluxe Room — modern interiors with city view",
-    saleBadge: "10% Sale",
-    title: "Deluxe Room",
-    description:
-      "A stylish room featuring modern interiors, plush bedding, and beautiful city views. Perfect for a relaxing short stay.",
-    price: "$108 / night",
-    originalPrice: "$120 / night",
-    discountLabel: "10% off",
-  },
-  {
-    id: 2,
-    href: "/rooms/executive-suite",
-    image: "/banner-2.avif",
-    imageAlt: "Executive Suite — separate living area with premium amenities",
-    saleBadge: "15% Sale",
-    title: "Executive Suite",
-    description:
-      "Spacious suite with a separate living area, premium amenities, and elegant design. Ideal for business travellers and couples.",
-    price: "$299 / night",
-    originalPrice: "$352 / night",
-    discountLabel: "15% off",
-  },
-  {
-    id: 3,
-    href: "/rooms/presidential-suite",
-    image: "/banner-3.avif",
-    imageAlt: "Presidential Suite — expansive luxury accommodation",
-    saleBadge: "20% Sale",
-    title: "Presidential Suite",
-    description:
-      "Our most luxurious accommodation offering expansive space, refined interiors, and exceptional comfort for the discerning guest.",
-    price: "$655 / night",
-    originalPrice: "$820 / night",
-    discountLabel: "20% off",
-  },
-  {
-    id: 4,
-    href: "/rooms/presidential-suite",
-    image: "/banner-4.avif",
-    imageAlt: "Presidential Suite — expansive luxury accommodation",
-    saleBadge: "20% Sale",
-    title: "Presidential Suite",
-    description:
-      "Our most luxurious accommodation offering expansive space, refined interiors, and exceptional comfort for the discerning guest.",
-    price: "$655 / night",
-    originalPrice: "$820 / night",
-    discountLabel: "20% off",
-  },
-  {
-    id: 5,
-    href: "/rooms/presidential-suite",
-    image: "/banner-5.avif",
-    imageAlt: "Presidential Suite — expansive luxury accommodation",
-    saleBadge: "20% Sale",
-    title: "Presidential Suite",
-    description:
-      "Our most luxurious accommodation offering expansive space, refined interiors, and exceptional comfort for the discerning guest.",
-    price: "$655 / night",
-    originalPrice: "$820 / night",
-    discountLabel: "20% off",
-  },
-  {
-    id: 7,
-    href: "/rooms/presidential-suite",
-    image: "/banner-5.avif",
-    imageAlt: "Presidential Suite — expansive luxury accommodation",
-    saleBadge: "20% Sale",
-    title: "Presidential Suite",
-    description:
-      "Our most luxurious accommodation offering expansive space, refined interiors, and exceptional comfort for the discerning guest.",
-    price: "$655 / night",
-    originalPrice: "$820 / night",
-    discountLabel: "20% off",
-  },
-  {
-    id: 8,
-    href: "/rooms/presidential-suite",
-    image: "/banner-5.avif",
-    imageAlt: "Presidential Suite — expansive luxury accommodation",
-    saleBadge: "20% Sale",
-    title: "Presidential Suite",
-    description:
-      "Our most luxurious accommodation offering expansive space, refined interiors, and exceptional comfort for the discerning guest.",
-    price: "$655 / night",
-    originalPrice: "$820 / night",
-    discountLabel: "20% off",
-  },
-  {
-    id: 6,
-    href: "/rooms/presidential-suite",
-    image: "/banner-5.avif",
-    imageAlt: "Presidential Suite — expansive luxury accommodation",
-    saleBadge: "20% Sale",
-    title: "Presidential Suite",
-    description:
-      "Our most luxurious accommodation offering expansive space, refined interiors, and exceptional comfort for the discerning guest.",
-    price: "$655 / night",
-    originalPrice: "$820 / night",
-    discountLabel: "20% off",
-  },
-];
-
-// ─── Leaf SVG decoration ──────────────────────────────────────────────────────
 
 function LeafDecoration() {
   return (
@@ -127,87 +21,124 @@ function LeafDecoration() {
         fill="#7a9e7e"
         opacity="0.6"
       />
-      <path
-        d="M30 4L30 56"
-        stroke="#5a7a5e"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M30 18C23 16 16 21 14 28"
-        stroke="#5a7a5e"
-        strokeWidth="1"
-        strokeLinecap="round"
-      />
-      <path
-        d="M30 28C23 26 17 31 16 38"
-        stroke="#5a7a5e"
-        strokeWidth="1"
-        strokeLinecap="round"
-      />
-      <path
-        d="M30 38C25 36 21 40 20 44"
-        stroke="#5a7a5e"
-        strokeWidth="1"
-        strokeLinecap="round"
-      />
+      <path d="M30 4L30 56" stroke="#5a7a5e" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M30 18C23 16 16 21 14 28" stroke="#5a7a5e" strokeWidth="1" strokeLinecap="round" />
+      <path d="M30 28C23 26 17 31 16 38" stroke="#5a7a5e" strokeWidth="1" strokeLinecap="round" />
+      <path d="M30 38C25 36 21 40 20 44" stroke="#5a7a5e" strokeWidth="1" strokeLinecap="round" />
     </svg>
   );
 }
 
-// ─── Section ──────────────────────────────────────────────────────────────────
-
 export default function BookingWidget() {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const { data, isLoading, isError } = useHotelsQuery();
+
+  const latestHotels = useMemo(() => {
+    const hotels = data?.items ?? [];
+    return [...hotels]
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 6);
+  }, [data?.items]);
+
+  const scrollByCards = (direction: "left" | "right") => {
+    const node = scrollerRef.current;
+    if (!node) return;
+
+    const amount = Math.round(node.clientWidth * 0.8);
+    node.scrollBy({
+      left: direction === "right" ? amount : -amount,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <section className="min-h-screen py-14">
       <div>
-        {/* Heading */}
-        <div className="relative text-center mb-12">
-          <h2 className="inline text-[36px] font-bold text-gray-900 leading-tight tracking-tight">
+        <div className="relative mb-12 text-center">
+          <h2 className="inline text-[36px] font-bold leading-tight tracking-tight text-gray-900 dark:text-neutral-100">
             Recently Booked{" "}
-            <span
-              className="font-normal italic"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
+            <span className="font-normal italic" style={{ fontFamily: "'Playfair Display', serif" }}>
               Hotels
             </span>
           </h2>
           <LeafDecoration />
         </div>
 
-        {/* Grid of ProductCards */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {rooms.map((room, i) => (
-            <div
-              key={room.id}
-              className="opacity-0 animate-fadeInUp"
-              style={{
-                animationDelay: `${i * 120}ms`,
-                animationFillMode: "forwards",
-              }}
-            >
-              <RoomCard
-                href={room.href}
-                image={room.image}
-                imageAlt={room.imageAlt}
-                saleBadge={room.saleBadge}
-                title={room.title}
-                description={room.description}
-                price={room.price}
-                originalPrice={room.originalPrice}
-                discountLabel={room.discountLabel}
-              />
+        <div className="relative">
+          <button
+            type="button"
+            aria-label="Previous hotels"
+            onClick={() => scrollByCards("left")}
+            className="absolute -left-5 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-emerald-200 bg-white/95 text-emerald-800 shadow-md transition-all duration-300 hover:scale-105 hover:bg-emerald-50 hover:shadow-lg active:scale-95 dark:border-emerald-900/60 dark:bg-neutral-900/95 dark:text-emerald-300 dark:hover:bg-neutral-800 lg:flex"
+          >
+            <span className="text-xl leading-none">&lt;</span>
+          </button>
+
+          <button
+            type="button"
+            aria-label="Next hotels"
+            onClick={() => scrollByCards("right")}
+            className="absolute -right-5 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-emerald-200 bg-white/95 text-emerald-800 shadow-md transition-all duration-300 hover:scale-105 hover:bg-emerald-50 hover:shadow-lg active:scale-95 dark:border-emerald-900/60 dark:bg-neutral-900/95 dark:text-emerald-300 dark:hover:bg-neutral-800 lg:flex"
+          >
+            <span className="text-xl leading-none">&gt;</span>
+          </button>
+
+          {isLoading ? (
+            <HotelCardSkeleton count={6} />
+          ) : isError ? (
+            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
+              Failed to load latest hotels.
             </div>
-          ))}
+          ) : (
+            <div
+              ref={scrollerRef}
+              className="hotel-form-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto pb-2 scroll-smooth"
+            >
+              {latestHotels.map((hotel, i) => (
+                <div
+                  key={hotel.id}
+                  className="animate-fadeInUp w-[78%] shrink-0 snap-start opacity-0 sm:w-[48%] lg:w-[23.5%]"
+                  style={{ animationDelay: `${i * 120}ms`, animationFillMode: "forwards" }}
+                >
+                  <RoomCard
+                    href={`/hotels/HotelDetail/${hotel.id}`}
+                    image={hotel.imageUrl}
+                    imageAlt={hotel.name}
+                    saleBadge="New"
+                    title={hotel.name}
+                    description={hotel.description || hotel.address}
+                    price="View details"
+                    originalPrice={new Date(hotel.createdAt).toLocaleDateString("en-US")}
+                    discountLabel="Latest"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="mt-8 flex justify-center">
+          <Link
+            href="/hotels"
+            className="inline-flex items-center justify-center rounded-xl border border-emerald-300 bg-emerald-600 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-lg active:translate-y-0 active:scale-95 dark:border-emerald-800"
+          >
+            View All
+          </Link>
         </div>
       </div>
 
-      {/* Keyframes — move to globals.css in a real project */}
       <style>{`
         @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(24px); }
-          to   { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(24px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
+
         .animate-fadeInUp {
           animation: fadeInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
         }

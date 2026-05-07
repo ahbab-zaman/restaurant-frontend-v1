@@ -50,7 +50,7 @@ export default function TrustBar() {
   return (
     <section
       aria-label="Trust and social proof statistics"
-      className="w-full border-y border-neutral-200 py-14 px-4"
+      className="w-full border-y border-neutral-200 py-14 px-4 dark:border-neutral-700"
     >
       <div className="max-w-6xl mx-auto">
         <motion.p
@@ -58,7 +58,7 @@ export default function TrustBar() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center text-xs tracking-[0.25em] uppercase text-neutral-500 font-medium mb-10"
+          className="text-center text-xs tracking-[0.25em] uppercase text-neutral-500 font-medium mb-10 dark:text-neutral-400"
         >
           Trusted by travellers worldwide
         </motion.p>
@@ -76,7 +76,7 @@ export default function TrustBar() {
               variants={itemVariants}
               whileHover={{ y: -6, scale: 1.03 }}
               transition={{ type: "spring", stiffness: 300, damping: 22 }}
-              className="group relative flex flex-col items-center gap-3 rounded-2xl border border-neutral-200 bg-white px-6 py-8 cursor-default overflow-hidden"
+              className="group relative flex flex-col items-center gap-3 rounded-2xl border border-neutral-200 bg-white px-6 py-8 cursor-default overflow-hidden dark:border-neutral-700 dark:bg-neutral-900"
             >
               {/* glow blob */}
               <span
@@ -92,12 +92,12 @@ export default function TrustBar() {
               </span>
 
               <p
-                className="text-3xl font-bold text-neutral-900 leading-none tracking-tight"
+                className="text-3xl font-bold text-neutral-900 leading-none tracking-tight dark:text-neutral-100"
               >
                 {value}
               </p>
               <p
-                className="text-xs text-neutral-500 tracking-widest uppercase"
+                className="text-xs text-neutral-500 tracking-widest uppercase dark:text-neutral-400"
               >
                 {label}
               </p>

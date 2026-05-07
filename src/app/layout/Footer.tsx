@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -15,7 +15,7 @@ import {
 import logo from "../../../public/reception.png";
 import google from "@/assets/gplay-store-full.webp";
 import apple from "@/assets/app-store-full.webp";
-// ── Link Groups ────────────────────────────────────────────────────────
+// â”€â”€ Link Groups â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 interface LinkGroup {
   title: string;
   links: { label: string; href: string }[];
@@ -62,7 +62,7 @@ const socialLinks = [
     icon: (
       <svg
         viewBox="0 0 24 24"
-        className="w-6 h-6 text-neutral-700 dark:text-neutral-200 group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors duration-300"
+        className="w-6 h-6 transition-colors duration-300"
         aria-hidden="true"
       >
         <path
@@ -78,7 +78,7 @@ const socialLinks = [
     icon: (
       <svg
         viewBox="0 0 24 24"
-        className="w-6 h-6 text-neutral-700 dark:text-neutral-200 group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors duration-300"
+        className="w-6 h-6 transition-colors duration-300"
         aria-hidden="true"
       >
         <path
@@ -94,7 +94,7 @@ const socialLinks = [
     icon: (
       <svg
         viewBox="0 0 30 30"
-        className="w-6 h-6 text-neutral-700 dark:text-neutral-200 group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors duration-300"
+        className="w-6 h-6 transition-colors duration-300"
         aria-hidden="true"
       >
         <path
@@ -110,7 +110,7 @@ const socialLinks = [
     icon: (
       <svg
         viewBox="0 0 24 24"
-        className="w-6 h-6 text-neutral-700 dark:text-neutral-200 group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors duration-300"
+        className="w-6 h-6 transition-colors duration-300"
         aria-hidden="true"
       >
         <path
@@ -126,7 +126,7 @@ const socialLinks = [
     icon: (
       <svg
         viewBox="0 0 24 24"
-        className="w-6 h-6 text-neutral-700 dark:text-neutral-200 group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors duration-300"
+        className="w-6 h-6 transition-colors duration-300"
         aria-hidden="true"
       >
         <path
@@ -140,7 +140,7 @@ const socialLinks = [
   },
 ];
 
-// ── Logo (reusable) ────────────────────────────────────────────────────
+// â”€â”€ Logo (reusable) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function FooterLogo() {
   return (
     <Link
@@ -150,9 +150,9 @@ function FooterLogo() {
       <motion.div
         whileHover={{ rotate: 8, scale: 1.08 }}
         transition={{ type: "spring", stiffness: 300, damping: 18 }}
-        className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-btn"
+        className="flex items-center justify-center w-9 h-9 rounded-lg bg-transparent dark:bg-white"
       >
-        <Image src={logo} alt="LumosStay Logo" className="w-6 h-w-6" />
+        <Image src={logo} alt="LumosStay Logo" className="w-6 h-6" />
       </motion.div>
       <span className="font-display text-xl font-semibold tracking-tight text-foreground leading-none">
         Lumos<span className="text-brand-btn">Stay</span>
@@ -161,7 +161,7 @@ function FooterLogo() {
   );
 }
 
-// ── Social Icon Button ─────────────────────────────────────────────────
+// â”€â”€ Social Icon Button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function SocialButton({
   icon,
   href,
@@ -180,14 +180,14 @@ function SocialButton({
       whileHover={{ scale: 1.12, y: -2 }}
       whileTap={{ scale: 0.92 }}
       transition={{ type: "spring", stiffness: 350, damping: 20 }}
-      className="flex items-center justify-center w-9 h-9 rounded-full border border-border/60 text-foreground/55 hover:text-brand-btn hover:border-brand-btn/40 transition-colors duration-200"
+      className="group flex items-center justify-center w-9 h-9 rounded-full border border-border/60 text-foreground/70 hover:text-brand-btn hover:border-brand-btn/40 transition-colors duration-200"
     >
       {icon}
     </motion.a>
   );
 }
 
-// ── Left Column ────────────────────────────────────────────────────────
+// â”€â”€ Left Column â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function FooterLeft() {
   return (
     <div className="flex flex-col gap-6">
@@ -199,21 +199,21 @@ function FooterLeft() {
       </p>
 
       {/* Address & contact */}
-      <address className="not-italic flex flex-col gap-2.5 text-sm text-foreground/65">
+      <address className="not-italic flex flex-col gap-2.5 text-sm text-foreground/75">
         <span className="flex items-start gap-2">
           <MapPin size={14} className="mt-0.5 shrink-0 text-brand-btn" />
           12 Harrington Lane, Sylhet 3100, Bangladesh
         </span>
         <a
           href="tel:+8801700000000"
-          className="flex items-center gap-2 hover:text-foreground transition-colors"
+          className="flex items-center gap-2 text-foreground/75 hover:text-foreground transition-colors"
         >
           <Phone size={14} className="shrink-0 text-brand-btn" />
           +880 1700 000 000
         </a>
         <a
           href="mailto:hello@lumosstay.com"
-          className="flex items-center gap-2 hover:text-foreground transition-colors"
+          className="flex items-center gap-2 text-foreground/75 hover:text-foreground transition-colors"
         >
           <Mail size={14} className="shrink-0 text-brand-btn" />
           hello@lumosstay.com
@@ -230,7 +230,7 @@ function FooterLeft() {
   );
 }
 
-// ── Accordion item (mobile only) ───────────────────────────────────────
+// â”€â”€ Accordion item (mobile only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function FooterAccordion({ group }: { group: LinkGroup }) {
   const [open, setOpen] = useState(false);
 
@@ -265,7 +265,7 @@ function FooterAccordion({ group }: { group: LinkGroup }) {
                 <li key={link.href} className="list-none">
                   <Link
                     href={link.href}
-                    className="group flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    className="group flex items-center gap-1.5 text-sm text-foreground/70 hover:text-foreground transition-colors"
                   >
                     <ArrowRight
                       size={11}
@@ -283,7 +283,7 @@ function FooterAccordion({ group }: { group: LinkGroup }) {
   );
 }
 
-// ── Middle Column (desktop links) ──────────────────────────────────────
+// â”€â”€ Middle Column (desktop links) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function FooterMiddle() {
   return (
     <div className="grid grid-cols-3 gap-8">
@@ -297,7 +297,7 @@ function FooterMiddle() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="group flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors duration-150"
+                  className="group flex items-center gap-1.5 text-sm text-foreground/70 hover:text-foreground transition-colors duration-150"
                 >
                   <motion.span
                     initial={{ width: 0, opacity: 0 }}
@@ -317,7 +317,7 @@ function FooterMiddle() {
   );
 }
 
-// ── Right Column (app store + QR) ─────────────────────────────────────
+// â”€â”€ Right Column (app store + QR) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function FooterRight() {
   return (
     <div className="flex flex-col gap-5">
@@ -331,7 +331,7 @@ function FooterRight() {
 
       {/* QR Code */}
       <div className="flex items-center gap-4 ">
-        <div className="p-2.5 rounded-xl border border-border/60 bg-nav-bg">
+        <div className="p-2.5 rounded-xl border border-border/60 bg-white dark:bg-gray-900">
           <Image
             src="/Ahbab.png"
             alt="Scan to download the LumosStay app"
@@ -347,7 +347,7 @@ function FooterRight() {
             href="#"
             whileHover={{ scale: 1.04, y: -1 }}
             whileTap={{ scale: 0.97 }}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/60 bg-nav-bg text-foreground/80 w-fit"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/60 bg-white dark:bg-gray-900 text-foreground/80 w-fit"
           >
             {/* Play icon */}
             <Image
@@ -365,7 +365,7 @@ function FooterRight() {
             href="#"
             whileHover={{ scale: 1.04, y: -1 }}
             whileTap={{ scale: 0.97 }}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/60 bg-nav-bg text-foreground/80 w-fit"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/60 bg-white dark:bg-gray-900 text-foreground/80 w-fit"
           >
             {/* Apple icon */}
             <Image
@@ -383,11 +383,11 @@ function FooterRight() {
   );
 }
 
-// ── Footer Bottom Bar ──────────────────────────────────────────────────
+// â”€â”€ Footer Bottom Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function FooterBottom() {
   return (
     <div className="border-t border-border/40 pt-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
-      <p>© {new Date().getFullYear()} LumosStay. All rights reserved.</p>
+      <p>&copy; {new Date().getFullYear()} LumosStay. All rights reserved.</p>
       <div className="flex items-center gap-4">
         {["Privacy", "Terms", "Sitemap"].map((item) => (
           <Link
@@ -403,19 +403,19 @@ function FooterBottom() {
   );
 }
 
-// ── Main Footer ────────────────────────────────────────────────────────
+// â”€â”€ Main Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function Footer() {
   return (
-    <footer className="border-t border-border/50 bg-nav-bg">
+    <footer className="border-t border-border/50 bg-white dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        {/* ── Desktop: 3-column grid ── */}
+        {/* â”€â”€ Desktop: 3-column grid â”€â”€ */}
         <div className="hidden md:grid md:grid-cols-[240px_1fr_260px] gap-12 lg:gap-16">
           <FooterLeft />
           <FooterMiddle />
           <FooterRight />
         </div>
 
-        {/* ── Mobile: stacked accordion ── */}
+        {/* â”€â”€ Mobile: stacked accordion â”€â”€ */}
         <div className="md:hidden flex flex-col gap-8">
           {/* Brand info */}
           <FooterLeft />
@@ -473,7 +473,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom bar — always visible */}
+        {/* Bottom bar â€” always visible */}
         <div className="mt-12">
           <FooterBottom />
         </div>
@@ -481,3 +481,5 @@ export default function Footer() {
     </footer>
   );
 }
+
+

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useRef } from "react";
+import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import StarRating from "../ui/StarRating";
 
@@ -53,46 +53,20 @@ const reviews = [
   },
 ];
 
-const VISIBLE = 3;
-
 export default function GuestReviews() {
-  const [current, setCurrent] = useState(0);
-  const total = reviews.length;
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const marqueeReviews = [...reviews, ...reviews];
 
-  const startAutoPlay = () => {
-    intervalRef.current = setInterval(() => {
-      setCurrent((c) => (c + 1) % total);
-    }, 4500);
+  const scrollTrack = (direction: "left" | "right") => {
+    const node = trackRef.current;
+    if (!node) return;
+
+    const amount = Math.round(node.clientWidth * 0.45);
+    node.scrollBy({
+      left: direction === "right" ? amount : -amount,
+      behavior: "smooth",
+    });
   };
-
-  const stopAutoPlay = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-  };
-
-  useEffect(() => {
-    startAutoPlay();
-    return stopAutoPlay;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const prev = () => {
-    stopAutoPlay();
-    setCurrent((c) => (c - 1 + total) % total);
-    startAutoPlay();
-  };
-
-  const next = () => {
-    stopAutoPlay();
-    setCurrent((c) => (c + 1) % total);
-    startAutoPlay();
-  };
-
-  // Build the visible indices
-  const visibleIndices = Array.from(
-    { length: VISIBLE },
-    (_, i) => (current + i) % total,
-  );
 
   return (
     <section
@@ -113,109 +87,86 @@ export default function GuestReviews() {
           </p>
           <h2
             id="reviews-heading"
-            className="text-4xl md:text-5xl font-bold text-neutral-900"
+            className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-neutral-100"
           >
             Voices of Experience
           </h2>
         </motion.div>
 
-        {/* carousel */}
+        {/* marquee */}
         <div className="relative">
-          {/* cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <AnimatePresence mode="popLayout">
-              {visibleIndices.map((idx, pos) => {
-                const review = reviews[idx];
-                return (
-                  <motion.article
-                    key={`${idx}-${current}`}
-                    initial={{ opacity: 0, x: 40, scale: 0.96 }}
-                    animate={{
-                      opacity: pos === 1 ? 1 : 0.65,
-                      x: 0,
-                      scale: pos === 1 ? 1 : 0.97,
-                    }}
-                    exit={{ opacity: 0, x: -40, scale: 0.96 }}
-                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                    className="relative flex flex-col gap-4 rounded-2xl border border-neutral-200 bg-white p-6"
-                    aria-label={`Review by ${review.name}`}
-                  >
-                    <Quote
-                      size={28}
-                      className="text-neutral-200"
-                      strokeWidth={1.5}
-                    />
+          <div
+            ref={trackRef}
+            className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            <motion.div
+              className="flex w-max gap-5 py-1"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{
+                duration: 28,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            >
+              {marqueeReviews.map((review, idx) => (
+                <article
+                  key={`${review.id}-${idx}`}
+                  className="relative flex w-[86vw] max-w-[460px] shrink-0 flex-col gap-4 rounded-2xl border border-neutral-200 bg-white p-6 sm:w-[70vw] md:w-[420px] dark:border-neutral-700 dark:bg-neutral-900"
+                  aria-label={`Review by ${review.name}`}
+                >
+                  <Quote
+                    size={28}
+                    className="text-neutral-200 dark:text-neutral-700"
+                    strokeWidth={1.5}
+                  />
 
-                    <p className="text-sm text-neutral-600 leading-relaxed flex-1">
-                      {review.text}
-                    </p>
+                  <p className="text-sm text-neutral-600 leading-relaxed flex-1 dark:text-neutral-300">
+                    {review.text}
+                  </p>
 
-                    <div className="flex items-center gap-3 pt-2 border-t border-neutral-200">
-                      <span
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-bold text-black"
-                        style={{ background: review.avatarBg }}
-                        aria-hidden="true"
-                      >
-                        {review.avatar}
-                      </span>
-                      <div>
-                        <p className="text-sm font-semibold text-neutral-900">
-                          {review.name}
-                        </p>
-                        <p className="text-[11px] text-neutral-500">
-                          {review.hotel}
-                        </p>
-                      </div>
-                      <div className="ml-auto">
-                        <StarRating rating={review.rating} />
-                      </div>
+                  <div className="flex items-center gap-3 pt-2 border-t border-neutral-200 dark:border-neutral-700">
+                    <span
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-bold text-black"
+                      style={{ background: review.avatarBg }}
+                      aria-hidden="true"
+                    >
+                      {review.avatar}
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                        {review.name}
+                      </p>
+                      <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                        {review.hotel}
+                      </p>
                     </div>
-                  </motion.article>
-                );
-              })}
-            </AnimatePresence>
+                    <div className="ml-auto">
+                      <StarRating rating={review.rating} />
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </motion.div>
           </div>
 
           {/* controls */}
-          <div className="mt-10 flex items-center justify-center gap-4">
+          <div className="mt-10 hidden items-center justify-center gap-4 md:flex">
             <button
-              onClick={prev}
+              onClick={() => scrollTrack("left")}
               aria-label="Previous review"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 transition-all"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 transition-all dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
             >
               <ChevronLeft size={18} />
             </button>
 
-            <div
-              className="flex gap-2"
-              role="tablist"
-              aria-label="Review navigation"
-            >
-              {reviews.map((_, i) => (
-                <button
-                  key={i}
-                  role="tab"
-                  aria-selected={i === current}
-                  onClick={() => {
-                    stopAutoPlay();
-                    setCurrent(i);
-                    startAutoPlay();
-                  }}
-                  className="h-1.5 rounded-full transition-all duration-300"
-                  style={{
-                    width: i === current ? "28px" : "8px",
-                    background:
-                      i === current ? "#C9A96E" : "rgba(115,115,115,0.30)",
-                  }}
-                  aria-label={`Go to review ${i + 1}`}
-                />
-              ))}
-            </div>
+            <span className="text-xs uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400">
+              Guest stories
+            </span>
 
             <button
-              onClick={next}
+              onClick={() => scrollTrack("right")}
               aria-label="Next review"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 transition-all"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 transition-all dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
             >
               <ChevronRight size={18} />
             </button>

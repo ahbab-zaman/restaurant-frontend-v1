@@ -205,6 +205,9 @@ export default function HotelPage() {
           border-radius: 9999px;
           margin: 8px 0;
         }
+        .dark .price-range-track {
+          background: #3f362f;
+        }
         .price-range-fill {
           position: absolute;
           height: 100%;
@@ -235,6 +238,10 @@ export default function HotelPage() {
         input[type="range"].price-thumb::-webkit-slider-thumb:hover {
           transform: scale(1.15);
         }
+        .dark input[type="range"].price-thumb::-webkit-slider-thumb {
+          border: 2px solid #111827;
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+        }
         input[type="range"].price-thumb::-moz-range-thumb {
           width: 18px;
           height: 18px;
@@ -245,6 +252,10 @@ export default function HotelPage() {
           pointer-events: all;
           cursor: pointer;
         }
+        .dark input[type="range"].price-thumb::-moz-range-thumb {
+          border: 2px solid #111827;
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+        }
       `}</style>
 
       <section className="relative min-h-screen px-4 py-10 text-[#2f261f] sm:px-6 lg:px-8">
@@ -253,13 +264,13 @@ export default function HotelPage() {
             {/* Top bar: search + controls */}
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               {/* Search */}
-              <div className="flex w-full max-w-2xl items-center gap-2 rounded-2xl border border-[#e5ddd2] bg-[#f5f1eb] p-2">
+              <div className="flex w-full max-w-2xl items-center gap-2 rounded-2xl border border-[#e5ddd2] bg-[#f5f1eb] p-2 dark:border-gray-700 dark:bg-gray-800/70">
                 <input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search hotels, location, room type..."
-                  className="h-11 w-full rounded-xl border-none bg-transparent px-3 text-sm text-[#3d3026] placeholder:text-[#a39585] focus:outline-none"
+                  className="h-11 w-full rounded-xl border-none bg-transparent px-3 text-sm text-[#3d3026] placeholder:text-[#a39585] focus:outline-none dark:text-gray-100 dark:placeholder:text-gray-400"
                 />
                 <button
                   type="button"
@@ -275,7 +286,7 @@ export default function HotelPage() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="h-11 min-w-44 rounded-xl border border-[#cfc2b3] bg-white px-3 text-sm text-[#3d3026] shadow-sm outline-none transition-colors focus:border-[#8f735d]"
+                  className="h-11 min-w-44 rounded-xl border border-[#cfc2b3] bg-white px-3 text-sm text-[#3d3026] shadow-sm outline-none transition-colors focus:border-[#8f735d] dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-[#a8896f]"
                 >
                   <option value="default">Default</option>
                   <option value="name-asc">Name: A to Z</option>
@@ -293,18 +304,18 @@ export default function HotelPage() {
                 >
                   <button
                     type="button"
-                    className="relative flex h-11 items-center gap-2 rounded-xl border border-[#cfc2b3] bg-white px-4 text-sm font-medium text-[#3d3026] shadow-sm transition-all duration-200 hover:border-[#8f735d] hover:bg-[#faf7f4] mb-2"
+                    className="relative mb-2 flex h-11 items-center gap-2 rounded-xl border border-[#cfc2b3] bg-white px-4 text-sm font-medium text-[#3d3026] shadow-sm transition-all duration-200 hover:border-[#8f735d] hover:bg-[#faf7f4] dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-[#a8896f] dark:hover:bg-gray-700"
                   >
                     <svg
                       width="16"
                       height="16"
                       viewBox="0 0 16 16"
                       fill="none"
-                      className="shrink-0"
+                      className="shrink-0 text-[#5d4330] dark:text-[#c7aa8f]"
                     >
                       <path
                         d="M2 4h12M4 8h8M6 12h4"
-                        stroke="#5d4330"
+                        stroke="currentColor"
                         strokeWidth="1.6"
                         strokeLinecap="round"
                       />
@@ -320,34 +331,34 @@ export default function HotelPage() {
                   {/* Dropdown panel */}
                   {filterOpen && (
                     <div
-                      className="filter-panel-enter absolute right-0 top-[calc(100%+8px)] z-50 w-72 rounded-2xl border border-[#d9d0c6] bg-white dark:bg-gray-900 p-5 shadow-[0_16px_48px_rgba(84,67,50,0.16)]"
+                      className="filter-panel-enter absolute right-0 top-[calc(100%+8px)] z-50 w-72 rounded-2xl border border-[#d9d0c6] bg-white p-5 shadow-[0_16px_48px_rgba(84,67,50,0.16)] dark:border-gray-700 dark:bg-gray-900"
                       onMouseEnter={handleFilterMouseEnter}
                       onMouseLeave={handleFilterMouseLeave}
                     >
                       <div className="flex items-center justify-between">
-                        <h2 className="text-sm font-semibold text-[#352b24]">
+                        <h2 className="text-sm font-semibold text-[#352b24] dark:text-gray-100">
                           Filters
                         </h2>
                         {activeFilterCount > 0 && (
                           <button
                             type="button"
                             onClick={clearFilters}
-                            className="text-xs text-[#8f735d] underline underline-offset-2 hover:text-[#5d4330]"
+                            className="text-xs text-[#8f735d] underline underline-offset-2 hover:text-[#5d4330] dark:text-[#c7aa8f] dark:hover:text-[#e4c9ae]"
                           >
                             Clear all
                           </button>
                         )}
                       </div>
 
-                      <div className="my-3 h-px bg-[#eee8e1]" />
+                      <div className="my-3 h-px bg-[#eee8e1] dark:bg-gray-700" />
 
                       <div className="space-y-5">
                         {/* Price Range */}
                         <div>
-                          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#554538]">
+                          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#554538] dark:text-gray-300">
                             Price Range
                           </p>
-                          <div className="flex justify-between text-xs text-[#7d6b58] mb-2">
+                          <div className="mb-2 flex justify-between text-xs text-[#7d6b58] dark:text-gray-400">
                             <span>${priceRange[0]}</span>
                             <span>${priceRange[1]}</span>
                           </div>
@@ -385,13 +396,13 @@ export default function HotelPage() {
                             />
                           </div>
                           <div className="mt-3 flex gap-2">
-                            <div className="flex-1 rounded-lg border border-[#e7dfd6] bg-[#faf8f5] px-2.5 py-1.5 text-center text-xs text-[#3d3026]">
+                            <div className="flex-1 rounded-lg border border-[#e7dfd6] bg-[#faf8f5] px-2.5 py-1.5 text-center text-xs text-[#3d3026] dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
                               Min:{" "}
                               <span className="font-semibold">
                                 ${priceRange[0]}
                               </span>
                             </div>
-                            <div className="flex-1 rounded-lg border border-[#e7dfd6] bg-[#faf8f5] px-2.5 py-1.5 text-center text-xs text-[#3d3026]">
+                            <div className="flex-1 rounded-lg border border-[#e7dfd6] bg-[#faf8f5] px-2.5 py-1.5 text-center text-xs text-[#3d3026] dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
                               Max:{" "}
                               <span className="font-semibold">
                                 ${priceRange[1]}
@@ -400,21 +411,21 @@ export default function HotelPage() {
                           </div>
                         </div>
 
-                        <div className="h-px bg-[#eee8e1]" />
+                        <div className="h-px bg-[#eee8e1] dark:bg-gray-700" />
 
                         {/* Room Types */}
                         <div>
-                          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#554538]">
+                          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#554538] dark:text-gray-300">
                             Room Types
                           </p>
-                          <div className="hotel-form-scrollbar max-h-36 space-y-1.5 overflow-y-auto rounded-xl border border-[#e7dfd6] bg-[#faf8f5] p-3">
+                          <div className="hotel-form-scrollbar max-h-36 space-y-1.5 overflow-y-auto rounded-xl border border-[#e7dfd6] bg-[#faf8f5] p-3 dark:border-gray-700 dark:bg-gray-800">
                             {roomTypes.length ? (
                               roomTypes.map((type) => {
                                 const checked = selectedTypes.includes(type);
                                 return (
                                   <label
                                     key={type}
-                                    className="flex cursor-pointer items-center gap-2 text-sm text-[#58493c] hover:text-[#352b24]"
+                                    className="flex cursor-pointer items-center gap-2 text-sm text-[#58493c] hover:text-[#352b24] dark:text-gray-300 dark:hover:text-gray-100"
                                   >
                                     <input
                                       type="checkbox"
@@ -426,14 +437,14 @@ export default function HotelPage() {
                                             : [...prev, type],
                                         )
                                       }
-                                      className="h-4 w-4 rounded border-[#cabba9] accent-[#6d4f37]"
+                                      className="h-4 w-4 rounded border-[#cabba9] accent-[#6d4f37] dark:border-gray-500"
                                     />
                                     {formatRoomType(type)}
                                   </label>
                                 );
                               })
                             ) : (
-                              <p className="text-xs text-[#9a8d7e]">
+                              <p className="text-xs text-[#9a8d7e] dark:text-gray-400">
                                 No room types found yet.
                               </p>
                             )}

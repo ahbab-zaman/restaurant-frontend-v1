@@ -140,12 +140,12 @@ export default function HeroSection() {
   const active = SLIDES[current];
 
   return (
-    <section className="w-full bg-site-bg">
+    <section className="w-full bg-site-bg dark:bg-[#0B1118]">
       <div className="max-w-7xl mx-auto px-6 lg:px-10 py-10 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10 items-stretch">
           <div className="lg:col-span-8 order-1 lg:order-2">
-            <div className="relative rounded-[28px] overflow-hidden border border-neutral-200/60 shadow-sm group h-full">
-              <div className="relative w-full aspect-16/10 bg-neutral-100">
+            <div className="relative rounded-[28px] overflow-hidden border border-neutral-200/60 shadow-sm group h-full dark:border-neutral-700/70">
+              <div className="relative w-full aspect-16/10 bg-neutral-100 dark:bg-neutral-800">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={active.id}
@@ -220,15 +220,15 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, ease: [0.2, 0.8, 0.2, 1] }}
-              className="h-full px-5 py-5 md:px-6 md:py-6 bg-white rounded-[28px] border border-neutral-200/70 flex flex-col"
+              className="h-full px-5 py-5 md:px-6 md:py-6 bg-white rounded-[28px] border border-neutral-200/70 flex flex-col dark:bg-neutral-900 dark:border-neutral-700/80"
             >
-              <div className="text-xs uppercase tracking-wider text-neutral-500">
+              <div className="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                 {active.featured}
               </div>
-              <p className="mt-3 text-sm md:text-base text-neutral-600">
+              <p className="mt-3 text-sm md:text-base text-neutral-600 dark:text-neutral-300">
                 {active.eyebrow}
               </p>
-              <h1 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-800 leading-[1.06]">
+              <h1 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-800 leading-[1.06] dark:text-neutral-100">
                 {active.title}
               </h1>
 
@@ -244,7 +244,7 @@ export default function HeroSection() {
                 <Button
                   asChild
                   variant="outline"
-                  className="rounded-full py-3.5 px-7 h-auto text-sm sm:text-base font-medium border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-100"
+                  className="rounded-full py-3.5 px-7 h-auto text-sm sm:text-base font-medium border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-100 dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800"
                 >
                   <Link href={active.secondaryCta.href}>
                     {active.secondaryCta.label}
@@ -256,12 +256,12 @@ export default function HeroSection() {
                 {active.stats.map((item) => (
                   <div
                     key={item.label}
-                    className="rounded-2xl border border-neutral-200/90 bg-white/70 px-4 py-3"
+                    className="rounded-2xl border border-neutral-200/90 bg-white/70 px-4 py-3 dark:border-neutral-700 dark:bg-neutral-800/80"
                   >
-                    <div className="text-[11px] uppercase tracking-wider text-neutral-500">
+                    <div className="text-[11px] uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                       {item.label}
                     </div>
-                    <div className="mt-1 text-sm font-medium text-neutral-800">
+                    <div className="mt-1 text-sm font-medium text-neutral-800 dark:text-neutral-100">
                       {item.value}
                     </div>
                   </div>

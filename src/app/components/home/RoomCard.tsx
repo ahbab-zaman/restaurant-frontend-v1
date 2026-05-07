@@ -67,7 +67,7 @@ export default function RoomCard({
       href={href}
       className="
         group relative flex flex-col h-full rounded-2xl border border-neutral-200
-        bg-white
+        bg-white dark:bg-neutral-900 dark:border-neutral-700
         hover:-translate-y-1 hover:border-emerald-300/70
         hover:shadow-[0_16px_40px_rgba(6,95,70,0.15)]
         transition-all duration-500 ease-in-out will-change-transform
@@ -76,7 +76,7 @@ export default function RoomCard({
       style={{ textDecoration: "none" }}
     >
       {/* ── Image area ───────────────────────────────────────────────────── */}
-      <div className="relative shrink-0 overflow-hidden bg-neutral-100 rounded-2xl">
+      <div className="relative shrink-0 overflow-hidden bg-neutral-100 rounded-2xl dark:bg-neutral-800">
         <div className="relative w-full" style={{ paddingBottom: "100%" }}>
           <div className="absolute inset-0 w-full h-full">
             <Image
@@ -95,9 +95,9 @@ export default function RoomCard({
 
         {saleBadge && (
           <div className="absolute top-2 left-2 flex flex-wrap items-center gap-1.5 z-10">
-            <div className="shadow-lg rounded-full flex items-center justify-center px-2 py-1 bg-white/95 backdrop-blur-sm">
+            <div className="shadow-lg rounded-full flex items-center justify-center px-2 py-1 bg-white/95 backdrop-blur-sm dark:bg-neutral-800/95">
               <BadgeIcon />
-              <span className="ml-1 leading-none text-xs text-red-400 font-bold">
+              <span className="ml-1 leading-none text-xs text-red-500 dark:text-red-300 font-bold">
                 {saleBadge}
               </span>
             </div>
@@ -109,25 +109,25 @@ export default function RoomCard({
       <div className="flex flex-1 flex-col p-4">
         <h3
           className="
-          text-sm font-semibold text-neutral-800 line-clamp-2 min-h-[2.5rem]
+          text-sm font-semibold text-neutral-800 dark:text-neutral-100 line-clamp-2 min-h-[2.5rem]
           transition-colors duration-500 ease-in-out
-          group-hover:text-emerald-800
+          group-hover:text-emerald-800 dark:group-hover:text-emerald-300
         "
         >
           {title}
         </h3>
 
-        <p className="text-xs text-neutral-500 mt-1.5 line-clamp-3 flex-1 leading-relaxed">
+        <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1.5 line-clamp-3 flex-1 leading-relaxed">
           {description}
         </p>
 
         <div className="mt-auto pt-3">
           <div className="flex flex-wrap items-baseline gap-2">
-            <span className="text-base font-bold text-neutral-800 tabular-nums">
+            <span className="text-base font-bold text-neutral-800 dark:text-neutral-100 tabular-nums">
               {price}
             </span>
             {originalPrice && (
-              <span className="text-sm text-neutral-400 line-through tabular-nums">
+              <span className="text-sm text-neutral-400 dark:text-neutral-500 line-through tabular-nums">
                 {originalPrice}
               </span>
             )}
@@ -135,9 +135,9 @@ export default function RoomCard({
               <span
                 className="
                 text-xs font-medium text-emerald-700
-                bg-emerald-100 px-1.5 py-0.5 rounded
+                bg-emerald-100 dark:bg-emerald-900/40 dark:text-emerald-300 px-1.5 py-0.5 rounded
                 transition-colors duration-500 ease-in-out
-                group-hover:bg-emerald-200 group-hover:text-emerald-900
+                group-hover:bg-emerald-200 group-hover:text-emerald-900 dark:group-hover:bg-emerald-800/70 dark:group-hover:text-emerald-200
               "
               >
                 {discountLabel}

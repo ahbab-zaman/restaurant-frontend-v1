@@ -62,7 +62,7 @@ function Logo() {
       <motion.div
         whileHover={{ rotate: 8, scale: 1.08 }}
         transition={{ type: "spring", stiffness: 300, damping: 18 }}
-        className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-btn"
+        className="flex items-center justify-center w-9 h-9 rounded-lg bg-transparent dark:bg-white"
       >
         <Image src={logo} alt="LumosStay Logo" className="w-6 h-6" />
       </motion.div>
@@ -115,9 +115,9 @@ function ThemeToggle({
       className="p-2 rounded-lg text-foreground/60 hover:text-foreground hover:bg-foreground/6 transition-colors duration-150"
     >
       {isDark ? (
-        <Moon size={18} className="text-brand-btn" />
+        <Moon size={18} className="" />
       ) : (
-        <Sun size={18} className="text-amber-500" />
+        <Sun size={18} className="" />
       )}
     </motion.button>
   );
@@ -381,6 +381,15 @@ export default function Navbar() {
   const isLoggedIn = Boolean(user);
 
   useEffect(() => {
+    const savedTheme = window.localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const shouldUseDark = savedTheme ? savedTheme === "dark" : prefersDark;
+
+    setIsDark(shouldUseDark);
+    document.documentElement.classList.toggle("dark", shouldUseDark);
+  }, []);
+
+  useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -390,6 +399,7 @@ export default function Navbar() {
     setIsDark((prev) => {
       const next = !prev;
       document.documentElement.classList.toggle("dark", next);
+      window.localStorage.setItem("theme", next ? "dark" : "light");
       return next;
     });
   };

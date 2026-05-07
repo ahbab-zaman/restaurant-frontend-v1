@@ -103,12 +103,12 @@ export default function WhyChooseUs() {
           </p>
           <h2
             id="why-heading"
-            className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4"
+            className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4 dark:text-neutral-100"
           >
             Why Choose Us
           </h2>
           <p
-            className="max-w-xl mx-auto text-sm text-neutral-600 leading-relaxed"
+            className="max-w-xl mx-auto text-sm text-neutral-600 leading-relaxed dark:text-neutral-300"
           >
             Every detail of your journey — from first click to final checkout —
             is crafted with care.
@@ -129,7 +129,7 @@ export default function WhyChooseUs() {
               variants={cardVariants}
               initial="rest"
               whileHover="hover"
-              className="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-white p-7 cursor-default transition-all duration-300 hover:border-neutral-300"
+              className="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-white p-7 cursor-default transition-all duration-300 hover:border-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-neutral-600"
               style={{
                 ["--accent" as string]: accent,
               }}
@@ -151,12 +151,12 @@ export default function WhyChooseUs() {
               </motion.span>
 
               <h3
-                className="text-base font-semibold text-neutral-900 mb-2"
+                className="text-base font-semibold text-neutral-900 mb-2 dark:text-neutral-100"
               >
                 {title}
               </h3>
               <p
-                className="text-sm text-neutral-600 leading-relaxed"
+                className="text-sm text-neutral-600 leading-relaxed dark:text-neutral-300"
               >
                 {description}
               </p>
