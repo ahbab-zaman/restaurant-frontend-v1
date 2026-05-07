@@ -148,6 +148,7 @@ function UserDropdown({
   onLogout: () => void | Promise<void>;
 }) {
   const displayName = user.name?.trim() || "User";
+  const [isOpen, setIsOpen] = useState(false);
   const userDropdownItems: UserDropdownItem[] = [
     {
       label: "My Dashboard",
@@ -158,10 +159,20 @@ function UserDropdown({
   ];
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <button
           type="button"
+          onPointerDown={(event) => {
+            event.preventDefault();
+            setIsOpen((prev) => !prev);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              setIsOpen((prev) => !prev);
+            }
+          }}
           className="flex items-center gap-2 px-1 py-0.5 rounded-full hover:bg-foreground/6 transition-colors focus-visible:ring-2 focus-visible:ring-brand-btn outline-none"
         >
           <Avatar className="w-8 h-8 ring-2 ring-brand-btn/30">
@@ -186,7 +197,7 @@ function UserDropdown({
       <DropdownMenuContent
         align="end"
         sideOffset={10}
-        className="w-52 rounded-xl shadow-xl border border-border/60 bg-white p-1.5"
+        className="z-[70] w-52 rounded-xl border border-border/60 bg-popover p-1.5 text-popover-foreground shadow-xl"
       >
         <DropdownMenuLabel className="px-2 py-1.5">
           <p className="text-sm font-semibold text-foreground truncate">

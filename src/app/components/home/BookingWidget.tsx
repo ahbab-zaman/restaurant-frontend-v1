@@ -5,6 +5,7 @@ import { useMemo, useRef } from "react";
 import HotelCardSkeleton from "@/app/components/hotel/HotelCardSkeleton";
 import { useHotelsQuery } from "@/lib/hotels/hotels.query";
 import RoomCard from "./RoomCard";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 function LeafDecoration() {
   return (
@@ -21,10 +22,30 @@ function LeafDecoration() {
         fill="#7a9e7e"
         opacity="0.6"
       />
-      <path d="M30 4L30 56" stroke="#5a7a5e" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M30 18C23 16 16 21 14 28" stroke="#5a7a5e" strokeWidth="1" strokeLinecap="round" />
-      <path d="M30 28C23 26 17 31 16 38" stroke="#5a7a5e" strokeWidth="1" strokeLinecap="round" />
-      <path d="M30 38C25 36 21 40 20 44" stroke="#5a7a5e" strokeWidth="1" strokeLinecap="round" />
+      <path
+        d="M30 4L30 56"
+        stroke="#5a7a5e"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M30 18C23 16 16 21 14 28"
+        stroke="#5a7a5e"
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
+      <path
+        d="M30 28C23 26 17 31 16 38"
+        stroke="#5a7a5e"
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
+      <path
+        d="M30 38C25 36 21 40 20 44"
+        stroke="#5a7a5e"
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -36,7 +57,10 @@ export default function BookingWidget() {
   const latestHotels = useMemo(() => {
     const hotels = data?.items ?? [];
     return [...hotels]
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      )
       .slice(0, 6);
   }, [data?.items]);
 
@@ -57,7 +81,10 @@ export default function BookingWidget() {
         <div className="relative mb-12 text-center">
           <h2 className="inline text-[36px] font-bold leading-tight tracking-tight text-gray-900 dark:text-neutral-100">
             Recently Booked{" "}
-            <span className="font-normal italic" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <span
+              className="font-normal italic"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
               Hotels
             </span>
           </h2>
@@ -71,7 +98,7 @@ export default function BookingWidget() {
             onClick={() => scrollByCards("left")}
             className="absolute -left-5 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-emerald-200 bg-white/95 text-emerald-800 shadow-md transition-all duration-300 hover:scale-105 hover:bg-emerald-50 hover:shadow-lg active:scale-95 dark:border-emerald-900/60 dark:bg-neutral-900/95 dark:text-emerald-300 dark:hover:bg-neutral-800 lg:flex"
           >
-            <span className="text-xl leading-none">&lt;</span>
+            <ChevronLeft size={18} />
           </button>
 
           <button
@@ -80,7 +107,7 @@ export default function BookingWidget() {
             onClick={() => scrollByCards("right")}
             className="absolute -right-5 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-emerald-200 bg-white/95 text-emerald-800 shadow-md transition-all duration-300 hover:scale-105 hover:bg-emerald-50 hover:shadow-lg active:scale-95 dark:border-emerald-900/60 dark:bg-neutral-900/95 dark:text-emerald-300 dark:hover:bg-neutral-800 lg:flex"
           >
-            <span className="text-xl leading-none">&gt;</span>
+            <ChevronRight size={18} />
           </button>
 
           {isLoading ? (
@@ -98,7 +125,10 @@ export default function BookingWidget() {
                 <div
                   key={hotel.id}
                   className="animate-fadeInUp w-[78%] shrink-0 snap-start opacity-0 sm:w-[48%] lg:w-[23.5%]"
-                  style={{ animationDelay: `${i * 120}ms`, animationFillMode: "forwards" }}
+                  style={{
+                    animationDelay: `${i * 120}ms`,
+                    animationFillMode: "forwards",
+                  }}
                 >
                   <RoomCard
                     href={`/hotels/HotelDetail/${hotel.id}`}
@@ -108,7 +138,9 @@ export default function BookingWidget() {
                     title={hotel.name}
                     description={hotel.description || hotel.address}
                     price="View details"
-                    originalPrice={new Date(hotel.createdAt).toLocaleDateString("en-US")}
+                    originalPrice={new Date(hotel.createdAt).toLocaleDateString(
+                      "en-US",
+                    )}
                     discountLabel="Latest"
                   />
                 </div>
