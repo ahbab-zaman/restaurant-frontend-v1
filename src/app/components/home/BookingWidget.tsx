@@ -4,8 +4,23 @@ import Link from "next/link";
 import { useMemo, useRef } from "react";
 import HotelCardSkeleton from "@/app/components/hotel/HotelCardSkeleton";
 import { useHotelsQuery } from "@/lib/hotels/hotels.query";
+import { useRoomsByHotelsQuery } from "@/lib/rooms/rooms.query";
+import { Room } from "@/types/room";
 import RoomCard from "./RoomCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
+const formatRoomType = (type: string) =>
+  type
+    .toLowerCase()
+    .split("_")
+    .map((item) => item.charAt(0).toUpperCase() + item.slice(1))
+    .join(" ");
+
+const extractRoomStats = (rooms: Room[]) => {
+  if (!rooms.length) return { minPrice: null };
+  const prices = rooms.map((room) => room.price);
+  return { minPrice: Math.min(...prices) };
+};
 
 function LeafDecoration() {
   return (
@@ -53,6 +68,21 @@ function LeafDecoration() {
 export default function BookingWidget() {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const { data, isLoading, isError } = useHotelsQuery();
+  const hotelIds = useMemo(
+    () => (data?.items ?? []).map((hotel) => hotel.id),
+    [data?.items],
+  );
+  const { data: roomsData } = useRoomsByHotelsQuery(hotelIds);
+
+  const roomsByHotel = useMemo(() => {
+    const grouped = new Map<string, Room[]>();
+    for (const room of roomsData?.items ?? []) {
+      const existing = grouped.get(room.hotelId) ?? [];
+      existing.push(room);
+      grouped.set(room.hotelId, existing);
+    }
+    return grouped;
+  }, [roomsData?.items]);
 
   const latestHotels = useMemo(() => {
     const hotels = data?.items ?? [];
@@ -122,28 +152,44 @@ export default function BookingWidget() {
               className="hotel-form-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto pb-2 scroll-smooth"
             >
               {latestHotels.map((hotel, i) => (
-                <div
-                  key={hotel.id}
-                  className="animate-fadeInUp w-[78%] shrink-0 snap-start opacity-0 sm:w-[48%] lg:w-[23.5%]"
-                  style={{
-                    animationDelay: `${i * 120}ms`,
-                    animationFillMode: "forwards",
-                  }}
-                >
-                  <RoomCard
-                    href={`/hotels/HotelDetail/${hotel.id}`}
-                    image={hotel.imageUrl}
-                    imageAlt={hotel.name}
-                    saleBadge="New"
-                    title={hotel.name}
-                    description={hotel.description || hotel.address}
-                    price="View details"
-                    originalPrice={new Date(hotel.createdAt).toLocaleDateString(
-                      "en-US",
-                    )}
-                    discountLabel="Latest"
-                  />
-                </div>
+                (() => {
+                  const rooms = roomsByHotel.get(hotel.id) ?? [];
+                  const { minPrice } = extractRoomStats(rooms);
+                  const representativeRoom = rooms[0];
+
+                  return (
+                    <div
+                      key={hotel.id}
+                      className="animate-fadeInUp w-[78%] shrink-0 snap-start opacity-0 sm:w-[48%] lg:w-[23.5%]"
+                      style={{
+                        animationDelay: `${i * 120}ms`,
+                        animationFillMode: "forwards",
+                      }}
+                    >
+                      <RoomCard
+                        href={`/hotels/HotelDetail/${hotel.id}`}
+                        image={hotel.imageUrl}
+                        imageAlt={hotel.name}
+                        saleBadge="New"
+                        title={hotel.name}
+                        description={hotel.description || hotel.address}
+                        price={
+                          minPrice !== null
+                            ? `$${minPrice} / night`
+                            : "Price not available"
+                        }
+                        originalPrice={
+                          rooms.length ? `${rooms.length} rooms` : undefined
+                        }
+                        discountLabel={
+                          representativeRoom
+                            ? formatRoomType(representativeRoom.type)
+                            : undefined
+                        }
+                      />
+                    </div>
+                  );
+                })()
               ))}
             </div>
           )}
