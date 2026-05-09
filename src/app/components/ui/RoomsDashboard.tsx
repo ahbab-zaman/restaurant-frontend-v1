@@ -33,9 +33,14 @@ export default function RoomsDashboard({ title, description }: RoomsDashboardPro
   const [roomsPage, setRoomsPage] = useState(1);
   const ROOMS_LIMIT = 10;
 
-  // Fetch all hotels (up to 100) so we have all hotel IDs for the bulk rooms query.
-  // Without this, only rooms belonging to the first 10 hotels would ever appear.
-  const { data: hotelsData, isLoading: isHotelsLoading } = useHotelsQuery({ page: 1, limit: 100 });
+  // For HOTEL_ADMIN: pass myHotels=true so the backend filters hotels to only
+  // those owned by the logged-in user. SUPER_ADMIN (and others) get all hotels.
+  const isHotelAdmin = user?.role === "HOTEL_ADMIN";
+  const { data: hotelsData, isLoading: isHotelsLoading } = useHotelsQuery({
+    page: 1,
+    limit: 100,
+    myHotels: isHotelAdmin,
+  });
   const hotels = useMemo(() => hotelsData?.items ?? [], [hotelsData?.items]);
   const hotelIds = useMemo(() => hotels.map((hotel) => hotel.id), [hotels]);
 

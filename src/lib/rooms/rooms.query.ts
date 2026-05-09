@@ -56,6 +56,7 @@ export const useCreateRoomsMutation = () => {
     mutationFn: (payload: CreateRoomPayload) => createRoomsApi(payload),
     onSuccess: (_result, payload) => {
       queryClient.invalidateQueries({ queryKey: ["rooms", payload.hotelId] });
+      queryClient.invalidateQueries({ queryKey: ["rooms-bulk"] }); // refresh dashboard list
       queryClient.invalidateQueries({ queryKey: hotelKeys.list });
     },
   });
@@ -69,6 +70,7 @@ export const useUpdateRoomMutation = () => {
       updateRoomApi(hotelId, roomId, payload),
     onSuccess: (_result, variables) => {
       queryClient.invalidateQueries({ queryKey: ["rooms", variables.hotelId] });
+      queryClient.invalidateQueries({ queryKey: ["rooms-bulk"] }); // refresh dashboard list
       queryClient.invalidateQueries({ queryKey: hotelKeys.list });
     },
   });
@@ -81,6 +83,7 @@ export const useDeleteRoomMutation = () => {
     mutationFn: ({ hotelId, roomId }: { hotelId: string; roomId: string }) => deleteRoomApi(hotelId, roomId),
     onSuccess: (_result, variables) => {
       queryClient.invalidateQueries({ queryKey: ["rooms", variables.hotelId] });
+      queryClient.invalidateQueries({ queryKey: ["rooms-bulk"] }); // refresh dashboard list
       queryClient.invalidateQueries({ queryKey: hotelKeys.list });
     },
   });
