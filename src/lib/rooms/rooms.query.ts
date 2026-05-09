@@ -1,44 +1,53 @@
 "use client";
 
-import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { hotelKeys } from "@/lib/hotels/hotels.query";
 import { CreateRoomPayload, RoomFilters, RoomsListResponse, UpdateRoomPayload } from "@/types/room";
-import { createRoomsApi, deleteRoomApi, getRoomsByHotelApi, updateRoomApi } from "./rooms.api";
+import { createRoomsApi, deleteRoomApi, getRoomsByHotelApi, getRoomsByHotelIdsApi, updateRoomApi } from "./rooms.api";
 
 export const roomKeys = {
   listByHotel: (hotelId: string, filters?: RoomFilters, pagination?: { page?: number; limit?: number }) =>
     ["rooms", hotelId, filters?.type ?? "", filters?.isAvailable ?? "", pagination?.page ?? 1, pagination?.limit ?? 10] as const,
+  listByHotelIds: (hotelIds: string[], filters?: RoomFilters, pagination?: { page?: number; limit?: number }) =>
+    ["rooms-bulk", hotelIds.join(","), filters?.type ?? "", filters?.isAvailable ?? "", pagination?.page ?? 1, pagination?.limit ?? 100] as const,
 };
 
+/**
+ * Fetches rooms for multiple hotels in ONE request (bulk endpoint).
+ * Replaces the previous N+1 useQueries pattern.
+ */
 export const useRoomsByHotelsQuery = (
   hotelIds: string[],
   filters?: RoomFilters,
   pagination?: { page?: number; limit?: number },
 ) => {
-  const queries = useQueries({
-    queries: hotelIds.map((hotelId) => ({
-      queryKey: roomKeys.listByHotel(hotelId, filters, pagination),
-      queryFn: () => getRoomsByHotelApi(hotelId, filters, pagination),
-      enabled: Boolean(hotelId),
-    })),
+  const enabled = hotelIds.length > 0;
+
+  return useQuery({
+    queryKey: roomKeys.listByHotelIds(hotelIds, filters, pagination),
+    queryFn: () => getRoomsByHotelIdsApi(hotelIds, filters, pagination),
+    enabled,
+    staleTime: 5 * 60 * 1000, // 5 minutes — reduces refetches across tabs
+    placeholderData: (prev) => prev, // keep previous data visible during refetch
+  });
+};
+
+/**
+ * Fetches rooms for a single hotel (used on hotel detail page).
+ */
+export const useRoomsByHotelQuery = (
+  hotelId: string,
+  filters?: RoomFilters,
+  pagination?: { page?: number; limit?: number },
+) =>
+  useQuery({
+    queryKey: roomKeys.listByHotel(hotelId, filters, pagination),
+    queryFn: () => getRoomsByHotelApi(hotelId, filters, pagination),
+    enabled: Boolean(hotelId),
+    staleTime: 5 * 60 * 1000,
   });
 
-  const isLoading = queries.some((query) => query.isLoading);
-  const isFetching = queries.some((query) => query.isFetching);
-  const isError = queries.some((query) => query.isError);
 
-  const data: RoomsListResponse = {
-    items: queries.flatMap((query) => query.data?.items ?? []),
-    meta: {
-      page: pagination?.page ?? 1,
-      limit: queries.reduce((sum, query) => sum + (query.data?.meta.limit ?? 0), 0),
-      total: queries.reduce((sum, query) => sum + (query.data?.meta.total ?? 0), 0),
-      totalPages: Math.max(1, ...queries.map((query) => query.data?.meta.totalPages ?? 1)),
-    },
-  };
-
-  return { data, isLoading, isFetching, isError };
-};
 
 export const useCreateRoomsMutation = () => {
   const queryClient = useQueryClient();

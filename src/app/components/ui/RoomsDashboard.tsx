@@ -30,14 +30,16 @@ export default function RoomsDashboard({ title, description }: RoomsDashboardPro
   const [editingRoom, setEditingRoom] = useState<Room | null>(null);
   const [deletingRoom, setDeletingRoom] = useState<Room | null>(null);
   const [filters, setFilters] = useState<RoomFilters>({ type: "", isAvailable: "" });
-  const [page, setPage] = useState(1);
-  const limit = 10;
+  const [roomsPage, setRoomsPage] = useState(1);
+  const ROOMS_LIMIT = 10;
 
-  const { data: hotelsData, isLoading: isHotelsLoading } = useHotelsQuery({ page, limit });
+  // Fetch all hotels (up to 100) so we have all hotel IDs for the bulk rooms query.
+  // Without this, only rooms belonging to the first 10 hotels would ever appear.
+  const { data: hotelsData, isLoading: isHotelsLoading } = useHotelsQuery({ page: 1, limit: 100 });
   const hotels = useMemo(() => hotelsData?.items ?? [], [hotelsData?.items]);
   const hotelIds = useMemo(() => hotels.map((hotel) => hotel.id), [hotels]);
 
-  const { data: roomsData, isLoading: isRoomsLoading, isFetching } = useRoomsByHotelsQuery(hotelIds, filters, { page: 1, limit: 10 });
+  const { data: roomsData, isLoading: isRoomsLoading, isFetching } = useRoomsByHotelsQuery(hotelIds, filters, { page: roomsPage, limit: ROOMS_LIMIT });
 
   const rooms = useMemo(() => {
     const hotelById = new Map(hotels.map((hotel) => [hotel.id, hotel]));
@@ -153,7 +155,7 @@ export default function RoomsDashboard({ title, description }: RoomsDashboardPro
           ) : null}
           <RoomsTable rooms={rooms} canManage={canManage} onView={setViewingRoom} onEdit={setEditingRoom} onDelete={setDeletingRoom} />
           <div className="flex justify-end">
-            <PremiumPagination page={page} totalPages={hotelsData?.meta.totalPages ?? 1} onPageChange={setPage} />
+            <PremiumPagination page={roomsPage} totalPages={roomsData?.meta.totalPages ?? 1} onPageChange={setRoomsPage} />
           </div>
         </div>
       ) : (

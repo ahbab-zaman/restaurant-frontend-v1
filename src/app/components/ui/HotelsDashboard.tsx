@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useAuthUser } from "@/lib/auth/auth.query";
 import toast from "react-hot-toast";
 import { Plus } from "lucide-react";
 import { useCreateHotelMutation, useDeleteHotelMutation, useHotelsQuery, useUpdateHotelMutation } from "@/lib/hotels/hotels.query";
@@ -22,9 +23,13 @@ type HotelsDashboardProps = {
 };
 
 export default function HotelsDashboard({ title, description }: HotelsDashboardProps) {
+  const user = useAuthUser();
+  // Hotel managers should only see and manage their own hotels in the dashboard.
+  const isHotelManager = user?.role === "HOTEL_ADMIN";
+
   const [page, setPage] = useState(1);
   const limit = 10;
-  const { data, isLoading, isFetching } = useHotelsQuery({ page, limit });
+  const { data, isLoading, isFetching } = useHotelsQuery({ page, limit, myHotels: isHotelManager });
   const createMutation = useCreateHotelMutation();
   const updateMutation = useUpdateHotelMutation();
   const deleteMutation = useDeleteHotelMutation();
@@ -40,7 +45,7 @@ export default function HotelsDashboard({ title, description }: HotelsDashboardP
 
   const hotelsWithRooms = useMemo(() => {
     const groupedRooms = new Map<string, Room[]>();
-    for (const room of roomsData.items) {
+    for (const room of roomsData?.items ?? []) {
       const existing = groupedRooms.get(room.hotelId) ?? [];
       existing.push(room);
       groupedRooms.set(room.hotelId, existing);
@@ -50,7 +55,7 @@ export default function HotelsDashboard({ title, description }: HotelsDashboardP
       ...hotel,
       rooms: groupedRooms.get(hotel.id) ?? [],
     }));
-  }, [hotels, roomsData.items]);
+  }, [hotels, roomsData?.items]);
 
   async function onCreate(payload: HotelMutationPayload) {
     try {

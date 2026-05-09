@@ -9,10 +9,10 @@ export const hotelKeys = {
   detail: (id: string) => ["hotels", id] as const,
 };
 
-export const useHotelsQuery = (params?: { page?: number; limit?: number }) =>
+export const useHotelsQuery = (params?: { page?: number; limit?: number; myHotels?: boolean }) =>
   useQuery({
-    queryKey: [...hotelKeys.list, params?.page ?? 1, params?.limit ?? 10],
-    queryFn: () => getHotelsApi(params?.page ?? 1, params?.limit ?? 10),
+    queryKey: [...hotelKeys.list, params?.page ?? 1, params?.limit ?? 10, params?.myHotels ?? false],
+    queryFn: () => getHotelsApi(params?.page ?? 1, params?.limit ?? 10, params?.myHotels ?? false),
   });
 
 export const useHotelByIdQuery = (id: string) =>

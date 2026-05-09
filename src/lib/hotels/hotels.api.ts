@@ -16,10 +16,11 @@ function toHotelFormData(payload: HotelMutationPayload) {
   return formData;
 }
 
-export const getHotelsApi = (page = 1, limit = 10) => {
+export const getHotelsApi = (page = 1, limit = 10, myHotels = false) => {
   const params = new URLSearchParams();
   params.set("page", String(page));
   params.set("limit", String(limit));
+  if (myHotels) params.set("myHotels", "true");
   return apiFetch<HotelsListResponse>(`${HOTELS_BASE_PATH}?${params.toString()}`);
 };
 

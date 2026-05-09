@@ -35,12 +35,27 @@ export const getRoomsByHotelApi = (
   pagination?: { page?: number; limit?: number },
 ) => {
   const params = new URLSearchParams();
-  params.set("page", String(pagination?.page ?? 1));
-  params.set("limit", String(pagination?.limit ?? 10));
-  if (filters?.type) params.set("type", filters.type);
-  if (filters?.isAvailable) params.set("isAvailable", filters.isAvailable);
+  params.set('page', String(pagination?.page ?? 1));
+  params.set('limit', String(pagination?.limit ?? 10));
+  if (filters?.type) params.set('type', filters.type);
+  if (filters?.isAvailable) params.set('isAvailable', filters.isAvailable);
   return apiFetch<RoomsListResponse>(`${roomsBasePath(hotelId)}?${params.toString()}`);
 };
+
+export const getRoomsByHotelIdsApi = (
+  hotelIds: string[],
+  filters?: RoomFilters,
+  pagination?: { page?: number; limit?: number },
+) => {
+  const params = new URLSearchParams();
+  params.set('hotelIds', hotelIds.join(','));
+  params.set('page', String(pagination?.page ?? 1));
+  params.set('limit', String(pagination?.limit ?? 100)); // fetch all for listing pages
+  if (filters?.type) params.set('type', filters.type);
+  if (filters?.isAvailable) params.set('isAvailable', filters.isAvailable);
+  return apiFetch<RoomsListResponse>(`${API_V1_PREFIX}/rooms?${params.toString()}`);
+};
+
 
 export const createRoomsApi = (payload: CreateRoomPayload) =>
   apiFetchMultipart<Room[]>(roomsBasePath(payload.hotelId), {
