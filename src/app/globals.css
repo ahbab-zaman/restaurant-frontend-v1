@@ -371,3 +371,59 @@
     rgba(168, 120, 35, 1) 100%
   );
 }
+
+/* ── Premium Room Detail Modal Scrollbar ────────────────────────── */
+.room-detail-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #c9a96e transparent;
+}
+
+.room-detail-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.room-detail-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 9999px;
+  margin-block: 24px; /* keep it away from the very edges */
+}
+
+.room-detail-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: linear-gradient(
+    180deg,
+    #f5e6c0 0%,
+    #c9a96e 40%,
+    #8b6914 100%
+  );
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 0 6px rgba(201, 169, 110, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.room-detail-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    #fff5d6 0%,
+    #e0b96e 40%,
+    #a07820 100%
+  );
+  box-shadow:
+    0 0 12px rgba(201, 169, 110, 0.8),
+    0 0 4px rgba(201, 169, 110, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.room-detail-scrollbar::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(
+    180deg,
+    #c9a96e 0%,
+    #8b6914 60%,
+    #5c4510 100%
+  );
+  box-shadow:
+    0 0 8px rgba(201, 169, 110, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
