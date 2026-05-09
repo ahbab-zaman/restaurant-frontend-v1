@@ -14,6 +14,7 @@ import HotelFormModal from "./HotelFormModal";
 import HotelsTable from "./HotelsTable";
 import LoadingSpinner from "./LoadingSpinner";
 import HotelDetailsModal from "./HotelDetailsModal";
+import PremiumPagination from "./PremiumPagination";
 
 type HotelsDashboardProps = {
   title: string;
@@ -21,7 +22,9 @@ type HotelsDashboardProps = {
 };
 
 export default function HotelsDashboard({ title, description }: HotelsDashboardProps) {
-  const { data, isLoading, isFetching } = useHotelsQuery();
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  const { data, isLoading, isFetching } = useHotelsQuery({ page, limit });
   const createMutation = useCreateHotelMutation();
   const updateMutation = useUpdateHotelMutation();
   const deleteMutation = useDeleteHotelMutation();
@@ -109,6 +112,9 @@ export default function HotelsDashboard({ title, description }: HotelsDashboardP
             </div>
           ) : null}
           <HotelsTable hotels={hotelsWithRooms} onView={setViewingHotel} onEdit={setEditingHotel} onDelete={setDeletingHotel} />
+          <div className="flex justify-end">
+            <PremiumPagination page={page} totalPages={data?.meta.totalPages ?? 1} onPageChange={setPage} />
+          </div>
         </div>
       ) : (
         <div className="rounded-2xl border border-dashed border-zinc-300 bg-white p-8 text-center">

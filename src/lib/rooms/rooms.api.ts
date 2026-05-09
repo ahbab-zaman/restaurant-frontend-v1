@@ -29,12 +29,17 @@ const toRoomFormData = (payload: Omit<CreateRoomPayload, "hotelId"> | UpdateRoom
 
 const roomsBasePath = (hotelId: string) => `${API_V1_PREFIX}/hotels/${hotelId}/rooms`;
 
-export const getRoomsByHotelApi = (hotelId: string, filters?: RoomFilters) => {
+export const getRoomsByHotelApi = (
+  hotelId: string,
+  filters?: RoomFilters,
+  pagination?: { page?: number; limit?: number },
+) => {
   const params = new URLSearchParams();
+  params.set("page", String(pagination?.page ?? 1));
+  params.set("limit", String(pagination?.limit ?? 10));
   if (filters?.type) params.set("type", filters.type);
   if (filters?.isAvailable) params.set("isAvailable", filters.isAvailable);
-  const query = params.toString();
-  return apiFetch<RoomsListResponse>(`${roomsBasePath(hotelId)}${query ? `?${query}` : ""}`);
+  return apiFetch<RoomsListResponse>(`${roomsBasePath(hotelId)}?${params.toString()}`);
 };
 
 export const createRoomsApi = (payload: CreateRoomPayload) =>

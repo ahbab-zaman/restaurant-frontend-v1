@@ -1,17 +1,25 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createHotelApi, deleteHotelApi, getHotelsApi, updateHotelApi } from "./hotels.api";
+import { createHotelApi, deleteHotelApi, getHotelByIdApi, getHotelsApi, updateHotelApi } from "./hotels.api";
 import { HotelMutationPayload } from "@/types/hotel";
 
 export const hotelKeys = {
   list: ["hotels"] as const,
+  detail: (id: string) => ["hotels", id] as const,
 };
 
-export const useHotelsQuery = () =>
+export const useHotelsQuery = (params?: { page?: number; limit?: number }) =>
   useQuery({
-    queryKey: hotelKeys.list,
-    queryFn: getHotelsApi,
+    queryKey: [...hotelKeys.list, params?.page ?? 1, params?.limit ?? 10],
+    queryFn: () => getHotelsApi(params?.page ?? 1, params?.limit ?? 10),
+  });
+
+export const useHotelByIdQuery = (id: string) =>
+  useQuery({
+    queryKey: hotelKeys.detail(id),
+    queryFn: () => getHotelByIdApi(id),
+    enabled: !!id,
   });
 
 export const useCreateHotelMutation = () => {

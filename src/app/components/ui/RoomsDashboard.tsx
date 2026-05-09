@@ -14,6 +14,7 @@ import LoadingSpinner from "./LoadingSpinner";
 import RoomDetailsModal from "./RoomDetailsModal";
 import RoomFormModal from "./RoomFormModal";
 import RoomsTable from "./RoomsTable";
+import PremiumPagination from "./PremiumPagination";
 
 type RoomsDashboardProps = {
   title: string;
@@ -29,12 +30,14 @@ export default function RoomsDashboard({ title, description }: RoomsDashboardPro
   const [editingRoom, setEditingRoom] = useState<Room | null>(null);
   const [deletingRoom, setDeletingRoom] = useState<Room | null>(null);
   const [filters, setFilters] = useState<RoomFilters>({ type: "", isAvailable: "" });
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
-  const { data: hotelsData, isLoading: isHotelsLoading } = useHotelsQuery();
+  const { data: hotelsData, isLoading: isHotelsLoading } = useHotelsQuery({ page, limit });
   const hotels = useMemo(() => hotelsData?.items ?? [], [hotelsData?.items]);
   const hotelIds = useMemo(() => hotels.map((hotel) => hotel.id), [hotels]);
 
-  const { data: roomsData, isLoading: isRoomsLoading, isFetching } = useRoomsByHotelsQuery(hotelIds, filters);
+  const { data: roomsData, isLoading: isRoomsLoading, isFetching } = useRoomsByHotelsQuery(hotelIds, filters, { page: 1, limit: 10 });
 
   const rooms = useMemo(() => {
     const hotelById = new Map(hotels.map((hotel) => [hotel.id, hotel]));
@@ -149,6 +152,9 @@ export default function RoomsDashboard({ title, description }: RoomsDashboardPro
             </div>
           ) : null}
           <RoomsTable rooms={rooms} canManage={canManage} onView={setViewingRoom} onEdit={setEditingRoom} onDelete={setDeletingRoom} />
+          <div className="flex justify-end">
+            <PremiumPagination page={page} totalPages={hotelsData?.meta.totalPages ?? 1} onPageChange={setPage} />
+          </div>
         </div>
       ) : (
         <div className="rounded-2xl border border-dashed border-zinc-300 bg-white p-8 text-center">

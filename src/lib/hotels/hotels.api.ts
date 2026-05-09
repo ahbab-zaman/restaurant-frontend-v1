@@ -16,7 +16,15 @@ function toHotelFormData(payload: HotelMutationPayload) {
   return formData;
 }
 
-export const getHotelsApi = () => apiFetch<HotelsListResponse>(HOTELS_BASE_PATH);
+export const getHotelsApi = (page = 1, limit = 10) => {
+  const params = new URLSearchParams();
+  params.set("page", String(page));
+  params.set("limit", String(limit));
+  return apiFetch<HotelsListResponse>(`${HOTELS_BASE_PATH}?${params.toString()}`);
+};
+
+export const getHotelByIdApi = (id: string) =>
+  apiFetch<Hotel>(`${HOTELS_BASE_PATH}/${id}`);
 
 export const createHotelApi = (payload: HotelMutationPayload) =>
   apiFetchMultipart<Hotel>(HOTELS_BASE_PATH, {

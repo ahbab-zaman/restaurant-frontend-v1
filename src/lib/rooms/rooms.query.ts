@@ -6,14 +6,19 @@ import { CreateRoomPayload, RoomFilters, RoomsListResponse, UpdateRoomPayload } 
 import { createRoomsApi, deleteRoomApi, getRoomsByHotelApi, updateRoomApi } from "./rooms.api";
 
 export const roomKeys = {
-  listByHotel: (hotelId: string, filters?: RoomFilters) => ["rooms", hotelId, filters?.type ?? "", filters?.isAvailable ?? ""] as const,
+  listByHotel: (hotelId: string, filters?: RoomFilters, pagination?: { page?: number; limit?: number }) =>
+    ["rooms", hotelId, filters?.type ?? "", filters?.isAvailable ?? "", pagination?.page ?? 1, pagination?.limit ?? 10] as const,
 };
 
-export const useRoomsByHotelsQuery = (hotelIds: string[], filters?: RoomFilters) => {
+export const useRoomsByHotelsQuery = (
+  hotelIds: string[],
+  filters?: RoomFilters,
+  pagination?: { page?: number; limit?: number },
+) => {
   const queries = useQueries({
     queries: hotelIds.map((hotelId) => ({
-      queryKey: roomKeys.listByHotel(hotelId, filters),
-      queryFn: () => getRoomsByHotelApi(hotelId, filters),
+      queryKey: roomKeys.listByHotel(hotelId, filters, pagination),
+      queryFn: () => getRoomsByHotelApi(hotelId, filters, pagination),
       enabled: Boolean(hotelId),
     })),
   });
@@ -25,10 +30,10 @@ export const useRoomsByHotelsQuery = (hotelIds: string[], filters?: RoomFilters)
   const data: RoomsListResponse = {
     items: queries.flatMap((query) => query.data?.items ?? []),
     meta: {
-      page: 1,
+      page: pagination?.page ?? 1,
       limit: queries.reduce((sum, query) => sum + (query.data?.meta.limit ?? 0), 0),
       total: queries.reduce((sum, query) => sum + (query.data?.meta.total ?? 0), 0),
-      totalPages: 1,
+      totalPages: Math.max(1, ...queries.map((query) => query.data?.meta.totalPages ?? 1)),
     },
   };
 

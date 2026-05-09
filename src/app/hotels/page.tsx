@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import RoomCard from "@/app/components/home/RoomCard";
 import HotelCardSkeleton from "@/app/components/hotel/HotelCardSkeleton";
+import PremiumPagination from "@/app/components/ui/PremiumPagination";
 import { Switch } from "@/components/ui/switch";
 import { useHotelsQuery } from "@/lib/hotels/hotels.query";
 import { useRoomsByHotelsQuery } from "@/lib/rooms/rooms.query";
@@ -36,18 +37,22 @@ const extractRoomStats = (rooms: Room[]) => {
 
 export default function HotelPage() {
   const MIN_SKELETON_MS = 700;
+  const [page, setPage] = useState(1);
+  const limit = 10;
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("default");
   const [onlyAvailable, setOnlyAvailable] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
   const filterTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Track if the user has manually adjusted the price range
+  const priceRangeUserModified = useRef(false);
 
   const {
     data: hotelsData,
     isLoading: hotelsLoading,
     isError: hotelsError,
-  } = useHotelsQuery();
+  } = useHotelsQuery({ page, limit });
   const hotels = useMemo(() => hotelsData?.items ?? [], [hotelsData?.items]);
   const hotelIds = useMemo(() => hotels.map((hotel) => hotel.id), [hotels]);
 
@@ -84,9 +89,11 @@ export default function HotelPage() {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
 
-  // Sync price range when global range loads
+  // Sync price range when global range loads (only if user hasn't manually changed it)
   useEffect(() => {
-    setPriceRange([globalPriceRange.min, globalPriceRange.max]);
+    if (!priceRangeUserModified.current) {
+      setPriceRange([globalPriceRange.min, globalPriceRange.max]);
+    }
   }, [globalPriceRange.min, globalPriceRange.max]);
 
   const activeFilterCount =
@@ -147,6 +154,13 @@ export default function HotelPage() {
     priceRange,
   ]);
 
+  // Reset to page 1 only when user-driven filter changes happen
+  // priceRange is intentionally excluded to avoid the reset loop:
+  // page change → new data → globalPriceRange update → priceRange sync → page reset
+  useEffect(() => {
+    setPage(1);
+  }, [search, sortBy, selectedTypes, onlyAvailable]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const isLoading = hotelsLoading || roomsLoading;
   const [showSkeleton, setShowSkeleton] = useState(true);
   const loadingStartedAtRef = useRef<number>(Date.now());
@@ -181,7 +195,9 @@ export default function HotelPage() {
   const clearFilters = () => {
     setSelectedTypes([]);
     setOnlyAvailable(false);
+    priceRangeUserModified.current = false;
     setPriceRange([globalPriceRange.min, globalPriceRange.max]);
+    setPage(1);
   };
 
   return (
@@ -378,8 +394,11 @@ export default function HotelPage() {
                               value={priceRange[0]}
                               onChange={(e) => {
                                 const val = Number(e.target.value);
-                                if (val <= priceRange[1])
+                                if (val <= priceRange[1]) {
+                                  priceRangeUserModified.current = true;
                                   setPriceRange([val, priceRange[1]]);
+                                  setPage(1);
+                                }
                               }}
                             />
                             <input
@@ -390,8 +409,11 @@ export default function HotelPage() {
                               value={priceRange[1]}
                               onChange={(e) => {
                                 const val = Number(e.target.value);
-                                if (val >= priceRange[0])
+                                if (val >= priceRange[0]) {
+                                  priceRangeUserModified.current = true;
                                   setPriceRange([priceRange[0], val]);
+                                  setPage(1);
+                                }
                               }}
                             />
                           </div>
@@ -467,49 +489,58 @@ export default function HotelPage() {
                   Failed to load hotels or rooms. Please refresh the page.
                 </div>
               ) : filteredHotels.length ? (
-                <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
-                  {filteredHotels.map((hotel, index) => {
-                    const rooms = roomsByHotel.get(hotel.id) ?? [];
-                    const { minPrice, availableCount } =
-                      extractRoomStats(rooms);
-                    const representativeRoom = rooms[0];
+                <div className="space-y-6">
+                  <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
+                    {filteredHotels.map((hotel, index) => {
+                      const rooms = roomsByHotel.get(hotel.id) ?? [];
+                      const { minPrice, availableCount } =
+                        extractRoomStats(rooms);
+                      const representativeRoom = rooms[0];
 
-                    return (
-                      <div
-                        key={hotel.id}
-                        className="opacity-0"
-                        style={{
-                          animation: `fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) ${index * 60}ms forwards`,
-                        }}
-                      >
-                        <RoomCard
-                          href={`/hotels/HotelDetail/${hotel.id}`}
-                          image={hotel.imageUrl}
-                          imageAlt={hotel.name}
-                          saleBadge={
-                            availableCount
-                              ? `${availableCount} Available`
-                              : "Fully Booked"
-                          }
-                          title={hotel.name}
-                          description={hotel.description || hotel.address}
-                          price={
-                            minPrice !== null
-                              ? `$${minPrice} / night`
-                              : "Price not available"
-                          }
-                          originalPrice={
-                            rooms.length ? `${rooms.length} rooms` : undefined
-                          }
-                          discountLabel={
-                            representativeRoom
-                              ? formatRoomType(representativeRoom.type)
-                              : undefined
-                          }
-                        />
-                      </div>
-                    );
-                  })}
+                      return (
+                        <div
+                          key={hotel.id}
+                          className="opacity-0"
+                          style={{
+                            animation: `fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) ${index * 60}ms forwards`,
+                          }}
+                        >
+                          <RoomCard
+                            href={`/hotels/HotelDetail/${hotel.id}`}
+                            image={hotel.imageUrl}
+                            imageAlt={hotel.name}
+                            saleBadge={
+                              availableCount
+                                ? `${availableCount} Available`
+                                : "No Rooms Available"
+                            }
+                            title={hotel.name}
+                            description={hotel.description || hotel.address}
+                            price={
+                              minPrice !== null
+                                ? `$${minPrice} / night`
+                                : "Price not available"
+                            }
+                            originalPrice={
+                              rooms.length ? `${rooms.length} rooms` : undefined
+                            }
+                            discountLabel={
+                              representativeRoom
+                                ? formatRoomType(representativeRoom.type)
+                                : undefined
+                            }
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="flex justify-end">
+                    <PremiumPagination
+                      page={page}
+                      totalPages={hotelsData?.meta.totalPages ?? 1}
+                      onPageChange={setPage}
+                    />
+                  </div>
                 </div>
               ) : (
                 <div className="rounded-2xl border border-[#ddd2c3] bg-white px-5 py-10 text-center text-[#7d6b58]">

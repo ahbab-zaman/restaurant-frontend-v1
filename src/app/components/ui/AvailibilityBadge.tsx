@@ -23,7 +23,7 @@ const CONFIG: Record<
     border: "rgba(201,150,58,0.28)",
   },
   unavailable: {
-    label: "Fully Booked",
+    label: "No Rooms Available",
     bg: "rgba(138,58,58,0.12)",
     text: "#8a3a3a",
     border: "rgba(138,58,58,0.28)",
