@@ -7,8 +7,8 @@ import {
   User,
   LogOut,
   ChevronRight,
-  ShoppingBag,
   Settings,
+  CalendarCheck,
 } from "lucide-react";
 import clsx from "clsx";
 import {
@@ -21,6 +21,7 @@ import { hasSessionFlag } from "@/lib/auth/session";
 const navItems = [
   { href: "/account/settings", label: "Account Settings", icon: Settings, exact: true },
   { href: "/account/edit", label: "Edit Profile", icon: User },
+  { href: "/account/bookings", label: "My Bookings", icon: CalendarCheck },
 ];
 
 export default function AccountLayout({

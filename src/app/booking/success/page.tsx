@@ -69,11 +69,7 @@ export default function BookingSuccessPage() {
           <Link href="/account/bookings" className="rounded-lg bg-[#2f261f] px-4 py-2 text-white">
             View My Bookings
           </Link>
-          {!isConfirmed ? (
-            <Link href={`/checkout/${booking.id}`} className="rounded-lg border border-[#2f261f] px-4 py-2 text-[#2f261f]">
-              Retry Payment
-            </Link>
-          ) : null}
+         
         </div>
       </section>
     </main>
