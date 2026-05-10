@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import { Room } from "@/types/room";
+import BookingCheckoutStarter from "@/app/components/checkout/BookingCheckoutStarter";
 
 interface RoomDetailModalProps {
   room: Room | null;
@@ -173,6 +174,15 @@ export default function RoomDetailModal({ room, onClose }: RoomDetailModalProps)
               <p className="text-sm text-[#9f8b77] dark:text-gray-400">No amenities listed.</p>
             )}
           </div>
+
+          {room.isAvailable ? (
+            <div>
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[#9f8b77] dark:text-gray-400">
+                Reserve This Room
+              </h3>
+              <BookingCheckoutStarter roomId={room.id} />
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
