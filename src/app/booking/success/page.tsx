@@ -32,25 +32,50 @@ export default function BookingSuccessPage() {
   }, [isConfirmed, queryClient]);
 
   return (
-    <main className="mx-auto max-w-xl space-y-4 px-4 py-12">
-      <div className="rounded-2xl border border-[#e7dccd] bg-white p-5">
-        <h1 className="text-xl font-semibold text-[#2f261f]">
-          {isConfirmed ? "Booking Confirmed" : "Payment Processing"}
-        </h1>
-        <p className="mt-2 text-sm text-[#6d5b4b]">Booking ID: {booking.id}</p>
-        <p className="text-sm text-[#6d5b4b]">Status: {booking.status}</p>
-      </div>
+    <main className="mx-auto max-w-2xl px-4 py-12">
+      <section className="rounded-3xl border border-[#e7dccd] bg-gradient-to-b from-[#fffdf9] to-[#f9f3ea] p-6 shadow-sm">
+        <div className="mb-4 flex items-center gap-3">
+          <div
+            className={`flex h-10 w-10 items-center justify-center rounded-full text-lg font-semibold ${
+              isConfirmed ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"
+            }`}
+          >
+            {isConfirmed ? "✓" : "!"}
+          </div>
+          <div>
+            <h1 className="text-2xl font-semibold text-[#2f261f]">
+              {isConfirmed ? "Booking Confirmed" : "Payment Processing"}
+            </h1>
+            <p className="text-sm text-[#6d5b4b]">
+              {isConfirmed
+                ? "Your room is reserved and your payment is complete."
+                : "We are still verifying your payment. Please check your booking status."}
+            </p>
+          </div>
+        </div>
 
-      <div className="flex gap-3">
-        <Link href="/account/bookings" className="rounded-lg bg-[#2f261f] px-4 py-2 text-white">
-          View My Bookings
-        </Link>
-        {!isConfirmed ? (
-          <Link href={`/checkout/${booking.id}`} className="rounded-lg border border-[#2f261f] px-4 py-2 text-[#2f261f]">
-            Retry Payment
+        <div className="grid gap-3 rounded-2xl border border-[#eadfce] bg-white p-4 text-sm text-[#4f4033] sm:grid-cols-2">
+          <p>
+            Booking ID
+            <span className="block font-medium text-[#2f261f]">{booking.id}</span>
+          </p>
+          <p>
+            Status
+            <span className="block font-medium text-[#2f261f]">{booking.status}</span>
+          </p>
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-3">
+          <Link href="/account/bookings" className="rounded-lg bg-[#2f261f] px-4 py-2 text-white">
+            View My Bookings
           </Link>
-        ) : null}
-      </div>
+          {!isConfirmed ? (
+            <Link href={`/checkout/${booking.id}`} className="rounded-lg border border-[#2f261f] px-4 py-2 text-[#2f261f]">
+              Retry Payment
+            </Link>
+          ) : null}
+        </div>
+      </section>
     </main>
   );
 }
