@@ -181,10 +181,7 @@ export default function RoomDetailModal({ room, onClose }: RoomDetailModalProps)
               <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[#9f8b77] dark:text-gray-400">
                 Reserve This Room
               </h3>
-              <div className="rounded-2xl border border-[#e7dccd] bg-[#fffaf2] p-4">
-                <p className="text-sm text-[#5a4a3b]">
-                  Start booking in a dedicated checkout flow with better layout and full order summary.
-                </p>
+             
                 <button
                   type="button"
                   onClick={() => {
@@ -202,7 +199,6 @@ export default function RoomDetailModal({ room, onClose }: RoomDetailModalProps)
                 >
                   Book Now
                 </button>
-              </div>
             </div>
           ) : null}
         </div>

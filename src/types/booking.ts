@@ -41,6 +41,18 @@ export interface CreateBookingPayload {
   notes?: string;
 }
 
+export interface RoomAvailabilityItem {
+  date: string;
+  isAvailable: boolean;
+}
+
+export interface RoomAvailabilityResponse {
+  roomId: string;
+  startDate: string;
+  days: number;
+  items: RoomAvailabilityItem[];
+}
+
 export interface BookingListResponse {
   items: Booking[];
   meta: {

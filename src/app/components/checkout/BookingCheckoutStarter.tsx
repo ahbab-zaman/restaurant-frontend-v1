@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { useCreateBookingMutation } from "@/lib/bookings/bookings.query";
+import { useCreateBookingMutation, useRoomAvailabilityQuery } from "@/lib/bookings/bookings.query";
 
 interface BookingCheckoutStarterProps {
   roomId: string;
@@ -22,21 +22,54 @@ const formatType = (type: string) =>
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
 
+const toIsoDate = (value: Date) => {
+  const date = new Date(value);
+  date.setHours(0, 0, 0, 0);
+  return date.toISOString().slice(0, 10);
+};
+
+const addDays = (isoDate: string, days: number) => {
+  const date = new Date(`${isoDate}T00:00:00.000Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+};
+
+const formatChipDate = (isoDate: string) =>
+  new Date(`${isoDate}T00:00:00.000Z`).toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+
 export default function BookingCheckoutStarter({ roomId, roomMeta }: BookingCheckoutStarterProps) {
   const router = useRouter();
   const { mutateAsync, isPending } = useCreateBookingMutation();
+  const [windowStart, setWindowStart] = useState(toIsoDate(new Date()));
   const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
   const [guestCount, setGuestCount] = useState(1);
+  const { data: availabilityData, isLoading: availabilityLoading } = useRoomAvailabilityQuery(
+    roomId,
+    windowStart,
+    7,
+    Boolean(roomId),
+  );
+
+  const availableDates = (availabilityData?.items ?? []).map((item) => item.date.slice(0, 10));
+  const checkOut = checkIn ? addDays(checkIn, 1) : "";
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
+    if (!checkIn || !checkOut) {
+      toast.error("Please select an available check-in date.");
+      return;
+    }
+
     try {
       const booking = await mutateAsync({
         roomId,
-        checkIn: new Date(checkIn).toISOString(),
-        checkOut: new Date(checkOut).toISOString(),
+        checkIn: new Date(`${checkIn}T00:00:00.000Z`).toISOString(),
+        checkOut: new Date(`${checkOut}T00:00:00.000Z`).toISOString(),
         guestCount,
       });
 
@@ -56,6 +89,64 @@ export default function BookingCheckoutStarter({ roomId, roomMeta }: BookingChec
           <p className="mt-1 text-sm text-[#6d5b4b]">Choose dates and guests, then continue to secure payment.</p>
         </div>
 
+        <div>
+          <div className="mb-2 flex items-center justify-between gap-3">
+            <label className="block text-sm font-medium text-[#5a4a3b]">Available dates (7-day window)</label>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  const previousWindow = addDays(windowStart, -7);
+                  setWindowStart(previousWindow);
+                  setCheckIn("");
+                }}
+                className="rounded-lg border border-[#d8c7af] px-3 py-1.5 text-xs font-medium text-[#4f4033] transition hover:bg-[#f8f2e8]"
+              >
+                Previous 7 days
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const nextWindow = addDays(windowStart, 7);
+                  setWindowStart(nextWindow);
+                  setCheckIn("");
+                }}
+                className="rounded-lg border border-[#d8c7af] px-3 py-1.5 text-xs font-medium text-[#4f4033] transition hover:bg-[#f8f2e8]"
+              >
+                Next 7 days
+              </button>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-[#e7dccd] bg-[#fdf9f4] p-3">
+            {availabilityLoading ? (
+              <p className="text-sm text-[#6d5b4b]">Loading available dates...</p>
+            ) : availableDates.length ? (
+              <div className="flex flex-wrap gap-2">
+                {availableDates.map((date) => {
+                  const selected = checkIn === date;
+                  return (
+                    <button
+                      key={date}
+                      type="button"
+                      onClick={() => setCheckIn(date)}
+                      className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
+                        selected
+                          ? "border-[#2f261f] bg-[#2f261f] text-white"
+                          : "border-[#d8c7af] bg-white text-[#4f4033] hover:bg-[#f5ecdf]"
+                      }`}
+                    >
+                      {formatChipDate(date)}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-sm text-[#6d5b4b]">No available dates in this 7-day range. Try next or previous 7 days.</p>
+            )}
+          </div>
+        </div>
+
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="mb-1.5 block text-sm font-medium text-[#5a4a3b]">Check-in</label>
@@ -63,7 +154,7 @@ export default function BookingCheckoutStarter({ roomId, roomMeta }: BookingChec
               type="date"
               className="w-full rounded-xl border border-[#d8c7af] px-3 py-2.5 text-slate-900 outline-none transition focus:border-[#b89a78] focus:ring-2 focus:ring-[#e8dac5]"
               value={checkIn}
-              onChange={(e) => setCheckIn(e.target.value)}
+              readOnly
               required
             />
           </div>
@@ -74,7 +165,7 @@ export default function BookingCheckoutStarter({ roomId, roomMeta }: BookingChec
               type="date"
               className="w-full rounded-xl border border-[#d8c7af] px-3 py-2.5 text-slate-900 outline-none transition focus:border-[#b89a78] focus:ring-2 focus:ring-[#e8dac5]"
               value={checkOut}
-              onChange={(e) => setCheckOut(e.target.value)}
+              readOnly
               required
             />
           </div>
@@ -94,7 +185,7 @@ export default function BookingCheckoutStarter({ roomId, roomMeta }: BookingChec
 
         <button
           type="submit"
-          disabled={isPending}
+          disabled={isPending || !checkIn}
           className="w-full rounded-xl bg-[#2f261f] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#241c16] disabled:opacity-50"
         >
           {isPending ? "Creating Reservation..." : "Continue to Checkout"}

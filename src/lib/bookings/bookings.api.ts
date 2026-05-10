@@ -1,5 +1,5 @@
 import { API_V1_PREFIX, apiFetch } from "@/lib/auth/api-client";
-import { Booking, BookingListResponse, CreateBookingPayload } from "@/types/booking";
+import { Booking, BookingListResponse, CreateBookingPayload, RoomAvailabilityResponse } from "@/types/booking";
 
 export const createBookingApi = (payload: CreateBookingPayload) =>
   apiFetch<Booking>(`${API_V1_PREFIX}/bookings`, {
@@ -12,3 +12,12 @@ export const getMyBookingsApi = (page = 1, limit = 10) =>
 
 export const getBookingByIdApi = (bookingId: string) =>
   apiFetch<Booking>(`${API_V1_PREFIX}/bookings/${bookingId}`);
+
+export const getRoomAvailabilityApi = (roomId: string, startDate: string, days = 7) => {
+  const params = new URLSearchParams({
+    roomId,
+    startDate,
+    days: String(days),
+  });
+  return apiFetch<RoomAvailabilityResponse>(`${API_V1_PREFIX}/bookings/availability?${params.toString()}`);
+};
