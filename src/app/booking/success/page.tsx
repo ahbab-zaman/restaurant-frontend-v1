@@ -33,7 +33,7 @@ export default function BookingSuccessPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-12">
-      <section className="rounded-3xl border border-[#e7dccd] bg-gradient-to-b from-[#fffdf9] to-[#f9f3ea] p-6 shadow-sm">
+      <section className="rounded-3xl border border-[#e7dccd] bg-linear-to-b from-[#fffdf9] to-[#f9f3ea] p-6 shadow-sm">
         <div className="mb-4 flex items-center gap-3">
           <div
             className={`flex h-10 w-10 items-center justify-center rounded-full text-lg font-semibold ${

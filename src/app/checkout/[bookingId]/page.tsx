@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -25,17 +25,36 @@ export default function CheckoutPage() {
 
   const { data: booking } = useBookingByIdQuery(bookingId, Boolean(bookingId));
   const {
-    mutate: createIntent,
-    data: paymentIntentData,
+    mutateAsync: createIntent,
     isPending,
-    isError,
   } = useCreatePaymentIntentMutation();
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [initError, setInitError] = useState(false);
 
   useEffect(() => {
     if (!bookingId) return;
-    if (paymentIntentData?.clientSecret) return;
-    createIntent({ bookingId });
-  }, [bookingId, paymentIntentData?.clientSecret, createIntent]);
+    setClientSecret(null);
+    setInitError(false);
+
+    let cancelled = false;
+
+    const initPaymentIntent = async () => {
+      try {
+        const result = await createIntent({ bookingId });
+        if (cancelled) return;
+        setClientSecret(result.clientSecret);
+      } catch {
+        if (cancelled) return;
+        setInitError(true);
+      }
+    };
+
+    void initPaymentIntent();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [bookingId, createIntent]);
 
   if (!booking) {
     return <div className="mx-auto max-w-xl px-4 py-12">Loading booking...</div>;
@@ -45,12 +64,16 @@ export default function CheckoutPage() {
     return <div className="mx-auto max-w-xl px-4 py-12">Preparing secure payment...</div>;
   }
 
-  if (isError || !paymentIntentData?.clientSecret) {
+  if (initError) {
     return (
       <div className="mx-auto max-w-xl px-4 py-12">
         Failed to initialize payment. If this booking is already paid, check your bookings page.
       </div>
     );
+  }
+
+  if (!clientSecret) {
+    return <div className="mx-auto max-w-xl px-4 py-12">Preparing secure payment...</div>;
   }
 
   return (
@@ -69,7 +92,7 @@ export default function CheckoutPage() {
           <p className="mt-1 text-sm text-[#6d5b4b]">All transactions are processed securely via Stripe.</p>
           <div className="mt-5">
             <Elements stripe={stripePromise}>
-              <StripeCheckoutForm bookingId={booking.id} clientSecret={paymentIntentData.clientSecret} />
+              <StripeCheckoutForm bookingId={booking.id} clientSecret={clientSecret} />
             </Elements>
           </div>
         </section>
