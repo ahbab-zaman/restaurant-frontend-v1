@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Hotel, HotelMutationPayload } from "@/types/hotel";
-import AppModal from "./AppModal";
-import LoadingSpinner from "./LoadingSpinner";
+import AppModal from "@/app/components/ui/common/AppModal";
+import LoadingSpinner from "@/app/components/ui/common/LoadingSpinner";
 
 type HotelFormModalProps = {
   open: boolean;

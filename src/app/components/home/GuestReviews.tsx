@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
-import StarRating from "../ui/StarRating";
+import StarRating from "../ui/common/StarRating";
 
 const reviews = [
   {

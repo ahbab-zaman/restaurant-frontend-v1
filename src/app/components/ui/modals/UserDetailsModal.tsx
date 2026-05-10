@@ -1,7 +1,7 @@
 "use client";
 
 import { AdminUser } from "@/types/user";
-import AppModal from "./AppModal";
+import AppModal from "@/app/components/ui/common/AppModal";
 
 const ROLE_LABELS: Record<string, string> = {
   SUPER_ADMIN: "Super Admin",

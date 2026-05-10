@@ -14,7 +14,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuthUser, useLogoutMutation } from "@/lib/auth/auth.query";
 import { useRouter } from "next/navigation";
-import logo from "../../../../public/reception.png";
+import logo from "../../../../../public/reception.png";
 
 interface TopBarProps {
   onOpenMobileMenu?: () => void;

@@ -10,12 +10,12 @@ import {
   useDeleteUserMutation,
 } from "@/lib/users/users.query";
 import { AdminUser, AdminUpdateUserPayload } from "@/types/user";
-import ConfirmationModal from "./ConfirmationModal";
-import LoadingSpinner from "./LoadingSpinner";
-import PremiumPagination from "./PremiumPagination";
-import UserDetailsModal from "./UserDetailsModal";
-import UserFormModal from "./UserFormModal";
-import UsersTable from "./UsersTable";
+import ConfirmationModal from "@/app/components/ui/modals/ConfirmationModal";
+import LoadingSpinner from "@/app/components/ui/common/LoadingSpinner";
+import PremiumPagination from "@/app/components/ui/common/PremiumPagination";
+import UserDetailsModal from "@/app/components/ui/modals/UserDetailsModal";
+import UserFormModal from "@/app/components/ui/modals/UserFormModal";
+import UsersTable from "@/app/components/ui/tables/UsersTable";
 
 export default function UsersDashboard() {
   const authUser = useAuthUser();

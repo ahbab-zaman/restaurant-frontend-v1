@@ -1,8 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import AppModal from "./AppModal";
-import LoadingSpinner from "./LoadingSpinner";
+import AppModal from "@/app/components/ui/common/AppModal";
+import LoadingSpinner from "@/app/components/ui/common/LoadingSpinner";
 
 type ConfirmationModalProps = {
   open: boolean;

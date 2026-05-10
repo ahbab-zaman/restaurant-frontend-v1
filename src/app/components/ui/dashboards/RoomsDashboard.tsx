@@ -9,12 +9,12 @@ import { useHotelsQuery } from "@/lib/hotels/hotels.query";
 import { useCreateRoomsMutation, useDeleteRoomMutation, useRoomsByHotelsQuery, useUpdateRoomMutation } from "@/lib/rooms/rooms.query";
 import { Button } from "@/components/ui/button";
 import { CreateRoomPayload, Room, RoomFilters, UpdateRoomPayload } from "@/types/room";
-import ConfirmationModal from "./ConfirmationModal";
-import LoadingSpinner from "./LoadingSpinner";
-import RoomDetailsModal from "./RoomDetailsModal";
-import RoomFormModal from "./RoomFormModal";
-import RoomsTable from "./RoomsTable";
-import PremiumPagination from "./PremiumPagination";
+import ConfirmationModal from "@/app/components/ui/modals/ConfirmationModal";
+import LoadingSpinner from "@/app/components/ui/common/LoadingSpinner";
+import RoomDetailsModal from "@/app/components/ui/modals/RoomDetailsModal";
+import RoomFormModal from "@/app/components/ui/modals/RoomFormModal";
+import RoomsTable from "@/app/components/ui/tables/RoomsTable";
+import PremiumPagination from "@/app/components/ui/common/PremiumPagination";
 
 type RoomsDashboardProps = {
   title: string;

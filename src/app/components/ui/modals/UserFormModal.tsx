@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AdminUser, AdminUpdateUserPayload } from "@/types/user";
 import { UserRole } from "@/types/auth";
-import AppModal from "./AppModal";
-import LoadingSpinner from "./LoadingSpinner";
+import AppModal from "@/app/components/ui/common/AppModal";
+import LoadingSpinner from "@/app/components/ui/common/LoadingSpinner";
 
 type UserFormModalProps = {
   open: boolean;

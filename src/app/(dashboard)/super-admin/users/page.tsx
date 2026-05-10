@@ -1,4 +1,4 @@
-import UsersDashboard from "@/app/components/ui/UsersDashboard";
+import UsersDashboard from "@/app/components/ui/dashboards/UsersDashboard";
 
 export const metadata = {
   title: "Users – Super Admin",

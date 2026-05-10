@@ -1,4 +1,4 @@
-import HotelsDashboard from "@/app/components/ui/HotelsDashboard";
+import HotelsDashboard from "@/app/components/ui/dashboards/HotelsDashboard";
 
 export default function HotelManagerHotelsPage() {
   return (

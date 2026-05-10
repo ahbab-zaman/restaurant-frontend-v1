@@ -10,12 +10,12 @@ import { apiError } from "@/lib/auth/api-client";
 import { Hotel, HotelMutationPayload } from "@/types/hotel";
 import { Room } from "@/types/room";
 import { Button } from "@/components/ui/button";
-import ConfirmationModal from "./ConfirmationModal";
-import HotelFormModal from "./HotelFormModal";
-import HotelsTable from "./HotelsTable";
-import LoadingSpinner from "./LoadingSpinner";
-import HotelDetailsModal from "./HotelDetailsModal";
-import PremiumPagination from "./PremiumPagination";
+import ConfirmationModal from "@/app/components/ui/modals/ConfirmationModal";
+import HotelFormModal from "@/app/components/ui/modals/HotelFormModal";
+import HotelsTable from "@/app/components/ui/tables/HotelsTable";
+import LoadingSpinner from "@/app/components/ui/common/LoadingSpinner";
+import HotelDetailsModal from "@/app/components/ui/modals/HotelDetailsModal";
+import PremiumPagination from "@/app/components/ui/common/PremiumPagination";
 
 type HotelsDashboardProps = {
   title: string;

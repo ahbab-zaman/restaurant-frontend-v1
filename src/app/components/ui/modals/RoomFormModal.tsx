@@ -12,8 +12,8 @@ import {
   RoomType,
   UpdateRoomPayload,
 } from "@/types/room";
-import AppModal from "./AppModal";
-import LoadingSpinner from "./LoadingSpinner";
+import AppModal from "@/app/components/ui/common/AppModal";
+import LoadingSpinner from "@/app/components/ui/common/LoadingSpinner";
 
 const ROOM_TYPES: RoomType[] = [
   "SINGLE",

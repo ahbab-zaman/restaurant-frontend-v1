@@ -121,7 +121,7 @@ export default function RoomCard({
           {description}
         </p>
 
-        <div className="mt-auto pt-3">
+        {/* <div className="mt-auto pt-3">
           <div className="flex flex-wrap items-baseline gap-2">
             <span className="text-base font-bold text-neutral-800 dark:text-neutral-100 tabular-nums">
               {price}
@@ -144,6 +144,45 @@ export default function RoomCard({
               </span>
             )}
           </div>
+        </div> */}
+        <div className="flex flex-wrap items-baseline gap-2">
+          {price === "Price not available" ? (
+            <span className="flex items-center gap-1.5 text-xs text-neutral-400 dark:text-neutral-500 italic">
+              <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+                <path
+                  d="M9.5 9.5C9.5 8.12 10.62 7 12 7C13.38 7 14.5 8.12 14.5 9.5C14.5 10.88 13.38 12 12 12V13.5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
+                <circle cx="12" cy="16.5" r="0.75" fill="currentColor" />
+              </svg>
+              Price not set
+            </span>
+          ) : (
+            <>
+              <span className="text-base font-bold text-neutral-800 dark:text-neutral-100 tabular-nums">
+                {price}
+              </span>
+              {originalPrice && (
+                <span className="text-sm text-neutral-400 dark:text-neutral-500 line-through tabular-nums">
+                  {originalPrice}
+                </span>
+              )}
+              {discountLabel && (
+                <span className="text-xs font-medium text-emerald-700 bg-emerald-100 dark:bg-emerald-900/40 dark:text-emerald-300 px-1.5 py-0.5 rounded transition-colors duration-500 ease-in-out group-hover:bg-emerald-200 group-hover:text-emerald-900 dark:group-hover:bg-emerald-800/70 dark:group-hover:text-emerald-200">
+                  {discountLabel}
+                </span>
+              )}
+            </>
+          )}
         </div>
       </div>
     </Link>

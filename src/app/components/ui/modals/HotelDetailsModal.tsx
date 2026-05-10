@@ -2,7 +2,7 @@
 
 import { Hotel } from "@/types/hotel";
 import { Room } from "@/types/room";
-import AppModal from "./AppModal";
+import AppModal from "@/app/components/ui/common/AppModal";
 
 type HotelDetailsModalProps = {
   open: boolean;

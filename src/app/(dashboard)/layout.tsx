@@ -1,9 +1,9 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
-import Sidebar from "../components/ui/Sidebar";
-import TopBar from "../components/ui/TopBar";
-import DashboardMobileDrawer from "../components/ui/DashboardMobileDrawer";
+import Sidebar from "../components/ui/navigation/Sidebar";
+import TopBar from "../components/ui/navigation/TopBar";
+import DashboardMobileDrawer from "../components/ui/navigation/DashboardMobileDrawer";
 
 export default function DashboardLayout({
   children,

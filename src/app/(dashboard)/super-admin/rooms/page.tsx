@@ -1,4 +1,4 @@
-import RoomsDashboard from "@/app/components/ui/RoomsDashboard";
+import RoomsDashboard from "@/app/components/ui/dashboards/RoomsDashboard";
 
 export default function SuperAdminRoomsPage() {
   return (

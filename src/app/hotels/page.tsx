@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import RoomCard from "@/app/components/home/RoomCard";
 import HotelCardSkeleton from "@/app/components/hotel/HotelCardSkeleton";
-import PremiumPagination from "@/app/components/ui/PremiumPagination";
+import PremiumPagination from "@/app/components/ui/common/PremiumPagination";
 import { Switch } from "@/components/ui/switch";
 import { useHotelsQuery } from "@/lib/hotels/hotels.query";
 import { useRoomsByHotelsQuery } from "@/lib/rooms/rooms.query";
@@ -472,7 +472,6 @@ export default function HotelPage() {
                             )}
                           </div>
                         </div>
-                        
                       </div>
                     </div>
                   )}
@@ -490,7 +489,7 @@ export default function HotelPage() {
                 </div>
               ) : filteredHotels.length ? (
                 <div className="space-y-6">
-                  <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
+                  <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-5">
                     {filteredHotels.map((hotel, index) => {
                       const rooms = roomsByHotel.get(hotel.id) ?? [];
                       const { minPrice, availableCount } =
@@ -515,7 +514,14 @@ export default function HotelPage() {
                                 : "No Rooms Available"
                             }
                             title={hotel.name}
-                            description={hotel.description || hotel.address}
+                            description={
+                              (hotel.description || hotel.address).length > 100
+                                ? (hotel.description || hotel.address).slice(
+                                    0,
+                                    100,
+                                  ) + "…"
+                                : hotel.description || hotel.address
+                            }
                             price={
                               minPrice !== null
                                 ? `$${minPrice} / night`

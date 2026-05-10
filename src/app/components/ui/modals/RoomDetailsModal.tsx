@@ -1,6 +1,6 @@
 "use client";
 
-import AppModal from "./AppModal";
+import AppModal from "@/app/components/ui/common/AppModal";
 import { Room } from "@/types/room";
 
 type RoomDetailsModalProps = {
