@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CreateBookingPayload } from "@/types/booking";
+import { hotelKeys } from "@/lib/hotels/hotels.query";
 import { createBookingApi, getBookingByIdApi, getMyBookingsApi } from "./bookings.api";
 
 export const bookingKeys = {
@@ -16,6 +17,9 @@ export const useCreateBookingMutation = () => {
     mutationFn: (payload: CreateBookingPayload) => createBookingApi(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["bookings", "me"] });
+      queryClient.invalidateQueries({ queryKey: ["rooms"] });
+      queryClient.invalidateQueries({ queryKey: ["rooms-bulk"] });
+      queryClient.invalidateQueries({ queryKey: hotelKeys.list });
     },
   });
 };

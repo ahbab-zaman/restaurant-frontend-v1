@@ -1,10 +1,14 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { hotelKeys } from "@/lib/hotels/hotels.query";
 import { useBookingByIdQuery } from "@/lib/bookings/bookings.query";
 
 export default function BookingSuccessPage() {
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const bookingId = searchParams.get("bookingId") ?? "";
 
@@ -19,6 +23,13 @@ export default function BookingSuccessPage() {
   }
 
   const isConfirmed = booking.status === "CONFIRMED";
+
+  useEffect(() => {
+    if (!isConfirmed) return;
+    queryClient.invalidateQueries({ queryKey: ["rooms"] });
+    queryClient.invalidateQueries({ queryKey: ["rooms-bulk"] });
+    queryClient.invalidateQueries({ queryKey: hotelKeys.list });
+  }, [isConfirmed, queryClient]);
 
   return (
     <main className="mx-auto max-w-xl space-y-4 px-4 py-12">

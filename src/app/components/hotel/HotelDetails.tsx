@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Hotel } from "@/types/hotel";
 import { Room } from "@/types/room";
@@ -29,6 +29,16 @@ const MAX_AMENITIES_SHOWN = 3;
 
 export default function HotelDetails({ hotel, rooms }: HotelDetailsProps) {
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+
+  useEffect(() => {
+    if (!selectedRoom) return;
+    const updated = rooms.find((room) => room.id === selectedRoom.id);
+    if (!updated) {
+      setSelectedRoom(null);
+      return;
+    }
+    setSelectedRoom(updated);
+  }, [rooms, selectedRoom]);
 
   const minPrice = rooms.length ? Math.min(...rooms.map((r) => r.price)) : null;
   const maxPrice = rooms.length ? Math.max(...rooms.map((r) => r.price)) : null;

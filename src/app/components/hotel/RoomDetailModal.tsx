@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Room } from "@/types/room";
-import BookingCheckoutStarter from "@/app/components/checkout/BookingCheckoutStarter";
 
 interface RoomDetailModalProps {
   room: Room | null;
@@ -27,6 +27,7 @@ const formatDate = (date: string) =>
   });
 
 export default function RoomDetailModal({ room, onClose }: RoomDetailModalProps) {
+  const router = useRouter();
   // Close on Escape key
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -180,7 +181,28 @@ export default function RoomDetailModal({ room, onClose }: RoomDetailModalProps)
               <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[#9f8b77] dark:text-gray-400">
                 Reserve This Room
               </h3>
-              <BookingCheckoutStarter roomId={room.id} />
+              <div className="rounded-2xl border border-[#e7dccd] bg-[#fffaf2] p-4">
+                <p className="text-sm text-[#5a4a3b]">
+                  Start booking in a dedicated checkout flow with better layout and full order summary.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const params = new URLSearchParams({
+                      roomId: room.id,
+                      roomNumber: room.roomNumber,
+                      roomType: room.type,
+                      capacity: String(room.capacity),
+                      price: String(room.price),
+                    });
+                    onClose();
+                    router.push(`/checkout/start?${params.toString()}`);
+                  }}
+                  className="mt-3 w-full rounded-xl bg-[#2f261f] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#241c16]"
+                >
+                  Book Now
+                </button>
+              </div>
             </div>
           ) : null}
         </div>
