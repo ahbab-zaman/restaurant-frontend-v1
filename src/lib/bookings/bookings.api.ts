@@ -10,6 +10,9 @@ export const createBookingApi = (payload: CreateBookingPayload) =>
 export const getMyBookingsApi = (page = 1, limit = 10) =>
   apiFetch<BookingListResponse>(`${API_V1_PREFIX}/bookings/me?page=${page}&limit=${limit}`);
 
+export const getAdminBookingsApi = (page = 1, limit = 10) =>
+  apiFetch<BookingListResponse>(`${API_V1_PREFIX}/bookings?page=${page}&limit=${limit}`);
+
 export const getBookingByIdApi = (bookingId: string) =>
   apiFetch<Booking>(`${API_V1_PREFIX}/bookings/${bookingId}`);
 
@@ -21,3 +24,9 @@ export const getRoomAvailabilityApi = (roomId: string, startDate: string, days =
   });
   return apiFetch<RoomAvailabilityResponse>(`${API_V1_PREFIX}/bookings/availability?${params.toString()}`);
 };
+
+export const updateBookingStatusApi = (bookingId: string, status: Booking["status"]) =>
+  apiFetch<Booking>(`${API_V1_PREFIX}/bookings/${bookingId}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });

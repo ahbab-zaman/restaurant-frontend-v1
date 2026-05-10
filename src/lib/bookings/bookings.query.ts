@@ -1,15 +1,23 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CreateBookingPayload } from "@/types/booking";
+import { BookingStatus, CreateBookingPayload } from "@/types/booking";
 import { hotelKeys } from "@/lib/hotels/hotels.query";
-import { createBookingApi, getBookingByIdApi, getMyBookingsApi, getRoomAvailabilityApi } from "./bookings.api";
+import {
+  createBookingApi,
+  getAdminBookingsApi,
+  getBookingByIdApi,
+  getMyBookingsApi,
+  getRoomAvailabilityApi,
+  updateBookingStatusApi,
+} from "./bookings.api";
 
 export const bookingKeys = {
   me: (page = 1, limit = 10) => ["bookings", "me", page, limit] as const,
   byId: (bookingId: string) => ["bookings", bookingId] as const,
   availability: (roomId: string, startDate: string, days = 7) =>
     ["bookings", "availability", roomId, startDate, days] as const,
+  admin: (page = 1, limit = 10) => ["bookings", "admin", page, limit] as const,
 };
 
 export const useCreateBookingMutation = () => {
@@ -32,6 +40,13 @@ export const useMyBookingsQuery = (page = 1, limit = 10) =>
     queryFn: () => getMyBookingsApi(page, limit),
   });
 
+export const useAdminBookingsQuery = (page = 1, limit = 10, enabled = true) =>
+  useQuery({
+    queryKey: bookingKeys.admin(page, limit),
+    queryFn: () => getAdminBookingsApi(page, limit),
+    enabled,
+  });
+
 export const useBookingByIdQuery = (bookingId: string, enabled = true) =>
   useQuery({
     queryKey: bookingKeys.byId(bookingId),
@@ -46,3 +61,16 @@ export const useRoomAvailabilityQuery = (roomId: string, startDate: string, days
     queryFn: () => getRoomAvailabilityApi(roomId, startDate, days),
     enabled: enabled && Boolean(roomId) && Boolean(startDate),
   });
+
+export const useUpdateBookingStatusMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ bookingId, status }: { bookingId: string; status: BookingStatus }) =>
+      updateBookingStatusApi(bookingId, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["bookings", "admin"] });
+      queryClient.invalidateQueries({ queryKey: ["bookings", "me"] });
+    },
+  });
+};

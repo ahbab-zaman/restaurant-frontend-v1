@@ -31,6 +31,21 @@ export interface Booking {
   createdAt: string;
   updatedAt: string;
   payment?: BookingPayment | null;
+  room?: {
+    id: string;
+    roomNumber: string;
+    hotelId: string;
+    hotel?: {
+      id: string;
+      name: string;
+      address: string;
+    };
+  };
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
 }
 
 export interface CreateBookingPayload {
