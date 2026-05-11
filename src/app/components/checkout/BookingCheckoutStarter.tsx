@@ -48,6 +48,7 @@ export default function BookingCheckoutStarter({ roomId, roomMeta }: BookingChec
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guestCount, setGuestCount] = useState(1);
+  const [hasDateAvailabilityError, setHasDateAvailabilityError] = useState(false);
   const { data: availabilityData, isLoading: availabilityLoading } = useRoomAvailabilityQuery(
     roomId,
     windowStart,
@@ -78,6 +79,11 @@ export default function BookingCheckoutStarter({ roomId, roomMeta }: BookingChec
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
+    if (availabilityLoading || !availabilityData) {
+      toast.error("Availability is still loading. Please wait before continuing.");
+      return;
+    }
+
     if (!checkIn || !checkOut) {
       toast.error("Please select both check-in and check-out dates.");
       return;
@@ -89,7 +95,13 @@ export default function BookingCheckoutStarter({ roomId, roomMeta }: BookingChec
     }
 
     if (!isCheckoutRangeAvailable(checkIn, checkOut)) {
+      setHasDateAvailabilityError(true);
       toast.error("Some selected stay dates are unavailable. Please choose a different check-out date.");
+      return;
+    }
+
+    if (hasDateAvailabilityError) {
+      toast.error("Please fix unavailable date selection before continuing.");
       return;
     }
 
@@ -128,6 +140,7 @@ export default function BookingCheckoutStarter({ roomId, roomMeta }: BookingChec
                   setWindowStart(previousWindow);
                   setCheckIn("");
                   setCheckOut("");
+                  setHasDateAvailabilityError(false);
                 }}
                 className="rounded-lg border border-[#d8c7af] px-3 py-1.5 text-xs font-medium text-[#4f4033] transition hover:bg-[#f8f2e8]"
               >
@@ -140,6 +153,7 @@ export default function BookingCheckoutStarter({ roomId, roomMeta }: BookingChec
                   setWindowStart(nextWindow);
                   setCheckIn("");
                   setCheckOut("");
+                  setHasDateAvailabilityError(false);
                 }}
                 className="rounded-lg border border-[#d8c7af] px-3 py-1.5 text-xs font-medium text-[#4f4033] transition hover:bg-[#f8f2e8]"
               >
@@ -161,8 +175,10 @@ export default function BookingCheckoutStarter({ roomId, roomMeta }: BookingChec
                       type="button"
                       onClick={() => {
                         setCheckIn(date);
+                        setHasDateAvailabilityError(false);
                         if (checkOut && checkOut <= date) {
                           setCheckOut("");
+                          setHasDateAvailabilityError(false);
                           toast("Please choose a new check-out date after check-in.");
                         }
                       }}
@@ -207,8 +223,12 @@ export default function BookingCheckoutStarter({ roomId, roomMeta }: BookingChec
                 setCheckOut(nextCheckOut);
                 if (!nextCheckOut || !checkIn) return;
                 if (!isCheckoutRangeAvailable(checkIn, nextCheckOut)) {
+                  setHasDateAvailabilityError(true);
+                  setCheckOut("");
                   toast.error("Selected check-out includes unavailable date(s). Please choose another date.");
+                  return;
                 }
+                setHasDateAvailabilityError(false);
               }}
               required
             />
@@ -229,7 +249,7 @@ export default function BookingCheckoutStarter({ roomId, roomMeta }: BookingChec
 
         <button
           type="submit"
-          disabled={isPending || !checkIn || !checkOut}
+          disabled={isPending || availabilityLoading || hasDateAvailabilityError || !checkIn || !checkOut}
           className="w-full rounded-xl bg-[#2f261f] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#241c16] disabled:opacity-50"
         >
           {isPending ? "Creating Reservation..." : "Continue to Checkout"}

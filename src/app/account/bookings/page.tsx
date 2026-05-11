@@ -25,6 +25,7 @@ const formatDate = (value: string) =>
 const BookingPage = () => {
   const { data, isLoading, isError } = useMyBookingsQuery();
   const [viewingBooking, setViewingBooking] = useState<Booking | null>(null);
+  const hasBookings = data?.items.length > 0;
 
   if (isLoading) {
     return <div>Loading bookings...</div>;
@@ -37,42 +38,49 @@ const BookingPage = () => {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">My Bookings</h1>
-      <div className="overflow-x-auto rounded-2xl border border-zinc-200 bg-white shadow-sm">
-        <Table>
-          <TableHeader className="bg-zinc-50">
-            <TableRow>
-              <TableHead>Booking</TableHead>
-              <TableHead>Stay</TableHead>
-              <TableHead>Total</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.items.map((booking) => (
-              <TableRow key={booking.id}>
-                <TableCell className="font-medium text-zinc-900">{booking.id}</TableCell>
-                <TableCell className="text-zinc-700">
-                  {formatDate(booking.checkIn)} - {formatDate(booking.checkOut)}
-                </TableCell>
-                <TableCell className="font-medium text-zinc-900">${booking.totalPrice.toFixed(2)}</TableCell>
-                <TableCell className="text-zinc-700">{booking.status}</TableCell>
-                <TableCell className="text-right">
-                  <Button
-                    type="button"
-                    size="icon"
-                    variant="outline"
-                    onClick={() => setViewingBooking(booking)}
-                    aria-label={`View booking ${booking.id}`}
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                </TableCell>
+      {hasBookings ? (
+        <div className="overflow-x-auto rounded-2xl border border-zinc-200 bg-white shadow-sm">
+          <Table>
+            <TableHeader className="bg-zinc-50">
+              <TableRow>
+                <TableHead>Booking</TableHead>
+                <TableHead>Stay</TableHead>
+                <TableHead>Total</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Action</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody>
+              {data.items.map((booking) => (
+                <TableRow key={booking.id}>
+                  <TableCell className="font-medium text-zinc-900">{booking.id}</TableCell>
+                  <TableCell className="text-zinc-700">
+                    {formatDate(booking.checkIn)} - {formatDate(booking.checkOut)}
+                  </TableCell>
+                  <TableCell className="font-medium text-zinc-900">${booking.totalPrice.toFixed(2)}</TableCell>
+                  <TableCell className="text-zinc-700">{booking.status}</TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="outline"
+                      onClick={() => setViewingBooking(booking)}
+                      aria-label={`View booking ${booking.id}`}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-dashed border-zinc-300 bg-zinc-50 px-6 py-12 text-center">
+          <p className="text-lg font-medium text-zinc-900">No bookings yet</p>
+          <p className="mt-2 text-sm text-zinc-600">You have not made any bookings yet. Once you book a stay, it will appear here.</p>
+        </div>
+      )}
 
       <BookingDetailsModal
         open={Boolean(viewingBooking)}
