@@ -25,7 +25,7 @@ const formatDate = (value: string) =>
 const BookingPage = () => {
   const { data, isLoading, isError } = useMyBookingsQuery();
   const [viewingBooking, setViewingBooking] = useState<Booking | null>(null);
-  const hasBookings = data?.items.length > 0;
+  const hasBookings = (data?.items?.length ?? 0) > 0;
 
   if (isLoading) {
     return <div>Loading bookings...</div>;
