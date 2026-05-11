@@ -1,6 +1,7 @@
 import { store } from "@/store";
 import { clearAuth, setAccessToken } from "@/store/auth.slice";
 import { ApiSuccessResponse } from "@/types/auth";
+import { hasSessionFlag } from "./session";
 
 const RAW_API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ??
@@ -53,7 +54,10 @@ export async function apiFetch<T>(
   if (!response.ok || !result.success) {
     const message = result?.message || "Request failed";
 
-    if (response.status === 401) {
+    // Only clear auth state when there is no active session.
+    // If the user has a session flag, the 401 is a transient/token-expired
+    // error — let the caller handle it rather than force-logging out.
+    if (response.status === 401 && !hasSessionFlag()) {
       store.dispatch(clearAuth());
     }
 
@@ -91,7 +95,7 @@ export async function apiFetchMultipart<T>(
   if (!response.ok || !result.success) {
     const message = result?.message || "Request failed";
 
-    if (response.status === 401) {
+    if (response.status === 401 && !hasSessionFlag()) {
       store.dispatch(clearAuth());
     }
 
