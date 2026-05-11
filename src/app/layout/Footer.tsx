@@ -15,7 +15,6 @@ import {
 import logo from "../../../public/reception.png";
 import google from "@/assets/gplay-store-full.webp";
 import apple from "@/assets/app-store-full.webp";
-// â”€â”€ Link Groups â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 interface LinkGroup {
   title: string;
   links: { label: string; href: string }[];
@@ -29,8 +28,6 @@ const linkGroups: LinkGroup[] = [
       { label: "Hotels", href: "/hotels" },
       { label: "About Us", href: "/about" },
       { label: "Contact Us", href: "/contact" },
-      { label: "Careers", href: "/careers" },
-      { label: "Press", href: "/press" },
     ],
   },
   {
