@@ -10,6 +10,7 @@ import { apiError } from "@/lib/auth/api-client";
 import { Hotel, HotelMutationPayload } from "@/types/hotel";
 import { Room } from "@/types/room";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import ConfirmationModal from "@/app/components/ui/modals/ConfirmationModal";
 import HotelFormModal from "@/app/components/ui/modals/HotelFormModal";
 import HotelsTable from "@/app/components/ui/tables/HotelsTable";
@@ -28,6 +29,9 @@ export default function HotelsDashboard({ title, description }: HotelsDashboardP
   const isHotelManager = user?.role === "HOTEL_ADMIN";
 
   const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState<"name" | "address" | "rooms" | "createdAt">("createdAt");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const limit = 10;
   const { data, isLoading, isFetching } = useHotelsQuery({ page, limit, myHotels: isHotelManager });
   const createMutation = useCreateHotelMutation();
@@ -56,6 +60,38 @@ export default function HotelsDashboard({ title, description }: HotelsDashboardP
       rooms: groupedRooms.get(hotel.id) ?? [],
     }));
   }, [hotels, roomsData?.items]);
+
+  const filteredAndSortedHotels = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
+    const filtered = query
+      ? hotelsWithRooms.filter((hotel) => {
+          const searchableText = [
+            hotel.name,
+            hotel.address,
+            hotel.admin?.name ?? "",
+            ...hotel.rooms.map((room) => `${room.roomNumber} ${room.type}`),
+          ]
+            .join(" ")
+            .toLowerCase();
+          return searchableText.includes(query);
+        })
+      : hotelsWithRooms;
+
+    return [...filtered].sort((a, b) => {
+      let comparison = 0;
+      if (sortBy === "name") {
+        comparison = a.name.localeCompare(b.name);
+      } else if (sortBy === "address") {
+        comparison = a.address.localeCompare(b.address);
+      } else if (sortBy === "rooms") {
+        comparison = a.rooms.length - b.rooms.length;
+      } else {
+        comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      }
+
+      return sortDirection === "asc" ? comparison : -comparison;
+    });
+  }, [hotelsWithRooms, searchTerm, sortBy, sortDirection]);
 
   async function onCreate(payload: HotelMutationPayload) {
     try {
@@ -105,6 +141,33 @@ export default function HotelsDashboard({ title, description }: HotelsDashboardP
         </Button>
       </div>
 
+      <div className="grid gap-3 rounded-2xl border border-zinc-200 bg-white p-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Input
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+          placeholder="Search by hotel, address, admin, room..."
+          className="sm:col-span-2"
+        />
+        <select
+          value={sortBy}
+          onChange={(event) => setSortBy(event.target.value as "name" | "address" | "rooms" | "createdAt")}
+          className="h-10 rounded-md border border-zinc-300 bg-white px-3 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+        >
+          <option value="createdAt">Sort: Created Date</option>
+          <option value="name">Sort: Hotel Name</option>
+          <option value="address">Sort: Address</option>
+          <option value="rooms">Sort: Room Count</option>
+        </select>
+        <select
+          value={sortDirection}
+          onChange={(event) => setSortDirection(event.target.value as "asc" | "desc")}
+          className="h-10 rounded-md border border-zinc-300 bg-white px-3 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+        >
+          <option value="desc">Order: Descending</option>
+          <option value="asc">Order: Ascending</option>
+        </select>
+      </div>
+
       {isLoading || isRoomsLoading ? (
         <div className="flex min-h-52 items-center justify-center rounded-2xl border border-zinc-200 bg-white">
           <LoadingSpinner className="h-8 w-8 text-zinc-600" />
@@ -116,7 +179,18 @@ export default function HotelsDashboard({ title, description }: HotelsDashboardP
               <LoadingSpinner className="h-4 w-4" /> Syncing latest data...
             </div>
           ) : null}
-          <HotelsTable hotels={hotelsWithRooms} onView={setViewingHotel} onEdit={setEditingHotel} onDelete={setDeletingHotel} />
+          {filteredAndSortedHotels.length ? (
+            <HotelsTable
+              hotels={filteredAndSortedHotels}
+              onView={setViewingHotel}
+              onEdit={setEditingHotel}
+              onDelete={setDeletingHotel}
+            />
+          ) : (
+            <div className="rounded-2xl border border-dashed border-zinc-300 bg-white p-8 text-center">
+              <p className="text-zinc-600">No hotels match your search.</p>
+            </div>
+          )}
           <div className="flex justify-end">
             <PremiumPagination page={page} totalPages={data?.meta.totalPages ?? 1} onPageChange={setPage} />
           </div>
