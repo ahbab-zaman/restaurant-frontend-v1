@@ -7,7 +7,8 @@ import BookingsTableSkeleton from "@/app/components/ui/common/BookingsTableSkele
 import PremiumPagination from "@/app/components/ui/common/PremiumPagination";
 import { apiError } from "@/lib/auth/api-client";
 import { useAdminBookingsQuery, useUpdateBookingStatusMutation } from "@/lib/bookings/bookings.query";
-import { BookingStatus } from "@/types/booking";
+import { useUpdatePaymentStatusMutation } from "@/lib/payments/payments.query";
+import { BookingStatus, PaymentStatus } from "@/types/booking";
 import { Input } from "@/components/ui/input";
 
 type BookingsDashboardProps = {
@@ -24,6 +25,7 @@ export default function BookingsDashboard({ title, description, canManage }: Boo
   const limit = 10;
   const { data, isLoading, isFetching, isError } = useAdminBookingsQuery(page, limit, true);
   const statusMutation = useUpdateBookingStatusMutation();
+  const paymentStatusMutation = useUpdatePaymentStatusMutation();
 
   const onUpdateStatus = async (bookingId: string, status: BookingStatus) => {
     try {
@@ -31,6 +33,16 @@ export default function BookingsDashboard({ title, description, canManage }: Boo
       toast.success("Booking status updated");
     } catch (error) {
       const message = error instanceof apiError ? error.message : "Failed to update booking status";
+      toast.error(message);
+    }
+  };
+
+  const onUpdatePaymentStatus = async (bookingId: string, status: PaymentStatus) => {
+    try {
+      await paymentStatusMutation.mutateAsync({ bookingId, status });
+      toast.success("Payment status updated");
+    } catch (error) {
+      const message = error instanceof apiError ? error.message : "Failed to update payment status";
       toast.error(message);
     }
   };
@@ -123,7 +135,8 @@ export default function BookingsDashboard({ title, description, canManage }: Boo
               bookings={filteredAndSortedBookings}
               canManage={canManage}
               onUpdateStatus={onUpdateStatus}
-              isUpdating={statusMutation.isPending}
+              onUpdatePaymentStatus={onUpdatePaymentStatus}
+              isUpdating={statusMutation.isPending || paymentStatusMutation.isPending}
             />
           ) : (
             <div className="rounded-2xl border border-dashed border-zinc-300 bg-white p-8 text-center text-zinc-600">

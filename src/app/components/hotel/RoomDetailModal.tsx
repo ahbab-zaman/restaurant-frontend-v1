@@ -162,9 +162,9 @@ export default function RoomDetailModal({ room, onClose }: RoomDetailModalProps)
             </h3>
             {room.amenities?.length ? (
               <div className="flex flex-wrap gap-2">
-                {room.amenities.map((amenity) => (
+                {room.amenities.map((amenity, index) => (
                   <span
-                    key={`${room.id}-${amenity}`}
+                    key={`${room.id}-${amenity}-${index}`}
                     className="rounded-full border border-[#dccdb7] bg-[#f8f2e8] px-3 py-1.5 text-xs font-medium text-[#6d5945] dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
                   >
                     {amenity}

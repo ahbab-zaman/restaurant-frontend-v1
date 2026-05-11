@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, CircleDashed, Eye, XCircle } from "lucide-react";
 import BookingDetailsModal from "@/app/components/ui/modals/BookingDetailsModal";
-import { Booking, BookingStatus } from "@/types/booking";
+import { Booking, BookingStatus, PaymentStatus } from "@/types/booking";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -19,6 +19,7 @@ type BookingsTableProps = {
   bookings: Booking[];
   canManage: boolean;
   onUpdateStatus: (bookingId: string, status: BookingStatus) => void;
+  onUpdatePaymentStatus: (bookingId: string, status: PaymentStatus) => void;
   isUpdating: boolean;
 };
 
@@ -42,6 +43,7 @@ export default function BookingsTable({
   bookings,
   canManage,
   onUpdateStatus,
+  onUpdatePaymentStatus,
   isUpdating,
 }: BookingsTableProps) {
   const [viewingBooking, setViewingBooking] = useState<Booking | null>(null);
@@ -132,6 +134,28 @@ export default function BookingsTable({
                         <XCircle className="mr-1 h-4 w-4" />
                         Cancel
                       </Button>
+                      {booking.payment ? (
+                        <>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="secondary"
+                            disabled={isUpdating || booking.payment.status === "SUCCEEDED"}
+                            onClick={() => onUpdatePaymentStatus(booking.id, "SUCCEEDED")}
+                          >
+                            Pay Success
+                          </Button>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="secondary"
+                            disabled={isUpdating || booking.payment.status === "FAILED"}
+                            onClick={() => onUpdatePaymentStatus(booking.id, "FAILED")}
+                          >
+                            Pay Failed
+                          </Button>
+                        </>
+                      ) : null}
                     </div>
                   ) : (
                     <div className="flex justify-end">

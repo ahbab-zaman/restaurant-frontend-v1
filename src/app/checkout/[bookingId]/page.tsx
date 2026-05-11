@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -30,11 +30,15 @@ export default function CheckoutPage() {
   } = useCreatePaymentIntentMutation();
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [initError, setInitError] = useState(false);
+  const [initMessage, setInitMessage] = useState("Preparing secure payment...");
+  const initializedBookingIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!bookingId) return;
+    if (initializedBookingIdRef.current === bookingId && clientSecret) return;
     setClientSecret(null);
     setInitError(false);
+    setInitMessage("Preparing secure payment...");
 
     let cancelled = false;
 
@@ -42,9 +46,15 @@ export default function CheckoutPage() {
       try {
         const result = await createIntent({ bookingId });
         if (cancelled) return;
+        if (!result?.clientSecret) {
+          throw new Error("Missing Stripe client secret");
+        }
+        initializedBookingIdRef.current = bookingId;
         setClientSecret(result.clientSecret);
-      } catch {
+      } catch (error) {
         if (cancelled) return;
+        const message = error instanceof Error ? error.message : "Failed to initialize payment.";
+        setInitMessage(message);
         setInitError(true);
       }
     };
@@ -67,7 +77,7 @@ export default function CheckoutPage() {
   if (initError) {
     return (
       <div className="mx-auto max-w-xl px-4 py-12">
-        Failed to initialize payment. If this booking is already paid, check your bookings page.
+        {initMessage || "Failed to initialize payment."} If this booking is already paid, check your bookings page.
       </div>
     );
   }

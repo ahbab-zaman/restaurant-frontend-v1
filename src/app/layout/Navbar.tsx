@@ -53,7 +53,7 @@ const navLinks: NavLink[] = [
 const getDashboardPathByRole = (role?: UserRole) => {
   if (role === "SUPER_ADMIN") return "/super-admin";
   if (role === "HOTEL_ADMIN") return "/hotel-manager";
-  return "/guest";
+  return null;
 };
 
 function Logo() {
@@ -149,12 +149,11 @@ function UserDropdown({
 }) {
   const displayName = user.name?.trim() || "User";
   const [isOpen, setIsOpen] = useState(false);
+  const dashboardPath = getDashboardPathByRole(user.role);
   const userDropdownItems: UserDropdownItem[] = [
-    {
-      label: "My Dashboard",
-      href: getDashboardPathByRole(user.role),
-      icon: LayoutDashboard,
-    },
+    ...(dashboardPath
+      ? [{ label: "My Dashboard", href: dashboardPath, icon: LayoutDashboard }]
+      : []),
     { label: "My Account", href: "/account/settings", icon: Settings },
   ];
 
