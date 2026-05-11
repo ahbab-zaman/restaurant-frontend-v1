@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import InfoPage from "../InfoPage";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | LumosStay",
+  description:
+    "Understand how LumosStay collects, uses, and protects your personal data in full compliance with applicable privacy regulations.",
+};
 
 export default function PrivacyPage() {
   return (

@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import InfoPage from "../InfoPage";
+
+export const metadata: Metadata = {
+  title: "Accessibility Statement | LumosStay",
+  description:
+    "LumosStay is committed to providing an accessible hotel booking experience for all users, including those using assistive technologies.",
+};
 
 export default function AccessibilityPage() {
   return (

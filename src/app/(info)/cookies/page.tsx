@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import InfoPage from "../InfoPage";
+
+export const metadata: Metadata = {
+  title: "Cookie Policy | LumosStay",
+  description:
+    "Learn how LumosStay uses cookies to keep your session secure, remember preferences, and deliver a faster booking experience.",
+};
 
 export default function CookiesPage() {
   return (

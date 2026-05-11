@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
 import BookingWidget from "./components/home/BookingWidget";import GuestReviews from "./components/home/GuestReviews";
 import HeroSection from "./components/home/HeroSection";
 import TrustBar from "./components/home/TrustBar";
 import WhyChooseUs from "./components/home/WhyChooseUs";
+
+export const metadata: Metadata = {
+  title: "LumosStay | Find & Book Premium Hotel Stays",
+  description:
+    "Discover handpicked hotels and extraordinary stays, curated for the discerning traveller. Search, compare, and book your perfect room in seconds.",
+};
+
 
 export default function Home() {
   return (

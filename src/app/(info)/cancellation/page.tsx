@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import InfoPage from "../InfoPage";
+
+export const metadata: Metadata = {
+  title: "Cancellation Policy | LumosStay",
+  description:
+    "Review LumosStay's cancellation and refund policy. Understand your options and deadlines when modifying or cancelling a hotel booking.",
+};
 
 export default function CancellationPage() {
   return (

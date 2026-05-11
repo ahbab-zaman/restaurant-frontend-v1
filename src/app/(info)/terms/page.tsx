@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import InfoPage from "../InfoPage";
+
+export const metadata: Metadata = {
+  title: "Terms of Service | LumosStay",
+  description:
+    "Read the LumosStay Terms of Service that govern your use of our hotel booking platform, including booking, payment, and cancellation rules.",
+};
 
 export default function TermsPage() {
   return (

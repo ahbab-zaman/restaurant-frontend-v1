@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import InfoPage from "../InfoPage";
+
+export const metadata: Metadata = {
+  title: "Contact Us | LumosStay Support",
+  description:
+    "Get in touch with the LumosStay support team for booking assistance, account questions, or business enquiries. We're here to help.",
+};
 
 export default function ContactPage() {
   return (

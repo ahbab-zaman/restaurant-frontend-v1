@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import InfoPage from "../InfoPage";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description:
+    "Learn about LumosStay, the trusted hotel booking platform built on clear pricing, thoughtful service, and reliable reservations for every traveller.",
+};
 
 export default function AboutPage() {
   return (
