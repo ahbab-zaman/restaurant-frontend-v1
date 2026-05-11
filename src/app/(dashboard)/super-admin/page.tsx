@@ -1,12 +1,31 @@
 "use client";
 
+import { useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useDashboardOverviewQuery } from "@/lib/dashboard/dashboard.query";
 import DashboardBarGraph from "@/app/components/ui/common/DashboardBarGraph";
+import { Button } from "@/components/ui/button";
 
 const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 
 export default function SuperAdminDashboardPage() {
-  const { data, isLoading, isError } = useDashboardOverviewQuery(true);
+  const [months, setMonths] = useState(6);
+  const [offset, setOffset] = useState(0);
+  const { data, isLoading, isError } = useDashboardOverviewQuery(true, { months, offset });
+
+  const periodLabel = useMemo(() => {
+    if (!data?.period?.chartFrom || !data?.period?.chartTo) return "";
+
+    const from = new Date(data.period.chartFrom);
+    const to = new Date(data.period.chartTo);
+    const lastIncludedMonth = new Date(Date.UTC(to.getUTCFullYear(), to.getUTCMonth() - 1, 1));
+
+    return `${from.toLocaleString("en-US", { month: "short", year: "numeric", timeZone: "UTC" })} - ${lastIncludedMonth.toLocaleString("en-US", {
+      month: "short",
+      year: "numeric",
+      timeZone: "UTC",
+    })}`;
+  }, [data?.period?.chartFrom, data?.period?.chartTo]);
 
   if (isLoading) {
     return <div className="mx-auto max-w-7xl rounded-2xl border border-zinc-200 bg-white p-6">Loading dashboard...</div>;
@@ -44,11 +63,51 @@ export default function SuperAdminDashboardPage() {
       </section>
 
       <section className="grid gap-4 xl:grid-cols-5">
-        <article className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm xl:col-span-3">
-          <div className="mb-3">
-            <h2 className="text-xl font-semibold text-zinc-900">Revenue and Guests (Last 6 Months)</h2>
-            <p className="text-sm text-zinc-500">
-              Revenue growth this month: {data.trends.revenueGrowthPercentage > 0 ? "+" : ""}
+        <article className="rounded-3xl border border-zinc-200/80 bg-gradient-to-b from-white to-zinc-50 p-6 shadow-[0_18px_45px_rgba(24,24,27,0.08)] xl:col-span-3">
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-semibold text-zinc-900">Revenue and Guests</h2>
+              <p className="text-xs font-medium tracking-wide text-zinc-500">{periodLabel}</p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                onClick={() => setOffset((prev) => prev + 1)}
+                aria-label="Previous range"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                onClick={() => setOffset((prev) => Math.max(prev - 1, 0))}
+                disabled={offset === 0}
+                aria-label="Next range"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+              <select
+                value={months}
+                onChange={(event) => {
+                  setMonths(Number(event.target.value));
+                  setOffset(0);
+                }}
+                className="h-8 rounded-lg border border-zinc-200 bg-white px-2 text-sm text-zinc-700 outline-none transition focus:border-zinc-400"
+                aria-label="Filter by range"
+              >
+                <option value={3}>Last 3 months</option>
+                <option value={6}>Last 6 months</option>
+                <option value={12}>Last 12 months</option>
+              </select>
+            </div>
+          </div>
+          <div className="mb-4">
+            <p className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
+              Revenue growth vs previous month: {data.trends.revenueGrowthPercentage > 0 ? "+" : ""}
               {data.trends.revenueGrowthPercentage}%
             </p>
           </div>
