@@ -42,7 +42,8 @@ export const useMeQuery = (enabled = true) => {
     queryKey: authKeys.me,
     queryFn: async () => {
       const user = await meApi();
-      dispatch(setAuth({ user, accessToken: null }));
+      // Preserve any existing access token; /me should only refresh user profile state.
+      dispatch(setUser(user));
       return user;
     },
     enabled,

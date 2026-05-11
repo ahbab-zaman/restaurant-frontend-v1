@@ -151,7 +151,7 @@ export default function HotelsDashboard({ title, description }: HotelsDashboardP
         <select
           value={sortBy}
           onChange={(event) => setSortBy(event.target.value as "name" | "address" | "rooms" | "createdAt")}
-          className="h-10 rounded-md border border-zinc-300 bg-white px-3 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+          className="h-10 rounded-md border border-zinc-300 bg-white px-3 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200 text-gray-900"
         >
           <option value="createdAt">Sort: Created Date</option>
           <option value="name">Sort: Hotel Name</option>
@@ -161,7 +161,7 @@ export default function HotelsDashboard({ title, description }: HotelsDashboardP
         <select
           value={sortDirection}
           onChange={(event) => setSortDirection(event.target.value as "asc" | "desc")}
-          className="h-10 rounded-md border border-zinc-300 bg-white px-3 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+          className="h-10 rounded-md border border-zinc-300 bg-white px-3 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200 text-gray-900"
         >
           <option value="desc">Order: Descending</option>
           <option value="asc">Order: Ascending</option>

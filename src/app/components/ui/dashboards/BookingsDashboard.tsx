@@ -7,8 +7,7 @@ import BookingsTableSkeleton from "@/app/components/ui/common/BookingsTableSkele
 import PremiumPagination from "@/app/components/ui/common/PremiumPagination";
 import { apiError } from "@/lib/auth/api-client";
 import { useAdminBookingsQuery, useUpdateBookingStatusMutation } from "@/lib/bookings/bookings.query";
-import { useUpdatePaymentStatusMutation } from "@/lib/payments/payments.query";
-import { BookingStatus, PaymentStatus } from "@/types/booking";
+import { BookingStatus } from "@/types/booking";
 import { Input } from "@/components/ui/input";
 
 type BookingsDashboardProps = {
@@ -25,7 +24,6 @@ export default function BookingsDashboard({ title, description, canManage }: Boo
   const limit = 10;
   const { data, isLoading, isFetching, isError } = useAdminBookingsQuery(page, limit, true);
   const statusMutation = useUpdateBookingStatusMutation();
-  const paymentStatusMutation = useUpdatePaymentStatusMutation();
 
   const onUpdateStatus = async (bookingId: string, status: BookingStatus) => {
     try {
@@ -33,16 +31,6 @@ export default function BookingsDashboard({ title, description, canManage }: Boo
       toast.success("Booking status updated");
     } catch (error) {
       const message = error instanceof apiError ? error.message : "Failed to update booking status";
-      toast.error(message);
-    }
-  };
-
-  const onUpdatePaymentStatus = async (bookingId: string, status: PaymentStatus) => {
-    try {
-      await paymentStatusMutation.mutateAsync({ bookingId, status });
-      toast.success("Payment status updated");
-    } catch (error) {
-      const message = error instanceof apiError ? error.message : "Failed to update payment status";
       toast.error(message);
     }
   };
@@ -101,7 +89,7 @@ export default function BookingsDashboard({ title, description, canManage }: Boo
         <select
           value={sortBy}
           onChange={(event) => setSortBy(event.target.value as "createdAt" | "guest" | "hotel" | "totalPrice" | "status")}
-          className="h-10 rounded-md border border-zinc-300 bg-white px-3 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+          className="h-10 rounded-md border border-zinc-300 bg-white px-3 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200 text-gray-900"
         >
           <option value="createdAt">Sort: Created Date</option>
           <option value="guest">Sort: Guest Name</option>
@@ -112,7 +100,7 @@ export default function BookingsDashboard({ title, description, canManage }: Boo
         <select
           value={sortDirection}
           onChange={(event) => setSortDirection(event.target.value as "asc" | "desc")}
-          className="h-10 rounded-md border border-zinc-300 bg-white px-3 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+          className="h-10 rounded-md border border-zinc-300 bg-white px-3 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200 text-gray-900"
         >
           <option value="desc">Order: Descending</option>
           <option value="asc">Order: Ascending</option>
@@ -135,8 +123,7 @@ export default function BookingsDashboard({ title, description, canManage }: Boo
               bookings={filteredAndSortedBookings}
               canManage={canManage}
               onUpdateStatus={onUpdateStatus}
-              onUpdatePaymentStatus={onUpdatePaymentStatus}
-              isUpdating={statusMutation.isPending || paymentStatusMutation.isPending}
+              isUpdating={statusMutation.isPending}
             />
           ) : (
             <div className="rounded-2xl border border-dashed border-zinc-300 bg-white p-8 text-center text-zinc-600">

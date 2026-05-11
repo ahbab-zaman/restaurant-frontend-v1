@@ -4,8 +4,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2, CircleDashed, Eye, XCircle } from "lucide-react";
 import BookingDetailsModal from "@/app/components/ui/modals/BookingDetailsModal";
-import { Booking, BookingStatus, PaymentStatus } from "@/types/booking";
+import { Booking, BookingStatus } from "@/types/booking";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -19,7 +20,6 @@ type BookingsTableProps = {
   bookings: Booking[];
   canManage: boolean;
   onUpdateStatus: (bookingId: string, status: BookingStatus) => void;
-  onUpdatePaymentStatus: (bookingId: string, status: PaymentStatus) => void;
   isUpdating: boolean;
 };
 
@@ -43,10 +43,15 @@ export default function BookingsTable({
   bookings,
   canManage,
   onUpdateStatus,
-  onUpdatePaymentStatus,
   isUpdating,
 }: BookingsTableProps) {
   const [viewingBooking, setViewingBooking] = useState<Booking | null>(null);
+  const actionTriggerLabel = (status: BookingStatus) => {
+    if (status === "CONFIRMED") return "Confirmed";
+    if (status === "COMPLETED") return "Completed";
+    if (status === "CANCELLED") return "Cancelled";
+    return "Manage";
+  };
 
   return (
     <>
@@ -104,58 +109,37 @@ export default function BookingsTable({
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        disabled={isUpdating || booking.status === "CONFIRMED"}
-                        onClick={() => onUpdateStatus(booking.id, "CONFIRMED")}
-                      >
-                        <CheckCircle2 className="mr-1 h-4 w-4" />
-                        Confirm
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        disabled={isUpdating || booking.status === "COMPLETED"}
-                        onClick={() => onUpdateStatus(booking.id, "COMPLETED")}
-                      >
-                        <CircleDashed className="mr-1 h-4 w-4" />
-                        Complete
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="destructive"
-                        disabled={isUpdating || booking.status === "CANCELLED"}
-                        onClick={() => onUpdateStatus(booking.id, "CANCELLED")}
-                      >
-                        <XCircle className="mr-1 h-4 w-4" />
-                        Cancel
-                      </Button>
-                      {booking.payment ? (
-                        <>
-                          <Button
-                            type="button"
-                            size="sm"
-                            variant="secondary"
-                            disabled={isUpdating || booking.payment.status === "SUCCEEDED"}
-                            onClick={() => onUpdatePaymentStatus(booking.id, "SUCCEEDED")}
-                          >
-                            Pay Success
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button type="button" size="sm" variant="outline" disabled={isUpdating} aria-label={`Manage booking ${booking.id}`}>
+                            {actionTriggerLabel(booking.status)}
                           </Button>
-                          <Button
-                            type="button"
-                            size="sm"
-                            variant="secondary"
-                            disabled={isUpdating || booking.payment.status === "FAILED"}
-                            onClick={() => onUpdatePaymentStatus(booking.id, "FAILED")}
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-40 rounded-xl border-zinc-200 p-1.5">
+                          <DropdownMenuItem
+                            disabled={booking.status === "CONFIRMED"}
+                            onClick={() => onUpdateStatus(booking.id, "CONFIRMED")}
                           >
-                            Pay Failed
-                          </Button>
-                        </>
-                      ) : null}
+                            <CheckCircle2 className="h-4 w-4" />
+                            Confirm
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            disabled={booking.status === "COMPLETED"}
+                            onClick={() => onUpdateStatus(booking.id, "COMPLETED")}
+                          >
+                            <CircleDashed className="h-4 w-4" />
+                            Complete
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            variant="destructive"
+                            disabled={booking.status === "CANCELLED"}
+                            onClick={() => onUpdateStatus(booking.id, "CANCELLED")}
+                          >
+                            <XCircle className="h-4 w-4" />
+                            Cancel
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   ) : (
                     <div className="flex justify-end">

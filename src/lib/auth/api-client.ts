@@ -25,28 +25,64 @@ class ApiError extends Error {
 
 export const apiError = ApiError;
 
+const refreshAccessToken = async (): Promise<string | null> => {
+  const response = await fetch(`${API_BASE_URL}${API_V1_PREFIX}/auth/refresh`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const result = (await response.json()) as ApiSuccessResponse<{ accessToken: string }>;
+  if (!result.success || !result.data?.accessToken) {
+    return null;
+  }
+
+  store.dispatch(setAccessToken(result.data.accessToken));
+  return result.data.accessToken;
+};
+
 export async function apiFetch<T>(
   path: string,
   options: RequestInit = {},
 ): Promise<T> {
+  const execute = async (token?: string | null) => {
+    const headers = new Headers(options.headers);
+    headers.set("Content-Type", "application/json");
+
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+
+    return fetch(`${API_BASE_URL}${path}`, {
+      ...options,
+      headers,
+      credentials: "include",
+    });
+  };
+
   const token = store.getState().auth.accessToken;
-
-  const headers = new Headers(options.headers);
-  headers.set("Content-Type", "application/json");
-
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
-  }
-
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...options,
-    headers,
-    credentials: "include",
-  });
+  let response = await execute(token);
 
   const nextAccessToken = response.headers.get("x-access-token");
   if (nextAccessToken) {
     store.dispatch(setAccessToken(nextAccessToken));
+  }
+
+  if (response.status === 401 && hasSessionFlag() && !path.endsWith("/auth/refresh")) {
+    const refreshedToken = await refreshAccessToken();
+    if (refreshedToken) {
+      response = await execute(refreshedToken);
+      const retriedAccessToken = response.headers.get("x-access-token");
+      if (retriedAccessToken) {
+        store.dispatch(setAccessToken(retriedAccessToken));
+      }
+    }
   }
 
   const result = (await response.json()) as ApiSuccessResponse<T>;
@@ -54,9 +90,6 @@ export async function apiFetch<T>(
   if (!response.ok || !result.success) {
     const message = result?.message || "Request failed";
 
-    // Only clear auth state when there is no active session.
-    // If the user has a session flag, the 401 is a transient/token-expired
-    // error — let the caller handle it rather than force-logging out.
     if (response.status === 401 && !hasSessionFlag()) {
       store.dispatch(clearAuth());
     }
@@ -71,23 +104,38 @@ export async function apiFetchMultipart<T>(
   path: string,
   options: Omit<RequestInit, "body"> & { body: FormData },
 ): Promise<T> {
+  const execute = async (token?: string | null) => {
+    const headers = new Headers(options.headers);
+
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+
+    return fetch(`${API_BASE_URL}${path}`, {
+      ...options,
+      headers,
+      body: options.body,
+      credentials: "include",
+    });
+  };
+
   const token = store.getState().auth.accessToken;
-  const headers = new Headers(options.headers);
-
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
-  }
-
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...options,
-    headers,
-    body: options.body,
-    credentials: "include",
-  });
+  let response = await execute(token);
 
   const nextAccessToken = response.headers.get("x-access-token");
   if (nextAccessToken) {
     store.dispatch(setAccessToken(nextAccessToken));
+  }
+
+  if (response.status === 401 && hasSessionFlag() && !path.endsWith("/auth/refresh")) {
+    const refreshedToken = await refreshAccessToken();
+    if (refreshedToken) {
+      response = await execute(refreshedToken);
+      const retriedAccessToken = response.headers.get("x-access-token");
+      if (retriedAccessToken) {
+        store.dispatch(setAccessToken(retriedAccessToken));
+      }
+    }
   }
 
   const result = (await response.json()) as ApiSuccessResponse<T>;
