@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -36,9 +36,7 @@ const linkGroups: LinkGroup[] = [
       { label: "Luxury Stays", href: "/hotels?category=luxury" },
       { label: "Business Travel", href: "/hotels?category=business" },
       { label: "Weekend Getaways", href: "/hotels?category=weekend" },
-      { label: "Group Bookings", href: "/group-bookings" },
-      { label: "Gift Cards", href: "/gift-cards" },
-      { label: "Loyalty Program", href: "/loyalty" },
+
     ],
   },
   {
